@@ -1,4 +1,5 @@
 from flask import render_template
+from flask import request
 from flask_login import current_user
 from flask import current_app as app 
 import datetime
@@ -81,14 +82,17 @@ AND pid = :pid
 
 
 
-@bp.route('/review/update', methods=['POST'])
-def review_update(product_id, review, rating):
+@bp.route('/review/update', methods=['POST', 'GET'])
+def review_update():
+    product_id = request.form.get('pidChoice')
+    review = request.form.get('reviewChoice')
+    rating = request.form.get('ratingChoice')
     if current_user.is_authenticated:
         try:
             hRnR = True
             rows = app.db.execute("""
 UPDATE Reviews
-SET review = :review, rating = :rating
+SET review = :review, rating = :rating, time_posted = :time_posted
 WHERE uid = :uid
 AND pid = :pid
 
@@ -96,7 +100,8 @@ AND pid = :pid
                                 uid=current_user.id,
                                 pid=product_id,
                                 review=review,
-                                rating=rating)
+                                rating=rating,
+                                time_posted=datetime.datetime.now())
         #push them over to wishlist()
             # print(str(product_id) + "pid")
             # print(str(current_user.id) + "uid")

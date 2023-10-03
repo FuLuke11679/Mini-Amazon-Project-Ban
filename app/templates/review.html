@@ -16,21 +16,11 @@
   <tbody>
     {% for r in reviews%}
       <tr>
-        <th scope="row">{{r.pid}}<form action="{{ url_for('review.review_update', product_id=r.pid)  }}" method="POST">
-          <input type="submit" value="Edit Review"/>
-        </form></th>
-        {%if hideRateNReview == True %}
-
-        {% else %}
+        <th scope="row">{{r.pid}}</th>
         <td>{{r.review}}<form action="{{ url_for('review.review_delete', product_id=r.pid)  }}" method="POST">
           <input type="submit" value="Delete Review"/>
         </form></td>
-        {% endif %}
-        {%if hideRateNReview == True %}
-          
-        {% else %}
         <td>{{r.rating}}</td>
-        {% endif %}
         <td>{{humanize_time(r.time_posted)}}</td>
       </tr>
     {% endfor %}
@@ -39,4 +29,44 @@
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your reviews!</p>
 {% endif %}
+
+
+<br><br>
+{% if current_user.is_authenticated %}
+<form action="{{ url_for('review.review_update')}}" method="POST"><h2>Edit/update current reviews here:
+  <input type="submit" value="Submit Updates"/>
+</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Review</th>
+      <th scope="col">Rating (out of 5 stars)</th>
+      <th scope="col">Date Added</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <th scope="row"><select name="pidChoice" id="pidSelect">
+          {% for ra in reviews %}
+            <option value="{{ra.pid}}" SELECTED>{{ra.pid}}</option>
+          {% endfor%}
+        </select></th>
+        <td> <input type="text" id="reviewInput" name="reviewChoice"></td>
+        <td><select name="ratingChoice" id="ratingSelect">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select></td>   
+        <td>Now</td>
+      </tr>
+  </tbody>
+</table>
+</form>
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to update your reviews!</p>
+{% endif %}
+
 {% endblock %}
