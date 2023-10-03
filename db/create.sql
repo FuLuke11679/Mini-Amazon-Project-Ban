@@ -39,3 +39,6 @@ CREATE TABLE Reviews (
     rating INT NOT NULL,
     time_posted timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
+
+ALTER TABLE Reviews
+    ADD CONSTRAINT oneUPPair UNIQUE (uid, pid)
