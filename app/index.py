@@ -4,11 +4,14 @@ import datetime
 
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.review import Review
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
-
+def humanize_time(dt):
+    return naturaltime(datetime.datetime.now() - dt)
+    
 @bp.route('/')
 def index():
     # get all available products for sale:
@@ -19,7 +22,15 @@ def index():
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
     else:
         purchases = None
+
+    #find all the ratings current user has performed:
+    if current_user.is_authenticated:
+        reviews = Review.get_all_by_uid_since(
+            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+    else:
+        reviews = None
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            avail_products=products,
-                           purchase_history=purchases)
+                           purchase_history=purchases,
+                           humanize_time=humanize_time)

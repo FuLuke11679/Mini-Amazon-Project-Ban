@@ -24,4 +24,7 @@ def create_app():
     from .wishlist import bp as wishlist_bp
     app.register_blueprint(wishlist_bp)
 
+    from .review import bp as review_bp
+    app.register_blueprint(review_bp)
+
     return app
