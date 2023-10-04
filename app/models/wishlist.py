@@ -1,7 +1,8 @@
 from flask import current_app as app
+from flask import jsonify   
 
 
-class Wish:
+class WishListItem:
     def __init__(self, id, uid, pid, time_added):
         self.id = id
         self.uid = uid
@@ -16,7 +17,7 @@ FROM Wishes
 WHERE id = :id
 ''',
                               id=id)
-        return Wish(*(rows[0])) if rows else None
+        return WishListItem(*(rows[0])) if rows else None
 
     @staticmethod
     def get_all_by_uid_since(uid, since):
@@ -29,10 +30,25 @@ ORDER BY time_added DESC
 ''',
                               uid=uid,
                               since=since)
-        return [Wish(*row) for row in rows]
+        return [WishListItem(*row) for row in rows]
 
 
-        def addWish(id, uid, pid, time_added):
+    @staticmethod
+    def get_all(uid):
+        rows = app.db.execute('''
+SELECT id, uid, pid, time_added
+FROM Wishes
+WHERE uid = :uid
+ORDER BY time_added DESC
+''',
+                              uid=uid)
+        return [WishListItem(*row) for row in rows]
+
+
+        
+
+    @staticmethod
+    def addWish(id, uid, pid, time_added):
         try:
             rows = app.db.execute("""
 INSERT INTO Wishes(id, uid, pid, time_added)
