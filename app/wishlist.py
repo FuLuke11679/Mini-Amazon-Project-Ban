@@ -13,14 +13,21 @@ from flask import redirect, url_for
 from flask import Blueprint
 bp = Blueprint('wishlist', __name__)
 
+from humanize import naturaltime
+
+def humanize_time(dt):
+    return naturaltime(datetime.datetime.now() - dt)
+
 
 @bp.route('/wishlist')
 def wishlist():
     if (current_user.is_authenticated):
-        #idd = WishlistItem.get(current_user.id)
         items = WishlistItem.get_all(current_user.id)
-        #items = WishlistItem.get_all(idd)
-        return jsonify([item.__dict__ for item in items])
+        #return jsonify([item.__dict__ for item in items])
+        return render_template('wishlist.html',
+                      items=items,
+                      humanize_time=humanize_time)
+
 
     else:
         return jsonify({}), 404 
