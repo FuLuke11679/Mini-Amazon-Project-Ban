@@ -1,5 +1,4 @@
-from flask import current_app as app
-from flask import jsonify   
+from flask import current_app as app  
 
 
 class WishListItem:
