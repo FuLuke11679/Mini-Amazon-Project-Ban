@@ -3,6 +3,12 @@
 {% block content %}
 
 <br><br>
+<h2>Search for 5 user feedback based on ID:</h2>
+<form action="{{ url_for('review.review') }}" type="submit" method="POST">
+   <input type="text" id="searchReviewId" name="searchReviewChoice" placeholder="Input User ID To Get Reviews Here">
+</form>
+
+<br>
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>

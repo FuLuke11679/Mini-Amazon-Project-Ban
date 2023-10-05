@@ -22,28 +22,50 @@ def findById(reviewSet, givenId):
 def humanize_time(dt):
     return naturaltime(datetime.datetime.now() - dt)
 
-@bp.route('/review')
+
+@bp.route('/review', methods = ['POST','GET'])
 def review():
     # get all available products for reivew:
-    if current_user.is_authenticated:
-        items = Review.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-        sItems = SellerReview.get_all_by_uid_since(
-                        current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-       
-        return render_template('review.html',
-                      reviews=items,
-                      sellerReviews = sItems, 
-                      humanize_time=humanize_time,
-                      composedItems=None)
-    else:
-        items = None
-        return render_template('review.html',
-                      reviews=items,
-                      sellerReviews = sItems,
-                      humanize_time=humanize_time,
-                      composedItems=None)
+    idToUse = request.form.get('searchReviewChoice')
+    items = Review.get_all_by_uid_since(
+        idToUse, datetime.datetime(1980, 9, 14, 0, 0, 0))
+    sItems = SellerReview.get_all_by_uid_since(
+                    idToUse, datetime.datetime(1980, 9, 14, 0, 0, 0))
+    
+
+    return render_template('review.html',
+                    reviews=items,
+                    sellerReviews = sItems, 
+                    humanize_time=humanize_time,
+                    composedItems=None)
+    
     # render the page by adding information to the index.html file
+
+
+
+#for future
+# @bp.route('/review')
+# def review():
+#     # get all available products for reivew:
+#     if current_user.is_authenticated:
+#         items = Review.get_all_by_uid_since(
+#             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+#         sItems = SellerReview.get_all_by_uid_since(
+#                         current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+       
+#         return render_template('review.html',
+#                       reviews=items,
+#                       sellerReviews = sItems, 
+#                       humanize_time=humanize_time,
+#                       composedItems=None)
+#     else:
+#         items = None
+#         return render_template('review.html',
+#                       reviews=items,
+#                       sellerReviews = sItems,
+#                       humanize_time=humanize_time,
+#                       composedItems=None)
+#     # render the page by adding information to the index.html file
 
 @bp.route('/review/add/<int:product_id>', methods=['POST'])
 def review_add(product_id):

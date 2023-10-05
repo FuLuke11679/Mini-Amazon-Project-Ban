@@ -4,7 +4,6 @@
 <br><br>
 
 {% if composedItems is none %}
-  {% if current_user.is_authenticated %}
   <h1>REVIEWS PAGE -> ALL YOUR REVIEWS HERE!</h1>
   <br><br>
   <h2>Your recent product reviews:</h2>
@@ -30,13 +29,8 @@
       {% endfor %}
     </tbody>
   </table>
-  {% else %}
-  <p><a href="{{ url_for('users.login') }}">Log in</a> to see your product reviews!</p>
-  {% endif %}
-
 
   <br><br>
-  {% if current_user.is_authenticated %}
   <form action="{{ url_for('review.review_update')}}" method="POST"><h2>Edit/update current product reviews here:
     <input type="submit" value="Submit Updates"/>
   </h2>
@@ -94,13 +88,9 @@
       {% endfor %}
     </tbody>
   </table>
-  {% else %}
-  <p><a href="{{ url_for('users.login') }}">Log in</a> to see your seller reviews!</p>
-  {% endif %}
 
 
   <br><br>
-  {% if current_user.is_authenticated %}
   <form action="{{ url_for('review.sellerreview_update')}}" method="POST"><h2>Edit/update current seller reviews here:
     <input type="submit" value="Submit Updates"/>
   </h2>
@@ -135,11 +125,7 @@
 
   <p><a href="{{ url_for('review.feedback')}}">Click Here To See Your Overall Top 5 Reviews!</a></p>
   </form>
-  {% else %}
-  <p><a href="{{ url_for('users.login') }}">Log in</a> to update your seller reviews!</p>
-  {% endif %}
 {% else %}
-    {% if current_user.is_authenticated %}
   <h1>TOP 5 REVIEWS PAGE -> The Top 5 Of Your Feedback Here!</h1>
   <br><br>
   <h2>Your recent product reviews:</h2>
@@ -169,13 +155,8 @@
       {% endfor %}
     </tbody>
   </table>
-  {% else %}
-  <p><a href="{{ url_for('users.login') }}">Log in</a> to see your product reviews!</p>
-  {% endif %}
-
 
   <br><br>
-  {% if current_user.is_authenticated %}
   <form action="{{ url_for('review.review_update')}}" method="POST"><h2>Edit/update current product reviews here:
     <input type="submit" value="Submit Updates"/>
   </h2>
@@ -239,13 +220,9 @@
       {% endfor %}
     </tbody>
   </table>
-  {% else %}
-  <p><a href="{{ url_for('users.login') }}">Log in</a> to see your seller reviews!</p>
-  {% endif %}
 
 
   <br><br>
-  {% if current_user.is_authenticated %}
   <form action="{{ url_for('review.sellerreview_update')}}" method="POST"><h2>Edit/update current seller reviews here:
     <input type="submit" value="Submit Updates"/>
   </h2>
@@ -283,8 +260,5 @@
 
   <p><a href="{{ url_for('review.review')}}">Click Here To See ALL Your Reviews!</a></p>
   </form>
-  {% else %}
-  <p><a href="{{ url_for('users.login') }}">Log in</a> to update your seller reviews!</p>
-  {% endif %}
 {% endif %}
 {% endblock %}
