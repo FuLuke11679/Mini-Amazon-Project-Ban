@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request
 from flask_login import current_user
 import datetime
 
@@ -12,21 +12,30 @@ from flask import request
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
-
-@bp.route('/')
+@bp.route('/', methods=['GET', 'POST'])
 def index():
-    # get all available products for sale:
+    # Get the value of K from the form or use a default value of 10
+    k = int(request.args.get('k', 10))
+
+    # Get all available products for sale
     products = Product.get_all(True)
-    # find the products current user has bought:
+
+    # Find the products current user has bought
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
     else:
         purchases = None
-    # render the page by adding information to the index.html file
+
+    # Retrieve the top k most expensive products
+    top_k_products = Product.get_top_k_expensive(k)
+
+    # Render the page by adding information to the index.html file
     return render_template('index.html',
                            avail_products=products,
-                           purchase_history=purchases)
+                           purchase_history=purchases,
+                           top_k_products=top_k_products,
+                           k=k)  # Pass k to the template to pre-fill the input field)
 
 @bp.route('/search_results', methods = ['GET', 'POST'])
 def search_results():
