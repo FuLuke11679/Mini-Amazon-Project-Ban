@@ -53,20 +53,17 @@ ORDER BY time_added DESC
                               since=since)
         return [WishListItem(*row) for row in rows]
     
-    def add_to_wish_list (uid, pid, time_added):
-        try:
-            rows = app.db.execute("""
+    @staticmethod
+    def add(uid, pid, time_added):
+        rows = app.db.execute("""
 INSERT INTO Wishes(uid, pid, time_added)
-VALUES(:uid, :pid, :times_added)
+VALUES(:uid, :pid, :time_added)
 RETURNING id
 """,
-                                uid = uid,
-                                pid = pid,
-                                time_added = time_added)
-            id = rows[0][0]
-            return User.get(id)
-        except Exception as e:
-            # likely email already in use; better error checking and reporting needed;
-            # the following simply prints the error to the console:
-            print(str(e))
-            return None
+                                uid=uid,
+                                pid=pid,
+                                time_added=time_added)
+        id = rows[0][0]
+        return WishListItem.get(id)
+
+        
