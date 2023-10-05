@@ -5,6 +5,10 @@ import datetime
 from .models.product import Product
 from .models.purchase import Purchase
 
+
+from flask import redirect, url_for
+from flask import request
+
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
@@ -23,3 +27,10 @@ def index():
     return render_template('index.html',
                            avail_products=products,
                            purchase_history=purchases)
+
+@bp.route('/search_results', methods = ['GET', 'POST'])
+def search_results():
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        return redirect(url_for('purchases.purchases', user_id = user_id))
+    return render_template('index.html')

@@ -23,7 +23,6 @@ def humanize_time(dt):
 def wishlist():
     if (current_user.is_authenticated):
         items = WishlistItem.get_all(current_user.id)
-        #return jsonify([item.__dict__ for item in items])
         return render_template('wishlist.html',
                       items=items,
                       humanize_time=humanize_time)
