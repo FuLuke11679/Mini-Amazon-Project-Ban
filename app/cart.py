@@ -9,35 +9,41 @@ from humanize import naturaltime
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.wishlist import WishListItem
+from .models.cart import CartItem
 
 from flask import Blueprint
-bp = Blueprint('wishlist', __name__)
+bp = Blueprint('cart', __name__)
 
 def humanize_time(dt):
     return naturaltime(datatime.datetime.now() - dt)
 
-@bp.route('/wishlist')
-def wishlist():
+@bp.route('/cart')
+def cart():
     # find the products current user has wishlisted:
     if current_user.is_authenticated:
-        wisheslist = WishListItem.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-        products = Product.get_all(True)
+        cartlist = CartItem.get_all(
+            current_user.id)
     else:
         return jsonify({}), 404
     # render the page by adding information to the index.html file
-    return render_template('wishlist.html',
-                      wisheslist=wisheslist,
+    return render_template('cart.html',
+                      cartlist=cartlist,
                       humanize_time=humanize_time)
 
 
-@bp.route('/wishlist/add/<int:product_id>', methods=['POST'])
-def wishlist_add(product_id):
+@bp.route('/cart/add/<int:product_id>', methods=['POST'])
+def cart_add(product_id):
     if current_user.is_authenticated:
-        WishListItem.add(current_user.id, product_id, datetime.datetime.now())
-        flash("Item added to wishlist successfully", "success")
-        wisheslist = WishListItem.get(current_user.id)
-        return redirect(url_for('wishlist.wishlist'))
+        CartItem.add(current_user.id, product_id, datetime.datetime.now())
+        flash("Item added to cart successfully", "success")
+        cartlist = CartItem.get(current_user.id)
+        return redirect(url_for('cart.cart'))
     else:
         return jsonify({}), 404
 
+
+@bp.route('/cart/getuser/<int:user_id>', methods=['POST'])
+def cart_get(uid):
+    cartlist = CartItem.get(current_user.id)
+    return redirect(url_for('wishlist.wishlist'))
+    
