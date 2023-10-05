@@ -4,6 +4,13 @@
 
 <br><br>
 
+<h2>Search User's Cart Items</h2>
+<form action="{{ url_for('cart.cart_search') }}" method="POST">
+    <label for="user_id">User ID:</label>
+    <input type="text" id="user_id" name="user_id">
+    <input type="submit" value="Search">
+</form>
+
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -15,7 +22,7 @@
     </tr>
   </thead>
   <tbody>
-    
+
     {% for product in avail_products%}
       <tr>
         <th scope="row">{{product.id}}</th>
