@@ -15,6 +15,7 @@ faker = "^19.3.1"
 python-dotenv = "^1.0.0"
 flask = "2.3.3"
 werkzeug = "2.3.7"
+humanize = "^4.8.0"
 
 [build-system]
 requires = ["poetry-core"]

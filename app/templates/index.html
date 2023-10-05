@@ -4,6 +4,14 @@
 
 <br><br>
 
+
+<h2>Search User Purchases</h2>
+<form action="{{ url_for('index.search_results') }}" method="POST">
+    <label for="user_id">User ID:</label>
+    <input type="text" id="user_id" name="user_id">
+    <input type="submit" value="Search">
+</form>
+
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -11,18 +19,29 @@
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
+      <th scope="col">Wishlist?</th>
     </tr>
   </thead>
   <tbody>
     {% for product in avail_products%}
       <tr>
+  
+
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
+        <td><form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}"
+          method="POST">
+              <input type="submit" value="Add to Wishlist"/>
+            </form></td>
+
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
+
+
 
 <br><br>
 {% if current_user.is_authenticated %}
@@ -31,8 +50,8 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">Purchase ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Date Purchased</th>
     </tr>
   </thead>
   <tbody>

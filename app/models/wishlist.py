@@ -1,8 +1,7 @@
-from flask import current_app as app
-from flask import jsonify   
+from flask import current_app as app  
 
 
-class WishListItem:
+class WishlistItem:
     def __init__(self, id, uid, pid, time_added):
         self.id = id
         self.uid = uid
@@ -17,7 +16,7 @@ FROM Wishes
 WHERE id = :id
 ''',
                               id=id)
-        return WishListItem(*(rows[0])) if rows else None
+        return WishlistItem(*(rows[0])) if rows else None
 
     @staticmethod
     def get_all_by_uid_since(uid, since):
@@ -30,7 +29,7 @@ ORDER BY time_added DESC
 ''',
                               uid=uid,
                               since=since)
-        return [WishListItem(*row) for row in rows]
+        return [WishlistItem(*row) for row in rows]
 
 
     @staticmethod
@@ -42,7 +41,7 @@ WHERE uid = :uid
 ORDER BY time_added DESC
 ''',
                               uid=uid)
-        return [WishListItem(*row) for row in rows]
+        return [WishlistItem(*row) for row in rows]
 
 
         
