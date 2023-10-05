@@ -27,3 +27,13 @@ WHERE available = :available
 ''',
                               available=available)
         return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_amount(id):
+        rows = app.db.execute('''
+SELECT amount
+FROM Products
+WHERE id = :id
+''',
+                              id=id)
+        return Product(*(rows[0])) if rows is not None else None
