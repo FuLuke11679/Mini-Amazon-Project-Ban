@@ -32,3 +32,16 @@ uid = uid,
 since = since)
         return [Review(*row) for row in rows]
 
+    @staticmethod
+    def get_most_recent_five_by_uid(uid, since):
+        rows = app.db.execute('''
+    SELECT id, uid, pid, review, rating, time_posted
+    FROM Reviews
+    WHERE uid = :uid
+    AND time_posted >= :since
+    ORDER BY time_posted DESC
+    LIMIT 5
+    ''', 
+    uid = uid, 
+    since = since)
+        return [Review(*row) for row in rows]
