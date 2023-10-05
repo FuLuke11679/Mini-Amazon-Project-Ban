@@ -6,37 +6,40 @@ from flask import redirect, url_for
 from flask import flash
 
 from humanize import naturaltime
+from flask import current_app as app
+
 from .models.product import Product
 from .models.purchase import Purchase
-from .models.wishlist import WishListItem
+from .models.wishlist import WishlistItem
+from flask import redirect, url_for
 
 from flask import Blueprint
 bp = Blueprint('wishlist', __name__)
 
+
 def humanize_time(dt):
-    return naturaltime(datatime.datetime.now() - dt)
+    return naturaltime(datetime.datetime.now() - dt)
+
 
 @bp.route('/wishlist')
 def wishlist():
-    # find the products current user has wishlisted:
-    if current_user.is_authenticated:
-        wisheslist = WishListItem.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-        products = Product.get_all(True)
-    else:
-        return jsonify({}), 404
-    # render the page by adding information to the index.html file
-    return render_template('wishlist.html',
-                      wisheslist=wisheslist,
+    if (current_user.is_authenticated):
+        items = WishlistItem.get_all(current_user.id)
+        return render_template('wishlist.html',
+                      items=items,
                       humanize_time=humanize_time)
+
+
+    else:
+        return jsonify({}), 404 
 
 
 @bp.route('/wishlist/add/<int:product_id>', methods=['POST'])
 def wishlist_add(product_id):
     if current_user.is_authenticated:
-        WishListItem.add(current_user.id, product_id, datetime.datetime.now())
+        WishlistItem.add(current_user.id, product_id, datetime.datetime.now())
         flash("Item added to wishlist successfully", "success")
-        wisheslist = WishListItem.get(current_user.id)
+        wisheslist = WishlistItem.get(current_user.id)
         return redirect(url_for('wishlist.wishlist'))
     else:
         return jsonify({}), 404

@@ -9,7 +9,7 @@ from flask import request
 from humanize import naturaltime
 from .models.product import Product
 from .models.purchase import Purchase
-from .models.wishlist import WishListItem
+from .models.wishlist import WishlistItem
 from .models.cart import CartItem
 
 from flask import Blueprint
@@ -24,8 +24,12 @@ def cart():
     if current_user.is_authenticated:
         cartlist = CartItem.get_all(
             current_user.id)
+        return render_template('cart.html',
+                      cartlist=cartlist,
+                      humanize_time=humanize_time) 
     else:
         return jsonify({}), 404
+
      #render the page by adding information to the index.html file
 
     
