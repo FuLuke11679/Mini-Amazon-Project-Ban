@@ -13,11 +13,11 @@
     </tr>
   </thead>
   <tbody>
-    {% for item in items %}
+    {% for item in purchaseditems %}
       <tr>
-        <th scope="row">{{ item.id }}</th>
-        <td>{{ item.pid }}</td>
-        <td>{{ item.time_purchased }}</td>
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.pid}}</td>
+        <td>{{item.time_purchased}}</td>
       </tr>
     {% endfor %}
   </tbody>
