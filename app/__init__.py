@@ -24,4 +24,7 @@ def create_app():
     from .wishlist import bp as wishlist_bp
     app.register_blueprint(wishlist_bp)
 
+    from .wishlist import bp as wishlist_bp
+    app.register_blueprint(wishlist_bp, url_prefix='/wishlist')
+
     return app
