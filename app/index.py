@@ -1,6 +1,5 @@
 from flask import render_template
 from flask_login import current_user
-import datetime
 
 from .models.product import Product
 from .models.purchase import Purchase
@@ -9,9 +8,7 @@ from .models.review import Review
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
-def humanize_time(dt):
-    return naturaltime(datetime.datetime.now() - dt)
-    
+
 @bp.route('/')
 def index():
     # get all available products for sale:
@@ -32,5 +29,4 @@ def index():
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            avail_products=products,
-                           purchase_history=purchases,
-                           humanize_time=humanize_time)
+                           purchase_history=purchases)
