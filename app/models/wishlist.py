@@ -1,4 +1,5 @@
-from flask import current_app as app
+from flask import current_app as app  
+
 
 class WishlistItem:
     def __init__(self, id, uid, pid, time_added):
@@ -13,8 +14,8 @@ class WishlistItem:
 SELECT id, uid, pid, time_added
 FROM Wishes
 WHERE id = :id
-''', id=id)
-
+''',
+                              id=id)
         return WishlistItem(*(rows[0])) if rows else None
 
     @staticmethod
@@ -23,10 +24,47 @@ WHERE id = :id
 SELECT id, uid, pid, time_added
 FROM Wishes
 WHERE uid = :uid
-AND time_added >= :since
+AND time_added>= :since
 ORDER BY time_added DESC
-''', 
-uid = uid, 
-since = since)
+''',
+                              uid=uid,
+                              since=since)
+        return [WishlistItem(*row) for row in rows]
+
+    def get(id):
+        rows = app.db.execute('''
+SELECT id, uid, pid, time_added
+FROM Wishes
+WHERE id = :id
+''',
+                              id=id)
+        return WishlistItem(*(rows[0])) if rows else None
+
+    
+    @staticmethod
+    def add(uid, pid, time_added):
+        rows = app.db.execute("""
+INSERT INTO Wishes(uid, pid, time_added)
+VALUES(:uid, :pid, :time_added)
+RETURNING id
+""",
+                                uid=uid,
+                                pid=pid,
+                                time_added=time_added)
+        id = rows[0][0]
+        return WishlistItem.get(id)
+
+        
+
+
+    @staticmethod
+    def get_all(uid):
+        rows = app.db.execute('''
+SELECT id, uid, pid, time_added
+FROM Wishes
+WHERE uid = :uid
+ORDER BY time_added DESC
+''',
+                              uid=uid)
         return [WishlistItem(*row) for row in rows]
 
