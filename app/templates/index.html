@@ -11,13 +11,12 @@
 
 <br>
 
-<div style="color: aliceblue; text-align: right; margin-right: 3500px; margin-bottom: 25px;">
+<h2>Search Inventory Based On Seller ID:</h2>
   <form action="{{ url_for('inventory.inventory_view') }}" method="POST">
     <label for = "user_id">User ID: </label>
     <input type="text"  placeholder="Enter Seller ID..."  name="user_id" user_id = "user_id" />
-    <button type="submit"><i class="fa fa-search"></i></button>
   </form>
-</div>
+
 
 <h2>Search User's Cart Items</h2>
 <form action="{{ url_for('cart.cart_search') }}" method="POST">
