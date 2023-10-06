@@ -5,6 +5,7 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.review import Review
 
+import datetime
 
 
 from flask import Blueprint
