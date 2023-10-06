@@ -3,13 +3,12 @@
 {% block content %}
 
 <br><br>
-<div style="color: aliceblue; text-align: right; margin-right: 3500px; margin-bottom: 25px;">
-  <form action="{{ url_for('inventory.inventory_view') }}" method="POST">
-    <label for = "user_id">User ID: </label>
-    <input type="text"  placeholder="Enter Seller ID..."  name="user_id" user_id = "user_id" />
-    <button type="submit"><i class="fa fa-search"></i></button>
-  </form>
-</div>
+<h2>Search Sellers's Inventory</h2>
+<form action="{{ url_for('inventory.inventory_view') }}" method="POST">
+  <label for = "user_id">User ID: </label>
+  <input type="text"  placeholder="Enter Seller ID..."  name="user_id" user_id = "user_id" />
+  <input type="submit" value="Search">
+</form>
 
 <h2>Search User's Cart Items</h2>
 <form action="{{ url_for('cart.cart_search') }}" method="POST">
