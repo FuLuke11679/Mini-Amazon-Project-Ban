@@ -33,9 +33,6 @@ def create_app():
     from .inventory import bp as inventory_bp
     app.register_blueprint(inventory_bp)
 
-    from .wishlist import bp as wishlist_bp
-    app.register_blueprint(wishlist_bp)
-
     from .review import bp as review_bp
     app.register_blueprint(review_bp)
 
