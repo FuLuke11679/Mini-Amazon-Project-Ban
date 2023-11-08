@@ -5,6 +5,7 @@ from faker import Faker
 num_users = 100
 num_products = 2000
 num_purchases = 2500
+num_sellers = 20
 
 Faker.seed(0)
 fake = Faker()
@@ -81,7 +82,38 @@ def gen_reviews(num_users, available_pids):
             review = f'{profile["name"].split(" ")[0]} likes this product!'
             rating = fake.random_int(min=1, max=5)
             time_purchased = fake.date_time()
-            writer.writerow([id, uid, pid, review, str(rating), time_purchased])
+            upvotes = fake.random_int(min=0, max=num_users-1)
+            writer.writerow([id, uid, pid, review, str(rating), upvotes, time_purchased])
+        print(f'{num_users} generated')
+    return
+
+def gen_sellers_and_sellerReviews(num_sellers, num_users):
+    sellersToBe = []
+    with open('Sellers.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Sellers...', end=' ', flush=True)
+        sellersToBe = fake.random_elements(elements=[x for x in range(num_users)], length=num_sellers, unique=True)
+        
+        for i in range(len(sellersToBe)):
+            if i % 2 == 0:
+                print(f'{i}', end=" ", flush=True)
+            writer.writerow([i, sellersToBe[i]])
+        print(f'{len(sellersToBe)} generated')
+
+    with open('SellerReviews.csv', 'w') as g:
+        writer = get_csv_writer(g)
+        print('SellerReviews...', end=' ', flush=True)
+        for id in range(num_users):
+            if id % 10 == 0:
+                print(f'{id}', end=" ", flush=True)
+            uid = fake.random_int(min=0, max=num_users-1)
+            seller_uid = fake.random_element(elements=sellersToBe)
+            profile = fake.profile()
+            review = f'{profile["name"].split(" ")[0]} likes this seller!'
+            rating = fake.random_int(min=1, max=5)
+            time_purchased = fake.date_time()
+            upvotes = fake.random_int(min=0, max=num_users-1)
+            writer.writerow([id, uid, seller_uid, review, str(rating), upvotes, time_purchased])
         print(f'{num_users} generated')
     return
 
@@ -89,3 +121,4 @@ gen_users(num_users)
 available_pids = gen_products(num_products)
 gen_purchases(num_purchases, available_pids)
 gen_reviews(num_users, available_pids)
+gen_sellers_and_sellerReviews(num_sellers, num_users)
