@@ -48,7 +48,7 @@ def cart_search():
 @bp.route('/cart/add/<int:product_id>', methods=['POST'])
 def cart_add(product_id):
     if current_user.is_authenticated:
-        CartItem.add(current_user.id, product_id, datetime.datetime.now())
+        CartItem.add(current_user.id, product_id, datetime.datetime.now(), 1)
         flash("Item added to cart successfully", "success")
         cartlist = CartItem.get_all(current_user.id)
         return redirect(url_for('cart.cart'))
