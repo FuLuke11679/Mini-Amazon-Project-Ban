@@ -49,7 +49,8 @@ def gen_products(num_products):
             available = randAmount > 0 
             if available == True:
                 available_pids.append(pid)
-            writer.writerow([pid, name, price, amount, available])
+            photo_url = fake.image_url(width=640, height=480)
+            writer.writerow([pid, name, price, amount, available, photo_url])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
