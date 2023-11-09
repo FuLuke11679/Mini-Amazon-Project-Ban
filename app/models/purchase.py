@@ -26,6 +26,7 @@ FROM Purchases
 WHERE uid = :uid
 AND time_purchased >= :since
 ORDER BY time_purchased DESC
+LIMIT 5
 ''',
                               uid=uid,
                               since=since)
@@ -46,4 +47,5 @@ LIMIT :per_page OFFSET :offset
                               per_page = per_page,
                               offset=offset)
         return [Purchase(*row) for row in rows]
+
 

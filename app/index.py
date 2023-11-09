@@ -13,11 +13,15 @@ bp = Blueprint('index', __name__)
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
+    # Get page value or default 1 (for products for sale display)
+    page = int(request.args.get('page', 1))
+    
     # Get the value of K from the form or use a default value of 10
     k = int(request.args.get('k', 10))
 
     # Get all available products for sale
-    products = Product.get_all(True)
+    
+    products = Product.get_all(True, page)
 
     # Find the products current user has bought
     if current_user.is_authenticated:
@@ -33,8 +37,9 @@ def index():
     top_k_products = Product.get_top_k_expensive(k)
 
     return render_template('index.html',
+                           page=page,
                            avail_products=products,
-                           purchase_history=purchases,
+                           recent_purchase_history=purchases,
                            top_k_products=top_k_products,
                            k=k)  # Pass k to the template to pre-fill the input field)
 
