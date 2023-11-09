@@ -13,7 +13,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for item in purchaseditems %}
+    {% for item in purchasedItems %}
       <tr>
         <th scope="row">{{item.id}}</th>
         <td>{{item.pid}}</td>
@@ -22,5 +22,8 @@
     {% endfor %}
   </tbody>
 </table>
+
+<a href="{{ url_for('purchases.purchases', user_id=user_id, page=page-1) }}">Backward</a>
+<a href="{{ url_for('purchases.purchases', user_id=user_id, page=page+1) }}">Forward</a>
 
 {% endblock %}
