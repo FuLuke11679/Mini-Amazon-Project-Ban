@@ -18,14 +18,16 @@ bp = Blueprint('cart', __name__)
 def humanize_time(dt):
     return naturaltime(datatime.datetime.now() - dt)
 
-@bp.route('/cart')
-def cart():
+@bp.route('/cart/<int:user_id>/<int:page>', methods = ['GET'])
+def cart(user_id, page):
     # find the products current user has wishlisted:
     if current_user.is_authenticated:
         cartlist = CartItem.get_all(
-            current_user.id)
+            current_user.id, page = page, per_page = 10)
         return render_template('cart.html',
                       cartlist=cartlist,
+                      user_id = user_id,
+                      page = page,
                       humanize_time=humanize_time) 
     else:
         return jsonify({}), 404
@@ -37,11 +39,13 @@ def cart():
 def cart_search():
     if request.method == 'POST':
         user_id = request.form['user_id']
-        cartlist = CartItem.get_all(user_id)
+        page = int(request.form.get('page', 1))
+        cartlist = CartItem.get_all(user_id, page)
         return render_template('cart.html',
                       cartlist=cartlist,
                       humanize_time=humanize_time,
-                      user_id = user_id) 
+                      user_id = user_id,
+                      page = page) 
     else:
         return render_template('cart.html')
 
