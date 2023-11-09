@@ -5,6 +5,7 @@ from faker import Faker
 num_users = 100
 num_products = 2000
 num_purchases = 2500
+num_sellers = 20
 num_wishlistitems = 2200
 
 Faker.seed(0)
@@ -85,7 +86,26 @@ def gen_Carts(num_wishlistitems, available_pids):
     return
 
 
+def gen_reviews(num_users, available_pids):
+    with open('Reviews.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Reviews...', end=' ', flush=True)
+        for id in range(num_users):
+            if id % 10 == 0:
+                print(f'{id}', end=" ", flush=True)
+            uid = fake.random_int(min=0, max=num_users-1)
+            pid = fake.random_element(elements=available_pids)
+            profile = fake.profile()
+            review = f'{profile["name"].split(" ")[0]} likes this product!'
+            rating = fake.random_int(min=1, max=5)
+            time_purchased = fake.date_time()
+            writer.writerow([id, uid, pid, review, str(rating), time_purchased])
+        print(f'{num_users} generated')
+    return
+
 gen_users(num_users)
 available_pids = gen_products(num_products)
 gen_purchases(num_purchases, available_pids)
+gen_reviews(num_users, available_pids)
+gen_sellers_and_sellerReviews(num_sellers, num_users)
 gen_Carts(num_purchases, available_pids)
