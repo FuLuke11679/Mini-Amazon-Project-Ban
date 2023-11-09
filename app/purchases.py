@@ -16,19 +16,20 @@ bp = Blueprint('purchases', __name__)
 
 from humanize import naturaltime
 
-@bp.route('/purchases/<int:user_id>', methods = ['GET'])
-def purchases(user_id):
-    purchasedItems = Purchase.get_all(user_id)
+@bp.route('/purchases/<int:user_id>/<int:page>', methods = ['GET'])
+def purchases(user_id, page):
+    purchasedItems = Purchase.get_all(user_id, page = page, per_page=20)
     return render_template('purchases.html',
-                    items=purchasedItems, user_id = user_id)
+                    purchasedItems=purchasedItems, user_id = user_id, page = page)
     
 @bp.route('/purchases_search', methods = ['GET', 'POST'])
 def purchases_search():
     if request.method == 'POST':
         user_id = request.form['user_id']
-        purchasedItems = Purchase.get_all(user_id)
+        page = int(request.form.get('page', 1))
+        purchasedItems = Purchase.get_all(user_id, page)
         return render_template('purchases.html',
-                      purchaseditems=purchasedItems, user_id = user_id) 
+                      purchasedItems=purchasedItems, user_id = user_id, page = page) 
     else:
         return render_template('purchases.html')
     
