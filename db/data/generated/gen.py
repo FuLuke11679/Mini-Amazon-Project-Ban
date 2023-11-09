@@ -6,10 +6,7 @@ num_users = 100
 num_products = 2000
 num_purchases = 2500
 num_sellers = 20
-<<<<<<< HEAD
 num_wishlistitems = 2200
-=======
->>>>>>> 10a6f76 (sellers exists and upvotes!)
 
 Faker.seed(0)
 fake = Faker()
@@ -137,13 +134,10 @@ def gen_sellers_and_sellerReviews(num_sellers, num_users):
         print(f'{num_users} generated')
     return
 
+
 gen_users(num_users)
 available_pids = gen_products(num_products)
 gen_purchases(num_purchases, available_pids)
 gen_reviews(num_users, available_pids)
-<<<<<<< HEAD
 gen_sellers_and_sellerReviews(num_sellers, num_users)
 gen_Carts(num_purchases, available_pids)
-=======
-gen_sellers_and_sellerReviews(num_sellers, num_users)
->>>>>>> 10a6f76 (sellers exists and upvotes!)
