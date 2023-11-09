@@ -6,6 +6,8 @@ num_users = 100
 num_products = 2000
 num_purchases = 2500
 num_wishlistitems = 2200
+num_sellers = 20
+num_inventory = 1000
 
 Faker.seed(0)
 fake = Faker()
@@ -83,8 +85,38 @@ def gen_Carts(num_wishlistitems, available_pids):
         print(f'{num_wishlistitems} generated')
     return
 
+def gen_sellers(num_sellers):
+    available_sellers = []
+    with open('Sellers.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Sellers...', end=' ', flush=True)    
+        for uid in range(num_sellers):
+            if uid % 10 == 0:
+                print(f'{uid}', end=' ', flush=True)
+            uid = fake.random_int(min=0, max=num_users-1)
+            available_sellers.append(uid)
+            writer.writerow([uid])
+        print(f'{num_users} generated')
+    return available_sellers
+            
+
+def gen_inventory(num_inventory, available_pids, available_sellers):
+    with open('Inventory.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Inventory...', end=' ', flush=True)
+        for id in range(num_inventory):
+            if id % 10 == 0:
+                print(f'{id}', end=' ', flush=True)
+            uid = fake.random_element(elements=available_sellers)
+            pid = fake.random_element(elements=available_pids)
+            time_purchased = fake.date_time()
+            writer.writerow([id, uid, pid, time_purchased])
+        print(f'{num_purchases} generated')
+    return
 
 gen_users(num_users)
 available_pids = gen_products(num_products)
 gen_purchases(num_purchases, available_pids)
 gen_Carts(num_purchases, available_pids)
+available_sellers = gen_sellers(num_sellers)
+gen_inventory(num_inventory, available_pids, available_sellers)
