@@ -4,9 +4,12 @@ from flask import redirect, url_for
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.review import Review
+from humanize import naturaltime
 
 import datetime
 
+def humanize_time(dt):
+    return naturaltime(datetime.datetime.now() - dt)
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -49,3 +52,14 @@ def search_results():
         user_id = request.form['user_id']
         return redirect(url_for('purchases.purchases', user_id = user_id))
     return render_template('index.html')
+
+
+@bp.route('/product/<int:product_id>', methods=['GET'])
+def product_page(product_id):
+    current_product = Product.get(product_id)
+    associated_reviews = Review.get_all_by_uid_since(product_id, 
+                            datetime.datetime(1980, 9, 14, 0, 0, 0))
+    return render_template('productsPage.html', 
+                            current_product=current_product,
+                            associated_reviews=associated_reviews,
+                            humanize_time=humanize_time)

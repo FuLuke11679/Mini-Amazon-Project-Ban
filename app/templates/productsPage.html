@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+Product ID: {{current_product.id}}
+<br><br>
+Product Name: {{current_product.name}}
+<br><br>
+Product Img: <img src="{{current_product.photo_url}}" alt="{{current_product.name}}">
+<br><br>
+Reviews for this Product:
+<br><br>
+
+<table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Product ID</th>
+        <th scope="col">Review</th>
+        <th scope="col">Rating (out of 5 stars)</th>
+        <th scope="col">Date Added</th>
+        <th scope="col">Upvotes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in associated_reviews%}
+        <tr>
+          <th scope="row">{{r.pid}}</th>
+          <td>{{r.review}}<form action="{{ url_for('review.review_delete', product_id=r.pid)  }}" method="POST">
+            <input type="submit" value="Delete Review"/>
+          </form></td>
+          <td>{{r.rating}}</td>
+          <td>{{humanize_time(r.time_posted)}}</td>
+          <td>{{r.upvotes}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
