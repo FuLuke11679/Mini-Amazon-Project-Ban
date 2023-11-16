@@ -1,6 +1,7 @@
 from flask import render_template, request
 from flask_login import current_user
 from flask import redirect, url_for
+from .models.user import User
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.review import Review
@@ -57,9 +58,12 @@ def search_results():
 @bp.route('/product/<int:product_id>', methods=['GET'])
 def product_page(product_id):
     current_product = Product.get(product_id)
-    associated_reviews = Review.get_all_by_uid_since(product_id, 
-                            datetime.datetime(1980, 9, 14, 0, 0, 0))
+    current_seller = User.get(current_product.seller_id)
+    associated_reviews = Review.get_by_product(product_id)
+    # print(product_id)
+    # print(associated_reviews.review)
     return render_template('productsPage.html', 
                             current_product=current_product,
                             associated_reviews=associated_reviews,
-                            humanize_time=humanize_time)
+                            humanize_time=humanize_time,
+                            current_seller=current_seller)

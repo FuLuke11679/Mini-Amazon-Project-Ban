@@ -136,15 +136,15 @@ def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
         for i in range(num_users):
             poss_pids = fake.random_elements(elements=available_pids, length=num_reviews_per_user, unique=True)
             for j in range(num_reviews_per_user):
-                if (((i*num_users) + j) % 100 == 0):
-                    print(f'{((i*num_users) + j)}', end=" ", flush=True)
+                if (((i*num_reviews_per_user) + j) % 100 == 0):
+                    print(f'{((i*num_reviews_per_user) + j)}', end=" ", flush=True)
                 uid = i
                 pid = poss_pids[j]
                 review = f'{users[i]["firstname"]} likes this product!'
                 rating = fake.random_int(min=1, max=5)
                 time_purchased = fake.date_time()
                 upvotes = fake.random_int(min=0, max=num_users-1)
-                writer.writerow([((i*num_users) + j) , uid, pid, review, rating, upvotes, time_purchased])
+                writer.writerow([((i*num_reviews_per_user) + j) , uid, pid, review, rating, upvotes, time_purchased])
         print(f'{num_reviews} generated')
     return
 
@@ -156,15 +156,15 @@ def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sell
         for i in range(num_sellers):
             #poss_ids = fake.random_element(elements=available_sellers, length=num_reviews_per_seller, unique=true)
             for j in range(num_reviews_per_seller):
-                if (((i*num_sellers) + j) % 200 == 0):
-                    print(f'{((i*num_sellers) + j)}', end=" ", flush=True)
+                if (((i*num_reviews_per_seller) + j) % 200 == 0):
+                    print(f'{((i*num_reviews_per_seller) + j)}', end=" ", flush=True)
                 uid = i
                 seller_uid = available_sellers[i]
                 review = f'{users[i]["firstname"]} likes this seller!'
                 rating = fake.random_int(min=1, max=5)
                 time_purchased = fake.date_time()
                 upvotes = fake.random_int(min=0, max=num_users-1)
-                writer.writerow([((i*num_users) + j), uid, seller_uid, review, str(rating), upvotes, time_purchased])
+                writer.writerow([((i*num_reviews_per_seller) + j), uid, seller_uid, review, str(rating), upvotes, time_purchased])
         print(f'{num_sellerReviews} generated')
     return
 

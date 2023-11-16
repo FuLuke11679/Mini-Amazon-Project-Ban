@@ -46,3 +46,14 @@ since = since)
     uid = uid, 
     since = since)
         return [Review(*row) for row in rows]
+
+    @staticmethod
+    def get_by_product(pid):
+        rows = app.db.execute('''
+            SELECT *
+            FROM Reviews
+            WHERE pid = :pid
+            ''', pid=pid
+        )
+
+        return  [Review(*row) for row in rows] if rows else None
