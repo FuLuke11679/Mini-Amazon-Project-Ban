@@ -57,3 +57,33 @@ since = since)
         )
 
         return  [Review(*row) for row in rows] if rows else None
+
+    @staticmethod
+    def get_top_3_helpful(pid):
+        rows = app.db.execute('''
+            SELECT *
+            FROM Reviews
+            WHERE pid = :pid
+            ORDER BY upvotes DESC, time_posted DESC
+            LIMIT 3
+            ''', pid=pid
+        )
+
+        return  [Review(*row) for row in rows] if rows else None
+
+    @staticmethod
+    def get_reviews_minus_top_3(pid):
+        rows = app.db.execute('''
+            SELECT * FROM Reviews
+            WHERE pid = :pid
+            EXCEPT
+            (SELECT *
+            FROM Reviews
+            WHERE pid = :pid
+            ORDER BY upvotes DESC, time_posted DESC
+            LIMIT 3)
+            ORDER BY time_posted DESC
+            ''', pid=pid
+        )
+
+        return  [Review(*row) for row in rows] if rows else None

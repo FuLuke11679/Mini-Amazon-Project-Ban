@@ -22,10 +22,44 @@ Reviews for this Product: <form action="{{ url_for('review.review')  }}" method=
 Reviews for this Product: 
 {% endif %}
 <br><br>
-{% if associated_reviews is none %}
-Looks like no one has left any reviews! Be the first!
-{% else %}
 
+{% if top_3_reviews is not none %}
+Most Helpful Reviews For This Product:
+<br><br>
+
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Review</th>
+      <th scope="col">Rating (out of 5 stars)</th>
+      <th scope="col">Date Added</th>
+      <th scope="col">Upvotes</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    
+    {% for s in top_3_reviews %}
+    <tr>
+      <th scope="row">{{s.pid}}</th>
+      <td>{{s.review}}<form action="{{ url_for('review.review_delete', product_id=s.pid)  }}" method="POST">
+        <input type="submit" value="Delete Review"/>
+      </form></td>
+      <td>{{s.rating}}</td>
+      <td>{{humanize_time(s.time_posted)}}</td>
+      <td>{{s.upvotes}}</td>
+    </tr>
+  {% endfor %}
+   
+  </tbody>
+</table>
+{% else %}
+Looks like no one has left any reviews! Be the first!
+{% endif %}
+
+{% if associated_reviews is not none %}
+Other Recent Reviews:
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
       <tr>

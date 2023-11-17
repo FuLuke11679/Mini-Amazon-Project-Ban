@@ -59,11 +59,14 @@ def search_results():
 def product_page(product_id):
     current_product = Product.get(product_id)
     current_seller = User.get(current_product.seller_id)
-    associated_reviews = Review.get_by_product(product_id)
+    top_3_reviews = Review.get_top_3_helpful(product_id)
+    print(top_3_reviews)
+    associated_reviews = Review.get_reviews_minus_top_3(product_id)
     # print(product_id)
     # print(associated_reviews.review)
     return render_template('productsPage.html', 
                             current_product=current_product,
+                            top_3_reviews=top_3_reviews,
                             associated_reviews=associated_reviews,
                             humanize_time=humanize_time,
                             current_seller=current_seller)

@@ -122,13 +122,16 @@ def gen_inventory(num_inventory, available_pids, available_sellers):
         print(f'{num_inventory} generated')
     return
 
-#num_reviews_per_user = 20
-#num_users = 100
-#99 
-#num_reviews = 20 * 100 = 2000
-#   gen_reviews(users, num_reviews_per_user, num_users, available_pids)
-# should be 20 * 5
 def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
+    reviewDict = {
+        "1": "abhors",
+        "2": "hates",
+        "3": "could care less either way about",
+        "4": "likes",
+        "5": "adores"
+    }
+
+
     with open('Reviews.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Reviews...', end=' ', flush=True)
@@ -140,8 +143,8 @@ def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
                     print(f'{((i*num_reviews_per_user) + j)}', end=" ", flush=True)
                 uid = i
                 pid = poss_pids[j]
-                review = f'{users[i]["firstname"]} likes this product!'
                 rating = fake.random_int(min=1, max=5)
+                review = f'{users[i]["firstname"]} {reviewDict[str(rating)]} this product!'
                 time_purchased = fake.date_time()
                 upvotes = fake.random_int(min=0, max=num_users-1)
                 writer.writerow([((i*num_reviews_per_user) + j) , uid, pid, review, rating, upvotes, time_purchased])
@@ -149,6 +152,14 @@ def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
     return
 
 def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sellers):
+    reviewDict = {
+        "1": "abhors",
+        "2": "hates",
+        "3": "could care less either way about",
+        "4": "likes",
+        "5": "adores"
+    }
+
     with open('SellerReviews.csv', 'w') as g:
         writer = get_csv_writer(g)
         print('SellerReviews...', end=' ', flush=True)
@@ -160,8 +171,8 @@ def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sell
                     print(f'{((i*num_reviews_per_seller) + j)}', end=" ", flush=True)
                 uid = i
                 seller_uid = available_sellers[i]
-                review = f'{users[i]["firstname"]} likes this seller!'
                 rating = fake.random_int(min=1, max=5)
+                review = f'{users[i]["firstname"]} {reviewDict[str(rating)]} this seller!'
                 time_purchased = fake.date_time()
                 upvotes = fake.random_int(min=0, max=num_users-1)
                 writer.writerow([((i*num_reviews_per_seller) + j), uid, seller_uid, review, str(rating), upvotes, time_purchased])
