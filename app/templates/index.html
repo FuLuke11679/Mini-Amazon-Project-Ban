@@ -4,33 +4,6 @@
 
 <br><br>
 
-<h2>Search for 5 user feedback based on ID:</h2>
-<form action="{{ url_for('review.review') }}" type="submit" method="POST">
-   <input type="text" id="searchReviewId" name="searchReviewChoice" placeholder="Input User ID To Get Reviews Here">
-</form>
-
-<br>
-
-<h2>Search Inventory Based On Seller ID:</h2>
-  <form action="{{ url_for('inventory.inventory_view') }}" method="POST">
-    <label for = "user_id">Seller ID: </label>
-    <input type="text"  placeholder="Enter Seller ID..."  name="user_id" user_id = "user_id" />
-  </form>
-
-
-<h2>Search User's Cart Items</h2>
-<form action="{{ url_for('cart.cart_search') }}" method="POST">
-    <label for="user_id">User ID:</label>
-    <input type="text" id="user_id" name="user_id">
-    <input type="submit" value="Search">
-</form>
-
-<h2>Search User Purchases</h2>
-<form action="{{ url_for('purchases.purchases_search') }}" method="POST">
-    <label for="user_id">User ID:</label>
-    <input type="text" id="user_id" name="user_id">
-    <input type="submit" value="Search">
-</form>
 
 <h2>Products for sale:</h2>
 <div class="container">
