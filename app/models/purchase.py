@@ -26,6 +26,7 @@ FROM Purchases
 WHERE uid = :uid
 AND time_purchased >= :since
 ORDER BY time_purchased DESC
+LIMIT 5
 ''',
                               uid=uid,
                               since=since)
@@ -33,13 +34,18 @@ ORDER BY time_purchased DESC
 
 
     @staticmethod
-    def get_all(uid):
+    def get_all(uid, page=1, per_page=20):
+        offset = (page-1) * per_page
         rows = app.db.execute('''
 SELECT id, uid, pid, time_purchased
 FROM Purchases
 WHERE uid = :uid
 ORDER BY time_purchased DESC
+LIMIT :per_page OFFSET :offset
 ''',
-                              uid=uid)
+                              uid=uid,
+                              per_page = per_page,
+                              offset=offset)
         return [Purchase(*row) for row in rows]
+
 

@@ -23,13 +23,18 @@ WHERE id = :id
         return Product(*(rows[0])) if rows is not None else None
 
     @staticmethod
-    def get_all(available=True):
+    def get_all(available=True, page=1, per_page=10):
+        offset = (page-1) * per_page
         rows = app.db.execute('''
 SELECT id, name, price, amount, available, photo_url
 FROM Products
 WHERE available = :available
+LIMIT :per_page OFFSET :offset
+
 ''',
-                              available=available)
+                              available=available, 
+                              per_page = per_page, 
+                              offset = offset)
         return [Product(*row) for row in rows]
 
     @staticmethod
