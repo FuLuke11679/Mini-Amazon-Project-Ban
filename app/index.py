@@ -12,7 +12,7 @@ bp = Blueprint('index', __name__)
 def index():
     # Get all available products for sale
     
-    products = Product.get_all(True, page)
+    products = Product.get_all(True)
 
     # Find the products current user has bought
     if current_user.is_authenticated:
@@ -25,7 +25,7 @@ def index():
         reviews = None
 
     return render_template('index.html',
-                           avail_products=products
+                           avail_products=products,
                            purchase_history=purchases,
                            reviews=reviews)  # Removed the top k products and k variable
 
