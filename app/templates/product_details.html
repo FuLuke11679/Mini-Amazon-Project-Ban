@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Product Details</title>
+</head>
+<body>
+   <h1>Product Details</h1>
+   <h2 id="product-name">{{ product.name }}</h2>
+   <p><strong>ID:</strong> {{ product.id }}</p>
+   <p><strong>Price:</strong> ${{ product.price }}</p>
+   <p><strong>Amount:</strong> {{ product.amount }}</p>
+   <p><strong>Available:</strong> {% if product.available %}Yes{% else %}No{% endif %}</p>
+   <img src="{{ product.photo_url }}" alt="{{ product.name }}" width="300">
+   <!-- Other product details can be displayed here -->
+</body>
+</html>

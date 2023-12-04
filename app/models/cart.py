@@ -49,14 +49,18 @@ RETURNING id
 
     
     @staticmethod
-    def get_all(uid):
+    def get_all(uid, page=1, per_page=10):
+        offset = (page-1) * per_page
         rows = app.db.execute('''
 SELECT id, uid, pid, time_added, quantity
 FROM Carts
 WHERE uid = :uid
 ORDER BY time_added DESC
+LIMIT :per_page OFFSET :offset
 ''',
-                              uid=uid)
+                              uid=uid,
+                              per_page = per_page,
+                              offset=offset)
         return [CartItem(*row) for row in rows]
     
     @staticmethod

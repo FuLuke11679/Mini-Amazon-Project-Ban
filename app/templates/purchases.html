@@ -13,7 +13,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for item in purchaseditems %}
+    {% for item in purchasedItems %}
       <tr>
         <th scope="row">{{item.id}}</th>
         <td>{{item.pid}}</td>
@@ -22,5 +22,13 @@
     {% endfor %}
   </tbody>
 </table>
+
+{% if page > 1 %}
+<a href="{{ url_for('purchases.purchases', user_id=user_id, page=page-1) }}">Previous</a>
+{% endif %}
+
+{% if purchasedItems|length == 20 %}
+<a href="{{ url_for('purchases.purchases', user_id=user_id, page=page+1) }}">Next</a>
+{% endif %}
 
 {% endblock %}

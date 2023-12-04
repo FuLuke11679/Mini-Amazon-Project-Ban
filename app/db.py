@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, text
 class DB:
     """Hosts all functions for querying the database.
 
-    Use the execute() method if you want to execute a single SQL
+    Use the execute() method if you waant to execute a single SQL
     statement (which will be in a transaction by itself.
 
     If you want to execute multiple SQL statements in the same

@@ -32,6 +32,8 @@ def review():
     sItems = SellerReview.get_all_by_uid_since(
                     idToUse, datetime.datetime(1980, 9, 14, 0, 0, 0))
     
+    for review in items:
+        print(review.upvotes)
 
     return render_template('review.html',
                     reviews=items,
