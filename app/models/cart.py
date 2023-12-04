@@ -20,7 +20,21 @@ WHERE id = :id
         return CartItem(*(rows[0])) if rows else None
     @staticmethod
     def add(uid, pid, time_added, quantity):
-        rows = app.db.execute("""
+        try:
+            rows = app.db.execute("""
+UPDATE Carts
+SET quantity = quantity + :quantity
+WHERE uid = :uid AND pid = :pid
+""",
+                                    uid=uid,
+                                    pid=pid,
+                                    time_added=time_added,
+                                    quantity = quantity
+                                    )
+            if rows.rowcount > 0:
+                return CartItem.get(id)
+        except Exception as e: 
+            rows = app.db.execute("""
 INSERT INTO Carts(uid, pid, time_added, quantity)
 VALUES(:uid, :pid, :time_added, :quantity)
 RETURNING id
@@ -30,8 +44,9 @@ RETURNING id
                                 time_added=time_added,
                                 quantity = quantity
                                 )
-        id = rows[0][0]
-        return CartItem.get(id)
+            id = rows[0][0]
+            return CartItem.get(id)
+
     
     @staticmethod
     def get_all(uid):

@@ -17,7 +17,7 @@ WHERE id = :id
 ''',
                               id=id)
         return Product(*(rows[0])) if rows is not None else None
-
+    
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
@@ -45,3 +45,5 @@ WHERE id = :id
         LIMIT :k
     ''', k=k)
         return [Product(*row) for row in rows]
+    
+    
