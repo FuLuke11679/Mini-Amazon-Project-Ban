@@ -6,30 +6,35 @@
 
 
 <h2>Products for sale:</h2>
-<div class="container">
-  <div class="row">
-    {% for product in avail_products %}
-      <div class="col-md-3 mb-4">
-        <!-- Wrap the card in an anchor tag with the product_id as a query parameter -->
-        <a href="{{ url_for('index.product_details', product_id=product.id) }}" class="card-link">
-          <div class="card">
-            <!-- Product Image -->
-            <img src="{{ product.photo_url }}" alt="{{ product.name }}" class="card-img-top">
-            <div class="card-body">
-              <h5 class="card-title">{{ product.name }}</h5>
-              <p class="card-text">Price: {{ product.price }}</p>
-              <!-- Display Quantity Available -->
-              <p class="card-text">Available: {{ product.amount }}</p>
-              <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
-                <input type="submit" class="btn btn-primary" value="Add to Wishlist"/>
-              </form>
-              <form action="{{ url_for('cart.cart_add', product_id=product.id) }}" method="POST">
-                <input type="submit" class="btn btn-secondary" value="Add to Cart"/>
-              </form>
-            </div>
-          </div>
-        </a>
-      </div>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Save/Add To Cart</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for product in avail_products%}
+      <tr>
+        <th scope="row">{{product.id}}</th>
+        <td>{{product.name}}<form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
+            <input type="submit" value="Add to Wishlist"/>
+          </form></td>
+        <td>{{product.price}}</td>
+        <td>
+          <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}"
+          method="POST">
+          <input type="submit" value="Add to Wishlist"/>
+          </form>
+          <form action = "{{ url_for('cart.cart_add', product_id=product.id) }}" method="POST">
+            <input type="number" id="quantityInput" name="quantityChoice" min="1" max="99" value="1">
+            <input type="submit" value="Add to Cart"/>
+        </form>
+        </td>
+      </tr>
     {% endfor %}
   </div>
 </div>

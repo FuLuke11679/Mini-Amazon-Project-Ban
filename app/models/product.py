@@ -21,7 +21,7 @@ WHERE id = :id
 ''',
                               id=id)
         return Product(*(rows[0])) if rows is not None else None
-
+    
     @staticmethod
     def get_all(available=True, page=1, per_page=10):
         offset = (page-1) * per_page
@@ -46,5 +46,13 @@ WHERE id = :id
 ''',
                               id=id)
         return Product(*(rows[0])) if rows is not None else None
-        
-
+    def get_top_k_expensive(k):
+        rows = app.db.execute('''
+        SELECT id, name, price, available
+        FROM Products
+        ORDER BY price DESC
+        LIMIT :k
+    ''', k=k)
+        return [Product(*row) for row in rows]
+    
+    
