@@ -58,4 +58,19 @@ ORDER BY time_added DESC
 ''',
                               uid=uid)
         return [CartItem(*row) for row in rows]
+    
+    @staticmethod
+    def display_num(uid, num_rows, offset):
+        times = offset*num_rows
+        rows = app.db.execute('''
+SELECT id, uid, pid, time_added, quantity
+FROM CARTS
+WHERE uid = :uid
+ORDER BY time_added DESC
+LIMIT :num_rows OFFSET :times
+''',
+                              uid=uid,
+                              num_rows = num_rows,
+                              times = times)
+        return [CartItem(*row) for row in rows]
 

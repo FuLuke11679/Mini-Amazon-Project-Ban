@@ -105,7 +105,7 @@ def cart_add(product_id):
         quantity = request.form.get('quantityChoice')
         CartItem.add(current_user.id, product_id, datetime.datetime.now(), quantity)
         flash("Item added to cart successfully", "success")
-        cartlist = CartItem.get_all(current_user.id)
+        cartlist = CartItem.display_num(current_user.id, 5, 1)
         return redirect(url_for('cart.cart'))
     else:
         return jsonify({}), 404
