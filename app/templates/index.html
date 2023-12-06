@@ -4,6 +4,33 @@
 
 <br><br>
 
+<h2>Search for 5 user feedback based on ID:</h2>
+<form action="{{ url_for('review.review') }}" type="submit" method="POST">
+   <input type="text" id="searchReviewId" name="searchReviewChoice" placeholder="Input User ID To Get Reviews Here">
+</form>
+
+<br>
+
+<h2>Search Inventory Based On Seller ID:</h2>
+  <form action="{{ url_for('inventory.inventory_view') }}" method="POST">
+    <label for = "user_id">Seller ID: </label>
+    <input type="text"  placeholder="Enter Seller ID..."  name="user_id" user_id = "user_id" />
+  </form>
+
+
+<h2>Search User's Cart Items</h2>
+<form action="{{ url_for('cart.cart_search') }}" method="POST">
+    <label for="user_id">User ID:</label>
+    <input type="text" id="user_id" name="user_id">
+    <input type="submit" value="Search">
+</form>
+
+<h2>Search User Purchases</h2>
+<form action="{{ url_for('purchases.purchases_search') }}" method="POST">
+    <label for="user_id">User ID:</label>
+    <input type="text" id="user_id" name="user_id">
+    <input type="submit" value="Search">
+</form>
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
@@ -36,30 +63,25 @@
         </td>
       </tr>
     {% endfor %}
-  </div>
-</div>
+  </tbody>
+</table>
 
-
-
-{% if avail_products|length == 10 %}
-<a href="{{ url_for('index.index') }}">Next</a>
-{% endif %}
 
 
 
 <br><br>
 {% if current_user.is_authenticated %}
-<h2>Your most recent purchases:</h2>
+<h2>Your DFAFASDFAFAt purchases:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">Purchase ID</th>
-      <th scope="col">Product Id</th>
+      <th scope="col">Product ID</th>
       <th scope="col">Time Purchased</th>
     </tr>
   </thead>
   <tbody>
-    {% for purchase in recent_purchase_history%}
+    {% for purchase in purchase_history%}
       <tr>
         <th scope="row">{{purchase.id}}</th>
         <td>{{purchase.pid}}<form action="{{ url_for('review.review_add', product_id = purchase.pid) }}" method="POST">

@@ -18,7 +18,10 @@ CREATE TABLE Products (
     price DECIMAL(12,2) NOT NULL,
     amount INT NOT NULL,
     available BOOLEAN DEFAULT TRUE,
-    photo_url VARCHAR(255) -- Adding a new column for the photo URL
+    photo_url VARCHAR(255), -- Adding a new column for the photo URL
+    seller_id INT NOT NULL REFERENCES Users(id),
+    longDescription VARCHAR(3000) NOT NULL,
+    tag VARCHAR(20) CHECK (tag IN ('Groceries', 'Basics', 'Music', 'Books', 'Tech', 'Pharmacy', 'Fashion'))
 );
 
 CREATE TABLE Purchases (
