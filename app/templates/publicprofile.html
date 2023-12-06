@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<h2>User</h2>
+{% if current_user.is_authenticated %}
+<table class='table table-hover table-bordered container'>
+ <thead class="thead-dark">
+   <tr>
+     <th scope="col">ID</th>
+     <th scope="col">Email</th>
+     <th scope="col">First Name</th>
+     <th scope="col">Last Name</th>
+     <th scope="col">Address</th>
+     <th scope="col">Balance</th>
+   </tr>
+ </thead>
+ <tbody>
+   <tr>
+       <th scope="row">{{ current_user.id }}</th>
+       <td>{{ current_user.email }}</td>
+       <td>{{ current_user.firstname }}</td>
+       <td>{{ current_user.lastname }}</td>
+       <td>{{ current_user.address }}</td>
+       <td>{{ current_user.balance }}</td>
+   </tr>
+
+   <form action="{{ url_for('users.register') }}" method="get">
+    <button type="submit" class="btn btn-primary">Update Profile</button>
+  </form>
+
+ </tbody>
+</table>
+{% else %}
+ <p>User not authenticated. Please log in.</p>
+
+
+{% endif %}
+
+
+{% endblock %}

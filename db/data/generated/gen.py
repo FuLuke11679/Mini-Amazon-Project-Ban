@@ -18,29 +18,29 @@ fake = Faker()
 
 
 def get_csv_writer(f):
-    return csv.writer(f, quoting=csv.QUOTE_NONE, dialect='unix')
+    return csv.writer(f, quoting=csv.QUOTE_MINIMAL, dialect='unix')
 
 
 def gen_users(num_users):
-    users = []
-    with open('Users.csv', 'w') as f:
-        writer = get_csv_writer(f)
-        print('Users...', end=' ', flush=True)
-        for uid in range(num_users):
-            if uid % 10 == 0:
-                print(f'{uid}', end=' ', flush=True)
-            profile = fake.profile()
-            email = profile['mail']
-            plain_password = f'pass{uid}'
-            password = generate_password_hash(plain_password)
-            name_components = profile['name'].split(' ')
-            firstname = name_components[0]
-            lastname = name_components[-1]
-            row = [uid, email, password, firstname, lastname]
-            writer.writerow(row)
-            users.append({"uid":uid, "email":email,"password":password,"firstname":firstname,"lastname":lastname})
-        print(f'{num_users} generated')
-    return(users)
+   with open('Users.csv', 'w') as f:
+       writer = get_csv_writer(f)
+       print('Users...', end=' ', flush=True)
+       for uid in range(num_users):
+           if uid % 10 == 0:
+               print(f'{uid}', end=' ', flush=True)
+           profile = fake.profile()
+           email = profile['mail']
+           plain_password = f'pass{uid}'
+           password = generate_password_hash(plain_password)
+           name_components = profile['name'].split(' ')
+           firstname = name_components[0]
+           lastname = name_components[-1]
+           address = profile['address']
+           balance = 0
+           writer.writerow([uid, email, password, firstname, lastname, address, balance])
+       print(f'{num_users} generated')
+   return
+   
 
 
 def gen_products(num_products, available_sellers):

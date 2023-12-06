@@ -5,6 +5,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
+
+from wtforms.fields.simple import HiddenField
+
+
 from .models.user import User
 
 
@@ -25,27 +29,64 @@ def login():
         return redirect(url_for('index.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.get_by_auth(form.email.data, form.password.data)
-        if user is None:
-            flash('Invalid email or password')
-            return redirect(url_for('users.login'))
-        login_user(user)
-        next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index.index')
+        user, message = User.get_by_auth(form.email.data, form.password.data)
+        if user:
+            login_user(user)
+            next_page = request.args.get('next')
+            if not next_page or url_parse(next_page).netloc != '':
+                next_page = url_for('index.index')
+                return redirect(next_page)
 
-        return redirect(next_page)
+        else:
+            flash(message, 'error')  
+            return redirect(url_for('users.login'))
+
+        
     return render_template('login.html', title='Sign In', form=form)
+
+class UpdateInfoForm(FlaskForm):
+    def validate_balance(form, field):
+       if field.data and int(field.data) < 0:
+           raise ValidationError('Balance must be non-negative!')
+    #only update to balance of 0 or positive
+
+    def validate_email(self, email):
+        if email.data:
+            if email.data != current_user.email and User.email_exists(email.data):
+                raise ValidationError('Email is already in use. Choose a different one.')
+
+    firstname = StringField('First Name')
+    lastname = StringField('Last Name')
+    email = StringField('Email')
+    address = StringField('Address')
+    balance = StringField('Balance', validators = [validate_balance])
+    password = PasswordField('New Password', validators = [DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(), 
+                                       EqualTo('password', 
+                                       message='Passwords must match')]
+    )
+
+    submit = SubmitField('Update Profile')
 
 
 class RegistrationForm(FlaskForm):
+
+    def validate_balance(form, field):
+       if field.data != '0':
+           raise ValidationError('Balance must be 0!')
+    #this is to make sure you can only register with a balance of 0
+
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
+    address = StringField('Address', validators=[DataRequired()])
+    balance = StringField('Balance', validators=[DataRequired(), validate_balance])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(),
-                                       EqualTo('password')])
+                                       EqualTo('password',
+                                       message='Passwords must match')])
     submit = SubmitField('Register')
 
     def validate_email(self, email):
@@ -56,15 +97,38 @@ class RegistrationForm(FlaskForm):
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index.index'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        if User.register(form.email.data,
-                         form.password.data,
-                         form.firstname.data,
-                         form.lastname.data):
-            flash('Congratulations, you are now a registered user!')
-            return redirect(url_for('users.login'))
+        form = UpdateInfoForm()
+        if form.validate_on_submit():
+        # Update user information in the database if not blank
+            email = form.email.data if form.email.data else current_user.email
+            password = form.password.data if form.password.data else current_user.password
+            firstname = form.firstname.data if form.firstname.data else current_user.firstname
+            lastname = form.lastname.data if form.lastname.data else current_user.lastname
+            address = form.address.data if form.address.data else current_user.address
+            balance = form.balance.data if form.balance.data else current_user.balance
+
+
+            if User.update(current_user.id, #pass current userid as identifying element
+                        email,
+                        password,
+                        firstname,
+                        lastname,
+                        address,
+                        balance):
+                        
+                return redirect(url_for('index.index'))
+
+    else:
+        form = RegistrationForm()
+        if form.validate_on_submit():
+            if User.register(form.email.data,
+                            form.password.data,
+                            form.firstname.data,
+                            form.lastname.data,
+                            form.address.data,
+                            form.balance.data):
+                flash('Congratulations, you are now a registered user! Login to your profile!')
+                return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
 
@@ -72,3 +136,22 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('index.index'))
+
+@bp.route('/myprofile')
+def myprofile():
+   return render_template('myprofile.html')
+
+
+@bp.route('/publicprofile/<int:user_id>', methods = ['GET'])
+def publicprofile(user_id):
+    # Fetch user information from the address using user_id
+    # Route to the public profile of the user with that id
+    return render_template('publicprofile.html', user_id=user_id)
+
+@bp.route('/purchases/<int:user_id>/<int:page>', methods = ['GET'])
+def purchases(user_id, page):
+    purchasedItems = Purchase.get_all(user_id, page = page, per_page=20)
+    return render_template('purchases.html',
+                    purchasedItems=purchasedItems, 
+                    user_id = user_id, 
+                    page = page)
