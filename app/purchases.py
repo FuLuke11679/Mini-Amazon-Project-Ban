@@ -36,4 +36,7 @@ def purchases_search():
                       page = page) 
     else:
         return render_template('purchases.html')
+
+
+
     

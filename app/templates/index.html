@@ -32,6 +32,24 @@
     <input type="submit" value="Search">
 </form>
 
+<h2>Search Products</h2>
+<form action="/search" method="get">
+  <input type="text" name="keyword" placeholder="Search products...">
+  <button type="submit">Search</button>
+</form>
+
+<form action="/search" method="get">
+  <select name="tag">
+      <option value="">Select a Category</option>
+      <option value="Groceries">Groceries</option>
+      <option value="Basics">Basics</option>
+      <!-- Add more categories as options here -->
+  </select>
+  <button type="submit">Go to Category</button>
+</form>
+
+
+
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">

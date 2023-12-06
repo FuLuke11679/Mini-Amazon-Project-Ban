@@ -70,3 +70,25 @@ def product_page(product_id):
                             associated_reviews=associated_reviews,
                             humanize_time=humanize_time,
                             current_seller=current_seller)
+
+
+@bp.route('/search', methods=['GET'])
+def search():
+    keyword = request.args.get('keyword')
+    tag = request.args.get('tag')
+    if keyword:
+        if tag:
+            # Search within the selected category
+            products = Product.search_in_category(keyword, tag)
+        else:
+            # General search without category filter
+            products = Product.search(keyword)
+    elif tag:
+        # No keyword, just filter by category
+        products = Product.get_by_tag(tag)
+    else:
+        products = []  # Handle this as you see fit
+
+    return render_template('search_results.html', products=products, search_term=keyword, tag=tag)
+
+

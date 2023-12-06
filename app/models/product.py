@@ -55,3 +55,38 @@ WHERE id = :id
         LIMIT :k
     ''', k=k)
         return [Product(*row) for row in rows]
+
+    @staticmethod
+    def search(keyword):
+        keyword = f"%{keyword}%"
+        rows = app.db.execute('''
+        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+        FROM Products
+        WHERE name LIKE :keyword OR longDescription LIKE :keyword
+        ''', keyword=keyword)
+        return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def get_by_tag(tag):
+        rows = app.db.execute('''
+        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+        FROM Products
+        WHERE tag = :tag
+        ''',
+        tag=tag)
+        return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def search_in_category(keyword, tag):
+        keyword = f"%{keyword}%"
+        rows = app.db.execute('''
+        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+        FROM Products
+        WHERE (name LIKE :keyword OR longDescription LIKE :keyword) AND tag = :tag
+        ''',
+        keyword=keyword, tag=tag)
+        return [Product(*row) for row in rows]
+
+
+
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- head elements -->
+</head>
+<body>
+    <h1>Search Results</h1>
+
+    <!-- Show current browsing category -->
+    {% if tag %}
+        <h2>Currently Browsing in Category: {{ tag }}</h2>
+    {% else %}
+        <h2>Browsing All Categories</h2>
+    {% endif %}
+
+    <!-- Include a search bar with category selection -->
+    <form action="/search" method="get">
+        <input type="text" name="keyword" placeholder="Search products...">
+        <select name="tag">
+            <option value="">All Categories</option>
+            <option value="Groceries" {% if tag == 'Groceries' %}selected{% endif %}>Groceries</option>
+            <option value="Basics" {% if tag == 'Basics' %}selected{% endif %}>Basics</option>
+            <!-- Add more categories as options here -->
+        </select>
+        <button type="submit">Search</button>
+    </form>
+
+
+    <!-- Check if there are any products -->
+    {% if products %}
+        <div class="product-list">
+            <!-- Loop through each product and display its details -->
+            {% for product in products %}
+                <div class="product">
+                    <h2><a href="{{ url_for('index.product_page', product_id=product.id) }}">{{ product.name }}</a></h2>
+                    <img src="{{ product.photo_url }}" alt="{{ product.name }}">
+                    <p>Price: ${{ product.price }}</p>
+                    <p>{{ product.longDescription }}</p>
+                    <!-- Add more product details as needed -->
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No products found matching "{{ search_term }}".</p>
+    {% endif %}
+</body>
+</html>
