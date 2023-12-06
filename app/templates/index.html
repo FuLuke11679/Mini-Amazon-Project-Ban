@@ -95,34 +95,4 @@
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}
-
-<!-- Add a form for entering K -->
-<form method="GET" action="{{ url_for('index.index') }}">
-  <label for="k">Enter K:</label>
-  <input type="number" name="k" id="k" value="{{ request.args.get('k', 10) }}" min="1" step="1">
-  <input type="submit" value="Submit">
-</form>
-
-<!-- Display top k most expensive products -->
-{% if top_k_products %}
-<h2>Top {{ k }} Most Expensive Products:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in top_k_products %}
-      <tr>
-        <th scope="row">{{ product.id }}</th>
-        <td>{{ product.name }}</td>
-        <td>{{ product.price }}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% endif %}
 {% endblock %}
