@@ -59,6 +59,9 @@ CREATE TABLE CARTS (
     pid INT NOT NULL REFERENCES Products(id),
     time_added timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     quantity INT NOT NULL
+    oid INT NOT NULL
+    status VARCHAR(100) NOT NULL
+    Save INT NOT NULL
 );
 
 

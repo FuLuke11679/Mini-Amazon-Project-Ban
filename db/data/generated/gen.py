@@ -79,7 +79,10 @@ def gen_Carts(num_wishlistitems, available_pids):
             pid = fake.random_element(elements=available_pids)
             time_added = fake.date_time()
             quantity = fake.random_int(min = 1, max = 20)
-            writer.writerow([id, uid, pid, time_added, quantity])
+            oid = 0
+            status = fake.random_element(elements=['Pending', 'Shipped', 'Delivered'])  # Random status
+            save = fake.rand_int(min = 0, max = 1)
+            writer.writerow([id, uid, pid, time_added, quantity, oid, status, save])
         print(f'{num_wishlistitems} generated')
     return
 
