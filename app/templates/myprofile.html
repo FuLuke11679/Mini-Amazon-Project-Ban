@@ -26,12 +26,23 @@
        <td>{{ current_user.balance }}</td>
    </tr>
 
-   <form action="{{ url_for('users.register') }}" method="get">
-    <button type="submit" class="btn btn-primary">Update Profile</button>
-  </form>
 
  </tbody>
+
+ <form action="{{ url_for('users.register') }}" method="get">
+  <button type="submit" class="btn btn-primary">Update Profile</button>
+</form>
+
+
+<form action="{{ url_for('purchases.mypurchases', page=1) }}" method="get">
+  <button type="submit" class="btn btn-primary">Purchase History</button>
+</form>
+
+
+ 
 </table>
+
+
 {% else %}
  <p>User not authenticated. Please log in.</p>
 

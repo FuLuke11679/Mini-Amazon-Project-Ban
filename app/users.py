@@ -10,6 +10,7 @@ from wtforms.fields.simple import HiddenField
 
 
 from .models.user import User
+from .models.purchase import Purchase
 
 
 from flask import Blueprint
