@@ -84,7 +84,7 @@ def search():
             products = Product.search_sorted(keyword, sort_order)
     else:
         if tag:
-            products = Product.get_by_tag(tag)
+            products = Product.get_by_tag(tag, sort_order)
         else:
             products = []  # Handle this as you see fit
 

@@ -43,6 +43,20 @@ def gen_users(num_users):
     return(users)
 
 
+def generate_subtag(tag):
+    # Define sub-categories for each main category
+    subtags = {
+        'Groceries': ['Frozen', 'Fruits', 'Vegetables', 'Candy'],
+        'Basics': ['Clothing', 'Household', 'Personal Care'],
+        'Music': ['Rock', 'Pop', 'Hip-Hop', 'Jazz'],
+        'Books': ['Fiction', 'Non-Fiction', 'Science Fiction', 'Mystery'],
+        'Tech': ['Electronics', 'Computers', 'Accessories'],
+        'Pharmacy': ['Medicine', 'Healthcare', 'Vitamins'],
+        'Fashion': ['Men\'s Clothing', 'Women\'s Clothing', 'Footwear']
+    }
+    
+    return random.choice(subtags[tag])
+
 def gen_products(num_products, available_sellers):
     tags = ['Groceries', 'Basics', 'Music', 'Books', 'Tech', 'Pharmacy', 'Fashion']
     available_pids = []
@@ -55,15 +69,16 @@ def gen_products(num_products, available_sellers):
             name = fake.sentence(nb_words=4)[:-1]
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             randAmount = fake.random_int(max=10)
-            amount =  f'{str(randAmount)}'
-            available = randAmount > 0 
+            amount = f'{str(randAmount)}'
+            available = randAmount > 0
             if available == True:
                 available_pids.append(pid)
             photo_url = fake.image_url(width=640, height=480)
             seller_id = fake.random_element(elements=available_sellers)
             longDescription = fake.sentence(nb_words=100)
             tag = random.choice(tags)
-            writer.writerow([pid, name, price, amount, available, photo_url, seller_id, longDescription, tag])
+            subtag = generate_subtag(tag)  # Generate subtag based on main tag
+            writer.writerow([pid, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 

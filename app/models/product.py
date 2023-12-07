@@ -67,12 +67,13 @@ WHERE id = :id
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def get_by_tag(tag):
+    def get_by_tag(tag, sort_order):
+        order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
         rows = app.db.execute('''
         SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
         FROM Products
-        WHERE tag = :tag
-        ''',
+        WHERE tag = :tag ORDER BY {}
+        '''.format(order_clause),
         tag=tag)
         return [Product(*row) for row in rows]
     

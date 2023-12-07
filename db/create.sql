@@ -19,6 +19,7 @@ CREATE TABLE Products (
     seller_id INT NOT NULL REFERENCES Users(id),
     longDescription VARCHAR(3000) NOT NULL,
     tag VARCHAR(20) CHECK (tag IN ('Groceries', 'Basics', 'Music', 'Books', 'Tech', 'Pharmacy', 'Fashion'))
+    subTag VARCHAR(255)
 );
 
 CREATE TABLE Purchases (
@@ -83,4 +84,3 @@ ALTER TABLE Reviews
 
 ALTER TABLE SellerReviews
     ADD CONSTRAINT oneUSellerPair UNIQUE (uid, seller_id)
-    
