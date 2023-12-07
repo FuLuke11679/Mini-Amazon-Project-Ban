@@ -83,7 +83,10 @@ def search():
         else:
             products = Product.search_sorted(keyword, sort_order)
     else:
-        products = []  # Handle this as you see fit
+        if tag:
+            products = Product.get_by_tag(tag)
+        else:
+            products = []  # Handle this as you see fit
 
     return render_template('search_results.html', products=products, search_term=keyword, tag=tag)
 
