@@ -156,7 +156,8 @@ def cart_submit2():
 
             product = Product.get(pid)
 
-            if Purchase.create_purchase(uid = current_user.id,
+            print (Product)
+            Purchase.create_purchase(uid = current_user.id,
                                     seller_id = product.seller_id,
                                     pid = pid, # comes from cartlist
                                     name = product.name,
@@ -166,12 +167,7 @@ def cart_submit2():
                                     price_per_unit = product.price,
                                     total_price = product.price * quantity,
                                     time_purchased = datetime.datetime.now(),
-                                    fulfillment_status = "pending"):
-
-                CartItem.delete_all(user_id)
-                flash("Your order has been submitted successfully!", "success")
-                return redirect(url_for('cart.get_cart'))
-
-            else:
-                flash("you suck")
-                return jsonify({}), 40
+                                    fulfillment_status = "pending")
+    CartItem.delete_all(user_id)
+    flash("Your order has been submitted successfully!", "success")
+    return redirect(url_for('cart.get_cart'))
