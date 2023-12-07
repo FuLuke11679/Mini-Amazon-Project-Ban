@@ -27,6 +27,14 @@
             <option value="Basics" {% if tag == 'Fashion' %}selected{% endif %}>Fashion</option>
             <!-- Add more categories as options here -->
         </select>
+        <select name="sort_order">
+            <option value="asc">Price: Low to High</option>
+            <option value="desc">Price: High to Low</option>
+        </select>
+        <button type="submit">Search</button>
+        </form>
+
+        
         <button type="submit">Search</button>
     </form>
 

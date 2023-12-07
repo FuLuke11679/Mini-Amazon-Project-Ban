@@ -86,6 +86,48 @@ WHERE id = :id
         ''',
         keyword=keyword, tag=tag)
         return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def get_all_sorted(available=True, page=1, per_page=10, sort_order='asc'):
+        offset = (page - 1) * per_page
+        order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
+        rows = app.db.execute('''
+SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+FROM Products
+WHERE available = :available
+ORDER BY {} 
+LIMIT :per_page OFFSET :offset
+'''.format(order_clause),
+                              available=available, 
+                              per_page=per_page, 
+                              offset=offset)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def search_sorted(keyword, sort_order='asc'):
+        keyword = f"%{keyword}%"
+        order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
+        rows = app.db.execute('''
+SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+FROM Products
+WHERE name LIKE :keyword OR longDescription LIKE :keyword
+ORDER BY {}
+'''.format(order_clause),
+                              keyword=keyword)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def search_in_category_sorted(keyword, tag, sort_order='asc'):
+        keyword = f"%{keyword}%"
+        order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
+        rows = app.db.execute('''
+SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+FROM Products
+WHERE (name LIKE :keyword OR longDescription LIKE :keyword) AND tag = :tag
+ORDER BY {}
+'''.format(order_clause),
+                              keyword=keyword, tag=tag)
+        return [Product(*row) for row in rows]
 
 
 

@@ -19,33 +19,33 @@ bp = Blueprint('index', __name__)
 def index():
     # Get page value or default 1 (for products for sale display)
     page = int(request.args.get('page', 1))
-    
+
     # Get the value of K from the form or use a default value of 10
     k = int(request.args.get('k', 10))
 
-    # Get all available products for sale
-    
-    products = Product.get_all(True, page)
+    # Get the sorting order from the request, default to ascending
+    sort_order = request.args.get('sort_order', 'asc')
+
+    # Get all available products for sale, sorted by price as per user's choice
+    products = Product.get_all_sorted(True, page, 10, sort_order)
 
     # Find the products current user has bought
+    recent_purchases = None
     if current_user.is_authenticated:
-        purchases = Purchase.get_all_by_uid_since(
+        recent_purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-        reviews = Review.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-    else:
-        purchases = None
-        reviews = None
 
     # Retrieve the top k most expensive products
     top_k_products = Product.get_top_k_expensive(k)
 
+    # Render the index.html template with the provided variables
     return render_template('index.html',
                            page=page,
                            avail_products=products,
-                           recent_purchase_history=purchases,
+                           recent_purchase_history=recent_purchases,
                            top_k_products=top_k_products,
-                           k=k)  # Pass k to the template to pre-fill the input field)
+                           k=k)  # Pass k to the template to pre-fill the input field
+
 
 @bp.route('/search_results', methods = ['GET', 'POST'])
 def search_results():
@@ -76,16 +76,12 @@ def product_page(product_id):
 def search():
     keyword = request.args.get('keyword')
     tag = request.args.get('tag')
+    sort_order = request.args.get('sort_order', 'asc')
     if keyword:
         if tag:
-            # Search within the selected category
-            products = Product.search_in_category(keyword, tag)
+            products = Product.search_in_category_sorted(keyword, tag, sort_order)
         else:
-            # General search without category filter
-            products = Product.search(keyword)
-    elif tag:
-        # No keyword, just filter by category
-        products = Product.get_by_tag(tag)
+            products = Product.search_sorted(keyword, sort_order)
     else:
         products = []  # Handle this as you see fit
 
