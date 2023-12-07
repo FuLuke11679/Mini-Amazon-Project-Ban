@@ -20,6 +20,11 @@
             <option value="">All Categories</option>
             <option value="Groceries" {% if tag == 'Groceries' %}selected{% endif %}>Groceries</option>
             <option value="Basics" {% if tag == 'Basics' %}selected{% endif %}>Basics</option>
+            <option value="Basics" {% if tag == 'Music' %}selected{% endif %}>Music</option>
+            <option value="Basics" {% if tag == 'Books' %}selected{% endif %}>Books</option>
+            <option value="Basics" {% if tag == 'Tech' %}selected{% endif %}>Tech</option>
+            <option value="Basics" {% if tag == 'Pharmacy' %}selected{% endif %}>Pharmacy</option>
+            <option value="Basics" {% if tag == 'Fashion' %}selected{% endif %}>Fashion</option>
             <!-- Add more categories as options here -->
         </select>
         <button type="submit">Search</button>
