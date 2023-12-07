@@ -6,6 +6,7 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.review import Review
 from humanize import naturaltime
+from flask import jsonify
 
 import datetime
 
@@ -90,4 +91,11 @@ def search():
 
     return render_template('search_results.html', products=products, search_term=keyword, tag=tag)
 
+@bp.route('/get-subtags', methods=['GET'])
+def get_subtags():
+    tag = request.args.get('tag', '')
+    print("Requested tag:", tag)  # Debugging statement
+    subtags = Product.get_subtags_by_tag(tag)
+    print("Subtags:", subtags)  # Debugging statement
+    return jsonify({'subtags': subtags})
 

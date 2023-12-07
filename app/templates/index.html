@@ -38,21 +38,6 @@
   <button type="submit">Search</button>
 </form>
 
-<form action="/search" method="get">
-  <select name="tag">
-      <option value="">Select a Category</option>
-      <option value="Groceries">Groceries</option>
-      <option value="Basics">Basics</option>
-      <option value="Groceries">Music</option>
-      <option value="Basics">Books</option>
-      <option value="Groceries">Tech</option>
-      <option value="Basics">Pharmacy</option>
-      <option value="Basics">Fashion</option>
-      <!-- Add more categories as options here -->
-  </select>
-  <button type="submit">Go to Category</button>
-</form>
-
 <form action="{{ url_for('index.index') }}" method="get">
   <select name="sort_order">
       <option value="asc">Price: Low to High</option>
@@ -61,7 +46,44 @@
   <input type="submit" value="Sort">
 </form>
 
+<script>
+  function updateSubtags() {
+      var tag = document.getElementById('tag').value;
+      fetch('/get-subtags?tag=' + tag)
+          .then(function(response) {
+              return response.json();
+          })
+          .then(function(data) {
+              var subtagSelect = document.getElementById('subtag');
+              subtagSelect.innerHTML = '';
+              data.subtags.forEach(function(subtag) {
+                  var option = document.createElement('option');
+                  option.value = subtag;
+                  option.text = subtag;
+                  subtagSelect.appendChild(option);
+              });
+          });
+  }
+  </script>
 
+<select name="tag" id="tag" onchange="updateSubtags()">
+  <option value="">Select a Category</option>
+  <option value="Groceries">Groceries</option>
+  <option value="Basics">Basics</option>
+  <option value="Music">Music</option> <!-- Unique value for Music -->
+  <option value="Books">Books</option> <!-- Unique value for Books -->
+  <option value="Tech">Tech</option>   <!-- Unique value for Tech -->
+  <option value="Pharmacy">Pharmacy</option> <!-- Unique value for Pharmacy -->
+  <option value="Fashion">Fashion</option>   <!-- Unique value for Fashion -->
+  <!-- ... other options ... -->
+</select>
+
+<select name="subtag" id="subtag">
+  <option value="">Select a Subcategory</option>
+  <!-- Subtag options will be populated here -->
+</select>
+
+  
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>

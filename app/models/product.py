@@ -1,4 +1,5 @@
 from flask import current_app as app
+from flask import jsonify
 
 
 class Product:
@@ -133,3 +134,12 @@ ORDER BY {}
 
 
 
+    @staticmethod
+    def get_subtags_by_tag(tag):
+        # Query the database to get subtags based on the selected category (tag)
+        rows = app.db.execute('''
+            SELECT DISTINCT subtag
+            FROM Products
+            WHERE tag = :tag
+        ''', tag=tag)
+        return [row[0] for row in rows]
