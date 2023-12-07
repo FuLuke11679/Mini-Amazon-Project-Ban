@@ -77,8 +77,8 @@ def gen_products(num_products, available_sellers):
             seller_id = fake.random_element(elements=available_sellers)
             longDescription = fake.sentence(nb_words=100)
             tag = random.choice(tags)
-            subtag = generate_subtag(tag)  # Generate subtag based on main tag
-            writer.writerow([pid, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag])
+            #subtag = generate_subtag(tag)  # Generate subtag based on main tag
+            writer.writerow([pid, name, price, amount, available, photo_url, seller_id, longDescription, tag])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
