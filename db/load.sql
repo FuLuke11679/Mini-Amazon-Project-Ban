@@ -41,7 +41,7 @@ SELECT pg_catalog.setval('public.sellerreviews_id_seq',
                          false);
 
 
-\COPY Sellers FROM 'Sellers.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY Sellers FROM 'generated/Sellers.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.sellers_id_seq',
                          (SELECT MAX(id)+1 FROM Reviews),
                          false);

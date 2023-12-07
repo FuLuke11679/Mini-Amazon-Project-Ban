@@ -110,7 +110,8 @@ def gen_inventory(num_inventory, available_pids, available_sellers):
             uid = fake.random_element(elements=available_sellers)
             pid = fake.random_element(elements=available_pids)
             time_purchased = fake.date_time()
-            writer.writerow([id, uid, pid, time_purchased])
+            quantity = fake.random_int(min = 1, max = 20)
+            writer.writerow([id, uid, pid, time_purchased, quantity])
         print(f'{num_purchases} generated')
     return
 
