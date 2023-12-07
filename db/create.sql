@@ -18,7 +18,8 @@ CREATE TABLE Products (
     photo_url VARCHAR(255), -- Adding a new column for the photo URL
     seller_id INT NOT NULL REFERENCES Users(id),
     longDescription VARCHAR(3000) NOT NULL,
-    tag VARCHAR(20) CHECK (tag IN ('Groceries', 'Basics', 'Music', 'Books', 'Tech', 'Pharmacy', 'Fashion'))
+    tag VARCHAR(20) CHECK (tag IN ('Groceries', 'Basics', 'Music', 'Books', 'Tech', 'Pharmacy', 'Fashion')),
+    subtag VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Purchases (

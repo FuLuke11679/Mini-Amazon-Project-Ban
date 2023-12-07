@@ -2,7 +2,7 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, price, amount, available, photo_url, seller_id, longDescription, tag):
+    def __init__(self, id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag):
         self.id = id
         self.name = name
         self.price = price
@@ -12,11 +12,12 @@ class Product:
         self.seller_id = seller_id
         self.longDescription = longDescription
         self.tag = tag
+        self.subtag = subtag
 
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
 FROM Products
 WHERE id = :id
 ''',
@@ -27,7 +28,7 @@ WHERE id = :id
     def get_all(available=True, page=1, per_page=10):
         offset = (page-1) * per_page
         rows = app.db.execute('''
-SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
 FROM Products
 WHERE available = :available
 LIMIT :per_page OFFSET :offset
@@ -49,7 +50,7 @@ WHERE id = :id
         return Product(*(rows[0])) if rows is not None else None
     def get_top_k_expensive(k):
         rows = app.db.execute('''
-        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
         FROM Products
         ORDER BY price DESC
         LIMIT :k
@@ -60,7 +61,7 @@ WHERE id = :id
     def search(keyword):
         keyword = f"%{keyword}%"
         rows = app.db.execute('''
-        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
         FROM Products
         WHERE name LIKE :keyword OR longDescription LIKE :keyword
         ''', keyword=keyword)
@@ -70,7 +71,7 @@ WHERE id = :id
     def get_by_tag(tag, sort_order):
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
         rows = app.db.execute('''
-        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
         FROM Products
         WHERE tag = :tag ORDER BY {}
         '''.format(order_clause),
@@ -81,7 +82,7 @@ WHERE id = :id
     def search_in_category(keyword, tag):
         keyword = f"%{keyword}%"
         rows = app.db.execute('''
-        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
         FROM Products
         WHERE (name LIKE :keyword OR longDescription LIKE :keyword) AND tag = :tag
         ''',
@@ -93,7 +94,7 @@ WHERE id = :id
         offset = (page - 1) * per_page
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
         rows = app.db.execute('''
-SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
 FROM Products
 WHERE available = :available
 ORDER BY {} 
@@ -109,7 +110,7 @@ LIMIT :per_page OFFSET :offset
         keyword = f"%{keyword}%"
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
         rows = app.db.execute('''
-SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
 FROM Products
 WHERE name LIKE :keyword OR longDescription LIKE :keyword
 ORDER BY {}
@@ -122,7 +123,7 @@ ORDER BY {}
         keyword = f"%{keyword}%"
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
         rows = app.db.execute('''
-SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
 FROM Products
 WHERE (name LIKE :keyword OR longDescription LIKE :keyword) AND tag = :tag
 ORDER BY {}
