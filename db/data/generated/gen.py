@@ -45,6 +45,7 @@ def gen_users(num_users):
 
 def gen_products(num_products, available_sellers):
     tags = ['Groceries', 'Basics', 'Music', 'Books', 'Tech', 'Pharmacy', 'Fashion']
+    products = []
     available_pids = []
     with open('Products.csv', 'w') as f:
         writer = get_csv_writer(f)
@@ -54,7 +55,7 @@ def gen_products(num_products, available_sellers):
                 print(f'{pid}', end=' ', flush=True)
             name = fake.sentence(nb_words=4)[:-1]
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
-            randAmount = fake.random_int(max=10)
+            randAmount = fake.random_int(max=99)
             amount =  f'{str(randAmount)}'
             available = randAmount > 0 
             if available == True:
@@ -63,24 +64,25 @@ def gen_products(num_products, available_sellers):
             seller_id = fake.random_element(elements=available_sellers)
             longDescription = fake.sentence(nb_words=100)
             tag = random.choice(tags)
+
+
+
+            product = {
+                'id': pid,
+                'name': name,
+                'price': price,
+                'amount': amount,
+                'available': available,
+                'photo_url': photo_url,
+                'seller_id': seller_id,
+                'longDescription': longDescription,
+                'tag': tag
+            }
+            products.append(product)
             writer.writerow([pid, name, price, amount, available, photo_url, seller_id, longDescription, tag])
         print(f'{num_products} generated; {len(available_pids)} available')
-    return available_pids
+    return available_pids, products
 
-
-def gen_purchases(num_purchases, available_pids):
-    with open('Purchases.csv', 'w') as f:
-        writer = get_csv_writer(f)
-        print('Purchases...', end=' ', flush=True)
-        for id in range(num_purchases):
-            if id % 100 == 0:
-                print(f'{id}', end=' ', flush=True)
-            uid = fake.random_int(min=0, max=num_users-1)
-            pid = fake.random_element(elements=available_pids)
-            time_purchased = fake.date_time()
-            writer.writerow([id, uid, pid, time_purchased])
-        print(f'{num_purchases} generated')
-    return
 
 def gen_Carts(num_wishlistitems, available_pids):
     with open('Carts.csv', 'w') as f:
@@ -111,6 +113,32 @@ def gen_sellers(num_sellers, num_users):
         print(f'{num_sellers} generated')
     return available_sellers
             
+def gen_purchases(num_purchases, products):
+    with open('Purchases.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Purchases...', end=' ', flush=True)
+        for id in range(num_purchases):
+            if id % 100 == 0:
+                print(f'{id}', end=' ', flush=True)
+            uid = fake.random_int(min=0, max=num_users-1)
+            
+            product = random.choice(products)
+
+
+            seller_id = product['seller_id']
+            pid = product['id']
+            name = product['name']
+            photo_url = product['photo_url']
+            tag = product['tag']
+            quantity = fake.random_int(min = 1, max = 20) # not based on product
+            price_per_unit = float(product['price'])
+            total_price = quantity * price_per_unit 
+            time_purchased = fake.date_time() # not based on product
+            fulfillment_status = random.choice(['pending', 'shipped', 'delivered'])
+
+            writer.writerow([id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status])
+        print(f'{num_purchases} generated')
+    return
 
 def gen_inventory(num_inventory, available_pids, available_sellers):
     with open('Inventory.csv', 'w') as f:
@@ -148,7 +176,8 @@ def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
                 uid = i
                 pid = poss_pids[j]
                 rating = fake.random_int(min=1, max=5)
-                review = f'{users[i]["firstname"]} {reviewDict[str(rating)]} this product!'
+                #review = f'{users[i]["firstname"]} {reviewDict[str(rating)]} this product!'
+                review = ''
                 time_purchased = fake.date_time()
                 upvotes = fake.random_int(min=0, max=num_users-1)
                 writer.writerow([((i*num_reviews_per_user) + j) , uid, pid, review, rating, upvotes, time_purchased])
@@ -176,7 +205,8 @@ def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sell
                 uid = i
                 seller_uid = available_sellers[i]
                 rating = fake.random_int(min=1, max=5)
-                review = f'{users[i]["firstname"]} {reviewDict[str(rating)]} this seller!'
+                #review = f'{users[i]["firstname"]} {reviewDict[str(rating)]} this seller!'
+                review = ''
                 time_purchased = fake.date_time()
                 upvotes = fake.random_int(min=0, max=num_users-1)
                 writer.writerow([((i*num_reviews_per_seller) + j), uid, seller_uid, review, str(rating), upvotes, time_purchased])
@@ -186,8 +216,8 @@ def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sell
 
 users = gen_users(num_users)
 available_sellers = gen_sellers(num_sellers, num_users)
-available_pids = gen_products(num_products, available_sellers)
-gen_purchases(num_purchases, available_pids)
+available_pids, products = gen_products(num_products, available_sellers)
+gen_purchases(num_purchases, products)
 gen_Carts(num_purchases, available_pids)
 gen_inventory(num_inventory, available_pids, available_sellers)
 gen_reviews(users, num_reviews_per_user, num_users, available_pids)

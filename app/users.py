@@ -5,11 +5,13 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
+from flask import current_app as app
 
 from wtforms.fields.simple import HiddenField
 
 
 from .models.user import User
+from .models.purchase import Purchase
 
 
 from flask import Blueprint
@@ -146,12 +148,18 @@ def myprofile():
 def publicprofile(user_id):
     # Fetch user information from the address using user_id
     # Route to the public profile of the user with that id
-    return render_template('publicprofile.html', user_id=user_id)
-
-@bp.route('/purchases/<int:user_id>/<int:page>', methods = ['GET'])
-def purchases(user_id, page):
-    purchasedItems = Purchase.get_all(user_id, page = page, per_page=20)
-    return render_template('purchases.html',
-                    purchasedItems=purchasedItems, 
+    seller = is_seller(user_id)
+    userInfo = User.get(user_id)
+    return render_template('publicprofile.html',
                     user_id = user_id, 
-                    page = page)
+                    userInfo = userInfo, 
+                    seller = seller)
+
+
+def is_seller(user_id):
+    rows = app.db.execute('''
+        SELECT id FROM Sellers
+        WHERE uid = :user_id
+    ''', user_id=user_id)
+
+    return bool(rows)

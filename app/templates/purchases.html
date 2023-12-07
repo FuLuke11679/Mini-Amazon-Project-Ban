@@ -8,27 +8,42 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">Purchase ID</th>
+      <th scope="col">Seller ID</th>
       <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Photo URL</th>
+      <th scope="col">Tag</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Total Price</th>
       <th scope="col">Date Purchased</th>
+      <th scope="col">Fulfillment Status</th>
+
     </tr>
   </thead>
   <tbody>
     {% for item in purchasedItems %}
       <tr>
         <th scope="row">{{item.id}}</th>
+        <td>{{item.seller_id}}</td>
         <td>{{item.pid}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.photo_url}}</td>
+        <td>{{item.tag}}</td>
+        <td>{{item.quantity}}</td>
+        <td>{{item.total_price}}</td>
         <td>{{item.time_purchased}}</td>
+        <td>{{item.fulfillment_status}}</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
 
 {% if page > 1 %}
-<a href="{{ url_for('purchases.purchases', user_id=user_id, page=page-1) }}">Previous</a>
+<a href="{{ url_for('purchases.mypurchases', page=page-1) }}">Previous</a>
 {% endif %}
 
 {% if purchasedItems|length == 20 %}
-<a href="{{ url_for('purchases.purchases', user_id=user_id, page=page+1) }}">Next</a>
+<a href="{{ url_for('purchases.mypurchases', page=page+1) }}">Next</a>
 {% endif %}
 
 {% endblock %}

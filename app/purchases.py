@@ -23,6 +23,14 @@ def purchases(user_id, page):
                     purchasedItems=purchasedItems, 
                     user_id = user_id, 
                     page = page)
+
+@bp.route('/mypurchases/<int:page>', methods = ['GET'])
+def mypurchases(page):
+    purchasedItems = Purchase.get_all(current_user.id, page = page, per_page=20)
+    return render_template('purchases.html',
+                    purchasedItems=purchasedItems, 
+                    user_id = current_user.id, 
+                    page = page)
     
 @bp.route('/purchases_search', methods = ['GET', 'POST'])
 def purchases_search():

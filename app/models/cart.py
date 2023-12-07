@@ -79,3 +79,16 @@ LIMIT :num_rows OFFSET :times
                               times = times)
         return [CartItem(*row) for row in rows]
 
+
+    @staticmethod
+    def delete_all(user_id):
+        try:
+            rows = app.db.execute('''
+DELETE FROM Carts
+WHERE uid = :user_id
+''', 
+                                user_id=user_id)
+            return True
+        except Exception as e:
+            # Handle the exception (log it, return False, etc.)
+            return False
