@@ -16,6 +16,8 @@ Product Amount: {{ current_product.amount }}
 <br><br>
 Product Tag: {{ current_product.tag }}
 <br><br>
+Product subtag: {{ current_product.subtag }}
+<br><br>
 Available: {% if current_product.available %}Yes{% else %}No{% endif %}
 <br><br>
 Product Img: <img src="{{ current_product.photo_url }}" alt="{{ current_product.name }}">

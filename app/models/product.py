@@ -143,3 +143,54 @@ ORDER BY {}
             WHERE tag = :tag
         ''', tag=tag)
         return [row[0] for row in rows]
+
+    @staticmethod
+    def search_products(keyword, tag, subtag, sort_order):
+        keyword = f"%{keyword}%"
+        order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
+
+        query = '''
+            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+            FROM Products
+            WHERE (name LIKE :keyword OR longDescription LIKE :keyword)
+        '''
+
+        if tag:
+            query += ' AND tag = :tag'
+        if subtag:
+            query += ' AND subtag = :subtag'
+
+        query += f' ORDER BY {order_clause}'
+
+        rows = app.db.execute(query, keyword=keyword, tag=tag, subtag=subtag)
+        return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def get_by_subtag(subtag, sort_order):
+        order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
+
+        query = '''
+            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+            FROM Products
+            WHERE subtag = :subtag
+            ORDER BY {}
+        '''.format(order_clause)
+
+        rows = app.db.execute(query, subtag=subtag)
+        return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def search_with_everything(keyword, subtag, sort_order):
+        keyword = f"%{keyword}%"
+        order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
+
+        query = '''
+            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+            FROM Products
+            WHERE (name LIKE :keyword OR longDescription LIKE :keyword)
+            AND subtag = :subtag
+            ORDER BY {}
+        '''.format(order_clause)
+
+        rows = app.db.execute(query, keyword=keyword, subtag=subtag)
+        return [Product(*row) for row in rows]

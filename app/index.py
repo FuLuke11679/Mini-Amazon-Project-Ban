@@ -75,21 +75,33 @@ def product_page(product_id):
 
 @bp.route('/search', methods=['GET'])
 def search():
-    keyword = request.args.get('keyword')
-    tag = request.args.get('tag')
+    keyword = request.args.get('keyword', '')
+    tag = request.args.get('tag', '')
+    subtag = request.args.get('subtag', '')
     sort_order = request.args.get('sort_order', 'asc')
+
+    print(f"Keyword: {keyword}, Tag: {tag}, Subtag: {subtag}, Sort Order: {sort_order}")
+    products = []
+
     if keyword:
-        if tag:
+        if tag and subtag == "":
             products = Product.search_in_category_sorted(keyword, tag, sort_order)
+        elif tag and subtag != "":
+            products = Product.search_with_everything(keyword, subtag, sort_order)
         else:
+            #return all products with just keyword search
             products = Product.search_sorted(keyword, sort_order)
+        
     else:
-        if tag:
+        if tag and subtag == "":
             products = Product.get_by_tag(tag, sort_order)
         else:
-            products = []  # Handle this as you see fit
+            products = Product.get_by_subtag(subtag, sort_order)
+    
+    subtags = Product.get_subtags_by_tag(tag)  # Fetch subtags based on the selected tag
 
-    return render_template('search_results.html', products=products, search_term=keyword, tag=tag)
+    return render_template('search_results.html', products=products, 
+                           search_term=keyword, tag=tag, subtag=subtag, subtags=subtags)
 
 @bp.route('/get-subtags', methods=['GET'])
 def get_subtags():
