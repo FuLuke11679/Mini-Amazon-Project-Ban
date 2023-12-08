@@ -72,15 +72,16 @@ def review_add(product_id):
     if current_user.is_authenticated:
         try:
             rows = app.db.execute("""
-INSERT INTO reviews (uid, pid, review, rating, upvotes, time_posted)
-VALUES(:uid, :pid, :review, :rating, :upvotes, :time_posted)
+INSERT INTO reviews (uid, pid, review, rating, upvotes, time_posted, photo_url)
+VALUES(:uid, :pid, :review, :rating, :upvotes, :time_posted, :photo_url)
 """,
                                   uid=current_user.id,
                                   pid = product_id,
                                   review = "You have just added this review.",
                                   rating = 0,
                                   upvotes = 1,
-                                  time_posted = datetime.datetime.now())
+                                  time_posted = datetime.datetime.now(),
+                                  photo_url = "https://picsum.photos/200/200")
             return redirect(url_for('users.myprofile'))
         except Exception as e:
             print(str(e))
@@ -116,11 +117,13 @@ def review_update():
     product_id = request.form.get('pidChoice')
     review = request.form.get('reviewChoice')
     rating = request.form.get('ratingChoice')
+    imageChoice = request.form.get("imageChoice")
+
     if current_user.is_authenticated:
         try:
             rows = app.db.execute("""
 UPDATE Reviews
-SET review = :review, rating = :rating, time_posted = :time_posted
+SET review = :review, rating = :rating, time_posted = :time_posted, photo_url = :photo_url
 WHERE uid = :uid
 AND pid = :pid
 
@@ -129,7 +132,8 @@ AND pid = :pid
                                 pid=product_id,
                                 review=review,
                                 rating=rating,
-                                time_posted=datetime.datetime.now())
+                                time_posted=datetime.datetime.now(),
+                                photo_url=imageChoice)
         #push them over to wishlist()
             # print(str(product_id) + "pid")
             # print(str(current_user.id) + "uid")

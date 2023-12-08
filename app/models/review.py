@@ -1,7 +1,7 @@
 from flask import current_app as app
 
 class Review:
-    def __init__(self, id, uid, pid, review, rating, upvotes, time_posted):
+    def __init__(self, id, uid, pid, review, rating, upvotes, time_posted, photo_url):
         self.id = id
         self.uid = uid
         self.pid = pid
@@ -9,11 +9,12 @@ class Review:
         self.rating = rating
         self.upvotes = upvotes
         self.time_posted = time_posted
+        self.photo_url = photo_url
 
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT id, uid, pid, review, rating
+SELECT id, uid, pid, review, rating, upvotes, time_posted, photo_url
 FROM Reviews
 WHERE id = :id
 ''', id=id)
