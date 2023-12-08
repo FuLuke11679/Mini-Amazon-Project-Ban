@@ -133,7 +133,7 @@ AND pid = :pid
                                 review=review,
                                 rating=rating,
                                 time_posted=datetime.datetime.now(),
-                                photo_url=imageChoice)
+                                photo_url= "https://picsum.photos/200/200")
         #push them over to wishlist()
             # print(str(product_id) + "pid")
             # print(str(current_user.id) + "uid")

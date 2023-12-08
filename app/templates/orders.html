@@ -16,7 +16,7 @@
         <th scope="col">Price per Unit</th>
         <th scope="col">Total Price</th>
         <th scope="col">Fulfillment</th>
-        <th scope="col">Talk To The Seller</th>
+        <!-- <th scope="col">Talk To The Seller</th> !-->
     </tr>
   </thead>
   <tbody>
@@ -30,7 +30,7 @@
         <td>{{ item.price_per_unit }}</td>
         <td>{{ item.total_price }} </td>
         <td>{{ item.fulfillment_status }} </td>
-        <td><a href="{{ url_for('users.login') }}" type="button" class="btn btn-dark">Click To Talk!</a></td>
+        <!--<td><a href="{{ url_for('users.login') }}" type="button" class="btn btn-dark">Click To Talk!</a></td> !-->
       </tr>
     {% endfor %}
   </tbody>

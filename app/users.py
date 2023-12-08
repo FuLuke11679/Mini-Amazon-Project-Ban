@@ -158,7 +158,7 @@ def myprofile():
         reviews = None
         sellerReviews = None
 
-    print(reviews)
+    # print(reviews)
 
     return render_template('myprofile.html', 
                         reviews=reviews,
