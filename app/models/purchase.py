@@ -100,3 +100,20 @@ RETURNING id
             return Purchase.get(id)
         except Exception as e:
             return None
+
+
+    @staticmethod
+    def get_all_seller_id(uid, page=1, per_page=20):
+        offset = (page-1) * per_page
+        rows = app.db.execute('''
+SELECT Purchases.id, uid, seller_id, pid, name, address, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
+FROM Purchases LEFT JOIN Users
+ON Purchases.uid = Users.id
+WHERE seller_id = :uid
+ORDER BY time_purchased DESC
+LIMIT :per_page OFFSET :offset
+''',
+                              uid=uid,
+                              per_page = per_page,
+                              offset=offset)
+        return [Purchase(*row) for row in rows]

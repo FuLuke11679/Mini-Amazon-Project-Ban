@@ -57,3 +57,15 @@ since = since)
         )
 
         return  [SellerReview(*row) for row in rows] if rows else None
+
+    @staticmethod
+    def total_average(seller_uid):
+        rows = app.db.execute('''
+            SELECT AVG(rating) 
+            FROM SellerReviews 
+            WHERE seller_uid = :seller_uid 
+            GROUP BY seller_uid;
+            ''', seller_uid = seller_uid
+        )
+
+        return [round(row, 2) for row in rows[0]] if rows else None

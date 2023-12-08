@@ -158,7 +158,7 @@ def myprofile():
         reviews = None
         sellerReviews = None
 
-    print(reviews)
+    # print(reviews)
 
     return render_template('myprofile.html', 
                         reviews=reviews,
@@ -171,15 +171,25 @@ def publicprofile(user_id):
     #user_id = request.form['user_id']
     seller = is_seller(user_id)
     userInfo = User.get(user_id)
-
+    
+    average_rating_a = SellerReview.total_average(user_id)
+    if average_rating_a == None:
+        average_rating = None
+    else:
+        average_rating = average_rating_a[0]
+    
     reviews_for_this_seller = SellerReview.reviews_for_this_seller(user_id)
+    num_of_reviews = len(reviews_for_this_seller or "")
+
 
     return render_template('publicprofile.html',
                     user_id = user_id, 
                     userInfo = userInfo, 
                     seller = seller,
                     reviews_for_this_seller=reviews_for_this_seller,
-                    humanize_time=humanize_time)
+                    humanize_time=humanize_time,
+                    average_rating = average_rating,
+                    num_of_reviews=num_of_reviews)
 
 @bp.route('/user_search', methods=['GET', 'POST'])
 def user_search():
@@ -188,10 +198,22 @@ def user_search():
         seller = is_seller(user_id)
         userInfo = User.get(user_id)
 
+        all_seller_reviews = SellerReview.reviews_for_this_seller(user_id)
+        num_of_reviews = len(all_seller_reviews or "")
+
+        average_rating_a = SellerReview.total_average(user_id)
+        if average_rating_a == None:
+            average_rating = None
+        else:
+            average_rating = average_rating_a[0]
+
         return render_template('publicprofile.html',
                     user_id = user_id, 
                     userInfo = userInfo, 
-                    seller = seller)
+                    seller = seller,
+                    humanize_time=humanize_time,
+                    num_of_reviews = num_of_reviews,
+                    average_rating = average_rating)
     else:
         return redirect(url_for('index.html'))
 
