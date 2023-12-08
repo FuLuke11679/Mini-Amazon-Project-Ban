@@ -18,10 +18,10 @@
   <tbody>
     {% for product in rec_products %}
     <tr>
-        <td>Product Name: {{ product.name }}</td>
-        <td>Price: {{ product.price }}</td>
+        <td>{{ product.name }}</td>
+        <td>${{product.price }}</td>
         <td>In Stock: {{ product.amount }}</td>
-        <td>Photo: {{ product.photo_url }}</td>
+        <td>{{ product.photo_url }}</td>
     </tr>
     {% endfor %}
   </tbody>

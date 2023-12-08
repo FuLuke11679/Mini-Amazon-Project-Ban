@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, get_flashe
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import FloatField, StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from flask import current_app as app
@@ -47,6 +47,12 @@ def login():
 
         
     return render_template('login.html', title='Sign In', form=form)
+
+class TopUpForm(FlaskForm):
+    deposit = FloatField('Deposit')
+    withdraw = FloatField('Withdraw')
+    submit = SubmitField('Change balance')
+
 
 class UpdateInfoForm(FlaskForm):
     def validate_balance(form, field):
@@ -134,6 +140,19 @@ def register():
                 flash('Congratulations, you are now a registered user! Login to your profile!')
                 return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@bp.route('/top_up', methods=['GET', 'POST'])
+def top_up():
+    form = TopUpForm()
+
+    if form.validate_on_submit():
+        deposit = form.deposit.data if form.deposit.data else 0
+        withdraw_amount = form.withdraw.data if form.withdraw.data else 0
+        current_user.balance += deposit
+        current_user.balance -= withdraw
+        return redirect(url_for('index.html'))  # Redirect to the user's dashboard or profile page
+
 
 
 @bp.route('/logout')

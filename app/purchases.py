@@ -25,6 +25,23 @@ import numpy as np
 
 
 
+
+
+
+
+
+
+
+def humanize_time(dt):
+    return naturaltime(datetime.datetime.now() - dt)
+
+def calculate_total_price(orderlist):
+    total_price = 0
+    for item in orderlist:
+        price = item.price_per_unit
+        total_price += item.quantity * price
+    return total_price
+
 @bp.route('/purchases/<int:user_id>/<int:page>', methods = ['GET'])
 def purchases(user_id, page):
     purchasedItems = Purchase.get_all(user_id, page = page, per_page=20)
@@ -39,6 +56,7 @@ def mypurchases(page):
 
     recommended_pids = recommend_based_on_purchase_history(current_user.id, user_item_matrix)
     rec_products = Product.get_list_by_ids(recommended_pids)
+    
     return render_template('purchases.html',
                     purchasedItems=purchasedItems, 
                     rec_products = rec_products,
@@ -80,16 +98,18 @@ def get_similar_users(user_id, matrix):
 def recommend_based_on_purchase_history(user_id, matrix, num_recommendations=5):
     # Get similar users
     similar_users = get_similar_users(user_id, matrix)
+    real_similar_users = [user for user in similar_users if user in matrix.index]
+
 
     # Identify products that similar users have purchased but the target user has not
     recommended_products = matrix.columns[
-        (matrix.loc[similar_users].sum(axis=0) > 0) & (matrix.loc[user_id] == 0)
+        (matrix.loc[real_similar_users].sum(axis=0) > 0) & (matrix.loc[user_id] == 0)
     ].tolist()
 
     # Sort recommended products by the sum of purchases by similar users
     recommended_products = sorted(
         recommended_products,
-        key=lambda pid: matrix.loc[similar_users, pid].sum(),
+        key=lambda pid: matrix.loc[real_similar_users, pid].sum(),
         reverse=True
     )
 
