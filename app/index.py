@@ -64,7 +64,11 @@ def product_page(product_id):
 
     associated_reviews = Review.get_reviews_minus_top_3(product_id)
     
-    average_rating = Review.total_average(product_id)[0]
+    average_rating_a = Review.total_average(product_id)
+    if average_rating_a == None:
+        average_rating = None
+    else:
+        average_rating = average_rating_a[0]
     # print(product_id)
     # print(associated_reviews.review)
     return render_template('productsPage.html', 
