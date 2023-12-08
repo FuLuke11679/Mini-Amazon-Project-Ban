@@ -76,6 +76,21 @@ RETURNING id
         except Exception as e:
             return False
 
+    @staticmethod
+    def updateBal(uid, subtract):
+        try:
+            rows = app.db.execute("""
+    UPDATE Users
+    SET balance = balance - :subtract
+    WHERE id = :uid
+""",
+                                  uid = uid,
+                                  subtract = subtract)
+
+            return True
+        except Exception as e:
+            return False
+
 
 
 

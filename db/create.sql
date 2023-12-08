@@ -8,7 +8,7 @@ CREATE TABLE Users (
    firstname VARCHAR(255) NOT NULL,
    lastname VARCHAR(255) NOT NULL,
    address VARCHAR(255) NOT NULL,
-   balance INT NOT NULL
+   balance FLOAT NOT NULL
 );
 
 

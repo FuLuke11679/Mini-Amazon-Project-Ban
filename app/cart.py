@@ -6,12 +6,14 @@ from flask import current_app as app
 from flask import redirect, url_for
 from flask import flash
 from flask import request
+from flask import Markup
 
 from humanize import naturaltime
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.wishlist import WishlistItem
 from .models.cart import CartItem
+from .models.user import User
 
 from flask import Blueprint
 bp = Blueprint('cart', __name__)
@@ -30,6 +32,10 @@ def calculate_total_price(cartlist):
         total_price += item.quantity * price
     return total_price
 
+def get_product_name(product_id):
+    product = Product.get(product_id)
+    return product.name 
+
 @bp.route('/cart')
 def cart():
     # find the products current user has wishlisted:
@@ -41,7 +47,9 @@ def cart():
                       cartlist=cartlist,
                       humanize_time=humanize_time,
                       total_price=total_price,
-                      get_product_price=get_product_price) 
+                      get_product_price=get_product_price,
+                      get_product_name = get_product_name,
+                      user_id = current_user.id) 
     else:
         return jsonify({}), 404
 
@@ -57,7 +65,8 @@ def get_cart():
                       humanize_time=humanize_time, 
                       total_price=total_price, 
                       get_product_price=get_product_price,
-                      user_id = user_id) 
+                      user_id = user_id,
+                      get_product_name = get_product_name) 
 
 @bp.route('/cart/update_quantity/<int:product_id>', methods = ['GET', 'POST'])
 def update_quantity(product_id):
@@ -82,7 +91,8 @@ WHERE uid = :uid AND pid = :pid
                       humanize_time=humanize_time, 
                       total_price=total_price, 
                       get_product_price=get_product_price,
-                      user_id = user_id) 
+                      user_id = user_id,
+                      get_product_name = get_product_name) 
     
 @bp.route('/cart_search', methods = ['GET', 'POST'])
 def cart_search():
@@ -95,7 +105,8 @@ def cart_search():
                       humanize_time=humanize_time, 
                       total_price=total_price, 
                       get_product_price=get_product_price,
-                      user_id = user_id) 
+                      user_id = user_id,
+                      get_product_name=get_product_name) 
     else:
         return render_template('cart.html')
 
@@ -131,7 +142,8 @@ WHERE uid = :uid AND pid = :pid
                       humanize_time=humanize_time, 
                       total_price=total_price, 
                       get_product_price=get_product_price,
-                      user_id = user_id) 
+                      user_id = user_id,
+                      get_product_name=get_product_name) 
  
 @bp.route('/cart_submit')        
 def cart_submit():
@@ -146,12 +158,14 @@ def cart_submit2():
     cartlist = CartItem.get_all(current_user.id)
     orderid = Purchase.get_max_id() + 1
     invalid = CartItem.return_invalid(current_user.id)
-
+    total_price = calculate_total_price(cartlist)
+    balance = current_user.balance
+    
     if not cartlist:
         flash("Your cart is empty", "info")
         return redirect(url_for('cart.get_cart'))
 
-    if not invalid:
+    if not invalid and balance >= total_price:
         for cart_item in cartlist:
             pid = cart_item.pid
             quantity = cart_item.quantity
@@ -168,16 +182,20 @@ def cart_submit2():
                                      total_price=product.price * quantity,
                                      time_purchased=datetime.datetime.now(),
                                      fulfillment_status="In Progress")
+            User.updateBal(current_user.id, total_price)
         CartItem.delete_all(user_id)
         flash("Your order has been submitted successfully!", "success")
         return redirect(url_for('cart.get_cart'))
     else:
-        error_message = "Some items in your cart have quantities greater than available amounts. "
-        error_message += "Please review the following items:\n"
-        for item in invalid:
-            amount = Product.get_amount_num(item.pid)
-            error_message += f"Product ID: {item.pid}, Quantity: {item.quantity}, Available Amount: {amount}\n"
-        flash(error_message, "error")
+        error_message = "Please review the following issues: <br>"
+        if balance < total_price:
+            error_message += f"Insufficient balance. Please add funds to your account. Balance: {balance}, Total Price: {total_price}."
+        if invalid:
+            error_message += " <br>Some items in your cart have quantities greater than available amounts:<br>"
+            for item in invalid:
+                amount = Product.get_amount_num(item.pid)
+                error_message += f"Product ID: {item.pid}, Quantity: {item.quantity}, Available Amount: {amount}<br>"
+        flash(Markup(error_message), "error")
         return redirect(url_for('cart.get_cart'))
     
 @staticmethod
