@@ -60,8 +60,10 @@ def product_page(product_id):
     current_product = Product.get(product_id)
     current_seller = User.get(current_product.seller_id)
     top_3_reviews = Review.get_top_3_helpful(product_id)
-    print(top_3_reviews)
+
     associated_reviews = Review.get_reviews_minus_top_3(product_id)
+    
+    average_rating = Review.total_average(product_id)[0]
     # print(product_id)
     # print(associated_reviews.review)
     return render_template('productsPage.html', 
@@ -69,4 +71,6 @@ def product_page(product_id):
                             top_3_reviews=top_3_reviews,
                             associated_reviews=associated_reviews,
                             humanize_time=humanize_time,
-                            current_seller=current_seller)
+                            current_seller=current_seller,
+                            num_of_reviews= (len(associated_reviews or "") + len(top_3_reviews or "")),
+                            average_rating=average_rating)

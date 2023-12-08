@@ -10,6 +10,8 @@ from .models.sellerreview import SellerReview
 from flask import current_app as app
 
 import datetime
+from humanize import naturaltime
+
 
 from wtforms.fields.simple import HiddenField
 
@@ -170,10 +172,15 @@ def publicprofile(user_id):
     # Route to the public profile of the user with that id
     seller = is_seller(user_id)
     userInfo = User.get(user_id)
+
+    reviews_for_this_seller = SellerReview.reviews_for_this_seller(user_id)
+
     return render_template('publicprofile.html',
                     user_id = user_id, 
                     userInfo = userInfo, 
-                    seller = seller)
+                    seller = seller,
+                    reviews_for_this_seller=reviews_for_this_seller,
+                    humanize_time=humanize_time)
 
 
 def is_seller(user_id):

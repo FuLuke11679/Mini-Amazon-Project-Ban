@@ -11,7 +11,7 @@ num_wishlistitems = 2200
 num_sellers = 20
 num_inventory = 1000
 num_reviews_per_user = 20
-num_reviews_per_seller = 100
+
 
 Faker.seed(0)
 fake = Faker()
@@ -203,7 +203,7 @@ def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
         print(f'{num_reviews} generated')
     return
 
-def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sellers):
+def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sellers, num_users):
     reviewDict = {
         "1": "abhors",
         "2": "hates",
@@ -215,14 +215,15 @@ def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sell
     with open('SellerReviews.csv', 'w') as g:
         writer = get_csv_writer(g)
         print('SellerReviews...', end=' ', flush=True)
-        num_sellerReviews = num_sellers * num_reviews_per_seller
-        for i in range(num_sellers):
-            #poss_ids = fake.random_element(elements=available_sellers, length=num_reviews_per_seller, unique=true)
+        num_sellerReviews = num_users * num_reviews_per_seller
+        for i in range(num_users): 
+            particular_sellers =  fake.random_elements(elements=available_sellers, length=num_reviews_per_seller, unique=True)
+            #print(particular_sellers)
             for j in range(num_reviews_per_seller):
                 if (((i*num_reviews_per_seller) + j) % 200 == 0):
                     print(f'{((i*num_reviews_per_seller) + j)}', end=" ", flush=True)
                 uid = i
-                seller_uid = available_sellers[i]
+                seller_uid = particular_sellers[j]
                 rating = fake.random_int(min=1, max=5)
                 review = f'{users[i]["firstname"]} {reviewDict[str(rating)]} this seller!'
                 time_purchased = fake.date_time()
@@ -234,11 +235,13 @@ def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sell
 
 users = gen_users(num_users)
 available_sellers = gen_sellers(num_sellers, num_users)
+num_reviews_per_seller = 2 #len(available_sellers) #num_of_sellerReviews_per_user
+# poss_ids = fake.random_elements(elements=available_sellers, length=num_reviews_per_seller, unique=True)
 available_pids, products = gen_products(num_products, available_sellers)
 gen_purchases(num_purchases, products)
 gen_Carts(num_purchases, available_pids)
 gen_inventory(num_inventory, available_pids, available_sellers)
 gen_reviews(users, num_reviews_per_user, num_users, available_pids)
-gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sellers)
+gen_sellerReviews(users, num_reviews_per_seller, list(set(available_sellers)), num_sellers, num_users)
 gen_Carts(num_purchases, available_pids)
 
