@@ -4,8 +4,8 @@ from faker import Faker
 import random
 
 num_users = 100
-num_products = 2000
-num_purchases = 2500
+num_products = 200
+num_purchases = 250
 num_sellers = 20
 num_wishlistitems = 2200
 num_sellers = 20
