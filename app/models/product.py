@@ -194,3 +194,18 @@ ORDER BY {}
 
         rows = app.db.execute(query, keyword=keyword, subtag=subtag)
         return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def just_order(sort_order):
+        # Define the order clause based on the sort_order argument
+        order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
+
+        # Execute the database query to fetch and sort products
+        rows = app.db.execute('''
+            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+            FROM Products
+            ORDER BY {}
+        '''.format(order_clause))
+
+        # Create and return a list of Product instances
+        return [Product(*row) for row in rows]

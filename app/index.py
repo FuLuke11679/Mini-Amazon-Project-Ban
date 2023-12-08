@@ -95,6 +95,8 @@ def search():
     else:
         if tag and subtag == "":
             products = Product.get_by_tag(tag, sort_order)
+        elif tag == "" and subtag =="":
+            products = Product.just_order(sort_order)
         else:
             products = Product.get_by_subtag(subtag, sort_order)
     

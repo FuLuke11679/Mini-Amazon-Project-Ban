@@ -4,6 +4,8 @@
     <!-- head elements -->
 </head>
 <body>
+    <!-- Home button -->
+    <a href="{{ url_for('index.index') }}" style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Home</a>
     <h1>Search Results</h1>
 
     {% if search_term %}
@@ -94,21 +96,39 @@
         
         <button type="submit">Search</button>
     </form>
-
-    <!-- Displaying products -->
+    
+    <!-- Displaying products in a table similar to index.html -->
     {% if products %}
-        <div class="product-list">
+    <table class='table table-hover table-bordered container'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Product ID</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
             {% for product in products %}
-                <div class="product">
-                    <h2><a href="{{ url_for('index.product_page', product_id=product.id) }}">{{ product.name }}</a></h2>
-                    <img src="{{ product.photo_url }}" alt="{{ product.name }}">
-                    <p>Price: ${{ product.price }}</p>
-                    <p>{{ product.longDescription }}</p>
-                </div>
+                <tr>
+                    <th scope="row">{{ product.id }}</th>
+                    <td><a href="/product/{{ product.id }}">{{ product.name }}</a></td>
+                    <td>${{ product.price }}</td>
+                    <td>
+                        <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
+                            <input type="submit" value="Add to Wishlist"/>
+                        </form>
+                        <form action="{{ url_for('cart.cart_add', product_id=product.id) }}" method="POST">
+                            <input type="submit" value="Add to Cart"/>
+                        </form>
+                    </td>
+                </tr>
             {% endfor %}
-        </div>
+        </tbody>
+    </table>
     {% else %}
-        <p>No products found matching your criteria.</p>
+    <p>No products found matching your criteria.</p>
     {% endif %}
-</body>
-</html>
+
+    </body>
+    </html>
