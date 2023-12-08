@@ -175,54 +175,54 @@ ORDER BY {}
     
 
 
-    # @staticmethod
-    # def get_list_by_ids(product_ids):
-    #     # Use WHERE id IN (:product_ids) to filter by a list of product IDs
-    #     rows = app.db.execute('''
-    #         SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
-    #         FROM Products
-    #         WHERE id IN :product_ids
-    #     ''',
-    #     product_ids=tuple(product_ids))
+    @staticmethod
+    def get_list_by_ids(product_ids):
+        # Use WHERE id IN (:product_ids) to filter by a list of product IDs
+        rows = app.db.execute('''
+            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+            FROM Products
+            WHERE id IN :product_ids
+        ''',
+        product_ids=tuple(product_ids))
         
-    #     return [Product(*row) for row in rows]
+        return [Product(*row) for row in rows]
 
-    # @staticmethod
-    # def get_amount_num(id):
-    #     rows = app.db.execute('''
-    #         SELECT amount
-    #         FROM Products
-    #         WHERE id = :id
-    #     ''', id=id)
-    #     return rows[0][0] if rows else None
+    @staticmethod
+    def get_amount_num(id):
+        rows = app.db.execute('''
+            SELECT amount
+            FROM Products
+            WHERE id = :id
+        ''', id=id)
+        return rows[0][0] if rows else None
 
-        # @staticmethod
-    # def get_all(available=True):
-    #     rows = app.db.execute('''
-    # SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
-    # FROM Products
-    # WHERE available = :available
-    # ''',
-    #                         available=available)
-    #     return [Product(*row) for row in rows]
+    @staticmethod
+    def get_all(available=True):
+        rows = app.db.execute('''
+    SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+    FROM Products
+    WHERE available = :available
+    ''',
+                            available=available)
+        return [Product(*row) for row in rows]
     
 
-    # @staticmethod
-    # def get_amount(id):
-    #     rows = app.db.execute('''
-    #         SELECT amount
-    #         FROM Products
-    #         WHERE id = :id
-    #     ''', id=id)
-    #     return rows[0][0] if rows else None
+    @staticmethod
+    def get_amount(id):
+        rows = app.db.execute('''
+            SELECT amount
+            FROM Products
+            WHERE id = :id
+        ''', id=id)
+        return rows[0][0] if rows else None
 
-    # @staticmethod
-    # def search(keyword):
-    #     keyword = f"%{keyword}%"
-    #     rows = app.db.execute('''
-    #     SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
-    #     FROM Products
-    #     WHERE name LIKE :keyword OR longDescription LIKE :keyword
-    #     ''', keyword=keyword)
-    #     return [Product(*row) for row in rows]
+    @staticmethod
+    def search(keyword):
+        keyword = f"%{keyword}%"
+        rows = app.db.execute('''
+        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+        FROM Products
+        WHERE name LIKE :keyword OR longDescription LIKE :keyword
+        ''', keyword=keyword)
+        return [Product(*row) for row in rows]
 

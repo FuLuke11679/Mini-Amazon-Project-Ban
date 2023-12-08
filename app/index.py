@@ -85,6 +85,7 @@ def search():
     tag = request.args.get('tag', '')
     subtag = request.args.get('subtag', '')
     sort_order = request.args.get('sort_order', 'asc')
+    print(str(keyword)+"       "+str(tag)+"       "+str(subtag)+"       "+str(sort_order))
 
     products = []
 

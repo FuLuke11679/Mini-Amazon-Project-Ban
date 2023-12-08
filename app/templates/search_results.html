@@ -13,16 +13,9 @@
         function updateSubtags() {
             var tag = document.getElementById('tag').value;
             var subtagSelect = document.getElementById('subtag');
-            var currentSubtag = '{{ subtag }}'; // Get the current subtag from the Flask template
 
             // Clear the subtag select element
             subtagSelect.innerHTML = '';
-
-            // Add an "All" option for the selected category
-            var allOption = document.createElement('option');
-            allOption.value = '';
-            allOption.text = 'All Subcategories';
-            subtagSelect.appendChild(allOption);
 
             if (tag !== '') {
                 // Fetch and populate subtags based on the selected category
@@ -35,68 +28,91 @@
                             var option = document.createElement('option');
                             option.value = subtag;
                             option.text = subtag;
-                            if (subtag === currentSubtag) {
-                                option.selected = true;
-                            }
                             subtagSelect.appendChild(option);
                         });
                     });
             }
         }
 
-        // Call the function to update subtags on page load
+        function updateSubtagsAndHiddenInput() {
+            var tag = document.getElementById('tag').value;
+            document.getElementById('hidden-tag').value = tag;
+            updateSubtags(); // Update subtags dropdown
+        }
+
+        function updateHiddenSubtag() {
+            var subtag = document.getElementById('subtag').value;
+            document.getElementById('hidden-subtag').value = subtag;
+        }
+
+        function updateHiddenSortOrder() {
+            var sortOrder = document.getElementById('sort_order').value;
+            document.getElementById('hidden-sort-order').value = sortOrder;
+        }
+
+        // Initialize hidden inputs on page load
         document.addEventListener('DOMContentLoaded', function() {
-            updateSubtags();
+            updateSubtagsAndHiddenInput();
+            updateHiddenSubtag();
+            updateHiddenSortOrder();
         }, false);
     </script>
 
-    <!-- Start of the modified search bar in search_results.html -->
-<!-- Search Container -->
-<div class="search-container">
-    <h2>Search Products</h2>
-  
-    <!-- Search Bar and Button -->
-    <div class="search-bar-container">
-        <form action="/search" method="get" class="search-form">
-            <input type="text" name="keyword" placeholder="Search products..." class="search-input">
-            <button type="submit" class="search-button">Search</button>
-        </form>
-    </div>
-  
-    <!-- Dropdown Search Options -->
-    <div class="search-options">
-        <select name="tag" id="tag" onchange="updateSubtags()" class="search-select">
-            <option value="">All Categories</option>
-            <option value="Groceries">Groceries</option>
-            <option value="Basics">Basics</option>
-            <option value="Music">Music</option>
-            <option value="Books">Books</option>
-            <option value="Tech">Tech</option>
-            <option value="Pharmacy">Pharmacy</option>
-            <option value="Fashion">Fashion</option>
-            <!-- ... other options ... -->
-        </select>
-  
-        <select name="subtag" id="subtag" class="search-select">
-            <option value="">All Subcategories</option>
-            <!-- Subcategories options will be populated by JavaScript -->
-        </select>
-  
-        <select name="sort_order" class="search-select">
-            <option value="asc">Price: Low to High</option>
-            <option value="desc">Price: High to Low</option>
-        </select>
-    </div>
-  </div>
+    <!-- Search Container -->
+    <div class="search-container">
+        <h2>Search Products</h2>
 
-  <div class="search-details">
-    <strong>Currently Searching For:</strong> 
-    {% if search_term %}{{ search_term }}{% else %}Any Keyword{% endif %}
-    <strong>| Browsing:</strong> 
-    {% if tag %}{{ tag }}{% else %}All Categories{% endif %}
-    <strong>| Browsing:</strong> 
-    {% if subtag %}{{ subtag }}{% else %}All Subcategories{% endif %}
-</div>
+        <!-- Search Bar and Button -->
+        <div class="search-bar-container">
+            <form action="/search" method="get" class="search-form">
+                <!-- Keyword Input -->
+                <input type="text" name="keyword" placeholder="Search products..." class="search-input">
+
+                <!-- Hidden Inputs for Tag, Subtag, and Sort Order -->
+                <input type="hidden" name="tag" id="hidden-tag">
+                <input type="hidden" name="subtag" id="hidden-subtag">
+                <input type="hidden" name="sort_order" id="hidden-sort-order">
+
+                <!-- Submit Button -->
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
+
+        <!-- Dropdown Search Options -->
+        <div class="search-options">
+            <!-- Tag Dropdown -->
+            <select id="tag" onchange="updateSubtagsAndHiddenInput()" class="search-select">
+                <option value="">All Categories</option>
+                <option value="Groceries">Groceries</option>
+                <option value="Basics">Basics</option>
+                <option value="Music">Music</option>
+                <option value="Books">Books</option>
+                <option value="Tech">Tech</option>
+                <option value="Pharmacy">Pharmacy</option>
+                <option value="Fashion">Fashion</option>
+            </select>
+
+            <!-- Subtag Dropdown -->
+            <select id="subtag" onchange="updateHiddenSubtag()" class="search-select">
+                <!-- Options will be populated by JavaScript -->
+            </select>
+
+            <!-- Sort Order Dropdown -->
+            <select id="sort_order" onchange="updateHiddenSortOrder()" class="search-select">
+                <option value="asc">Price: Low to High</option>
+                <option value="desc">Price: High to Low</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="search-details">
+        <strong>Currently Searching For:</strong> 
+        {% if search_term %}{{ search_term }}{% else %}Any Keyword{% endif %}
+        <strong>| Browsing:</strong> 
+        {% if tag %}{{ tag }}{% else %}All Categories{% endif %}
+        <strong>| Browsing:</strong> 
+        {% if subtag %}{{ subtag }}{% else %}All Subcategories{% endif %}
+    </div>
     
     <!-- Displaying products in a table similar to index.html -->
     {% if products %}
@@ -121,7 +137,6 @@
     <p>No products found matching your criteria.</p>
     {% endif %}
 
-
     <!-- Link to CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
@@ -129,3 +144,10 @@
 </html>
 
 {% endblock %}
+
+
+
+
+
+
+
