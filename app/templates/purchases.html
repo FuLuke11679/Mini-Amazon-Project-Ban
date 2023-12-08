@@ -3,6 +3,33 @@
 {% block content %}
 
 <br><br>
+{% if rec_products %}
+
+<h2>You may also like:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity In Stock</th>
+      <th scope="col">Photo URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in rec_products %}
+    <tr>
+        <td>Product Name: {{ product.name }}</td>
+        <td>Price: {{ product.price }}</td>
+        <td>In Stock: {{ product.amount }}</td>
+        <td>Photo: {{ product.photo_url }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endif %}
+
+
 <h2>User's Recent Purchases:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">

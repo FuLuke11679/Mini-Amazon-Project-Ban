@@ -34,8 +34,8 @@
     <input type="submit" value="Search">
 </form>
 
-<h2>Search User Purchases</h2>
-<form action="{{ url_for('purchases.purchases_search') }}" method="POST">
+<h2>Search Users</h2>
+<form action="{{ url_for('users.user_search') }}" method="POST">
     <label for="user_id">User ID:</label>
     <input type="text" id="user_id" name="user_id">
     <input type="submit" value="Search">

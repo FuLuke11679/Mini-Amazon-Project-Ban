@@ -54,6 +54,20 @@ LIMIT :per_page OFFSET :offset
         LIMIT :k
     ''', k=k)
         return [Product(*row) for row in rows]
+
+
+    @staticmethod
+    def get_list_by_ids(product_ids):
+        # Use WHERE id IN (:product_ids) to filter by a list of product IDs
+        rows = app.db.execute('''
+            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+            FROM Products
+            WHERE id IN :product_ids
+        ''',
+        product_ids=tuple(product_ids))
+        
+        return [Product(*row) for row in rows]
+
     @staticmethod
     def get_amount_num(id):
         rows = app.db.execute('''
