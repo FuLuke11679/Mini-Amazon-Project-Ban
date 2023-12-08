@@ -87,3 +87,15 @@ since = since)
         )
 
         return  [Review(*row) for row in rows] if rows else None
+
+    @staticmethod
+    def total_average(pid):
+        rows = app.db.execute('''
+            SELECT AVG(rating) 
+            FROM Reviews 
+            WHERE pid = :pid 
+            GROUP BY pid;
+            ''', pid=pid
+        )
+
+        return [round(row, 2) for row in rows[0]] if rows else None

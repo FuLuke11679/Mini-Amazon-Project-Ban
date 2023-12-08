@@ -46,3 +46,14 @@ LIMIT 5
 uid = uid, 
 since = since)
         return [SellerReview(*row) for row in rows]
+
+    @staticmethod
+    def reviews_for_this_seller(seller_uid):
+        rows = app.db.execute('''
+            SELECT * FROM SellerReviews
+            WHERE seller_uid = :seller_uid
+            ORDER BY time_posted DESC
+            ''', seller_uid=seller_uid
+        )
+
+        return  [SellerReview(*row) for row in rows] if rows else None

@@ -4,8 +4,14 @@ from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-
+from humanize import naturaltime
+from .models.review import Review 
+from .models.sellerreview import SellerReview
 from flask import current_app as app
+
+import datetime
+from humanize import naturaltime
+
 
 from wtforms.fields.simple import HiddenField
 
@@ -17,6 +23,8 @@ from .models.purchase import Purchase
 from flask import Blueprint
 bp = Blueprint('users', __name__)
 
+def humanize_time(dt):
+    return naturaltime(datetime.datetime.now() - dt)
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -143,7 +151,19 @@ def logout():
 
 @bp.route('/myprofile')
 def myprofile():
-   return render_template('myprofile.html')
+    if current_user.is_authenticated:
+        reviews = Review.get_all_by_uid_since(current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+        sellerReviews = SellerReview.get_all_by_uid_since(current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+    else:
+        reviews = None
+        sellerReviews = None
+
+    print(reviews)
+
+    return render_template('myprofile.html', 
+                        reviews=reviews,
+                        sellerReviews=sellerReviews,
+                        humanize_time=humanize_time)
 
 
 @bp.route('/publicprofile/<int:user_id>', methods = ['GET'])
@@ -151,10 +171,15 @@ def publicprofile(user_id):
     #user_id = request.form['user_id']
     seller = is_seller(user_id)
     userInfo = User.get(user_id)
+
+    reviews_for_this_seller = SellerReview.reviews_for_this_seller(user_id)
+
     return render_template('publicprofile.html',
                     user_id = user_id, 
                     userInfo = userInfo, 
-                    seller = seller)
+                    seller = seller,
+                    reviews_for_this_seller=reviews_for_this_seller,
+                    humanize_time=humanize_time)
 
 @bp.route('/user_search', methods=['GET', 'POST'])
 def user_search():

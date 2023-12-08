@@ -22,7 +22,7 @@ Available: {% if current_product.available %}Yes{% else %}No{% endif %}
 <br><br>
 Product Img: <img src="{{ current_product.photo_url }}" alt="{{ current_product.name }}">
 <br><br>
-Sold by: <a href="/{{ current_seller.id }}">{{ current_seller.firstname }} {{ current_seller.lastname }}</a>
+Sold by: <a href="/publicprofile/{{ current_seller.id }}">{{ current_seller.firstname }} {{ current_seller.lastname }}</a>
 <br><br>
 {% if current_user.is_authenticated %}
 Reviews for this Product: <form action="{{ url_for('review.review')  }}" method="GET">
@@ -30,12 +30,13 @@ Reviews for this Product: <form action="{{ url_for('review.review')  }}" method=
 </form>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to leave/update your review!</p>
-<br><br>
-Reviews for this Product: 
 {% endif %}
 <br><br>
-
+Number of Reviews: {{num_of_reviews}}
+<br><br> 
+Average Product Review Rating: {{average_rating}}
 {% if top_3_reviews is not none %}
+<br><br>
 Most Helpful Reviews For This Product:
 <br><br>
 
@@ -100,5 +101,7 @@ Other Recent Reviews:
     </tbody>
 </table>
 {% endif %}
+
+
 
 {% endblock %}
