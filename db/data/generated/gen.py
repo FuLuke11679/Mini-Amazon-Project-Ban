@@ -152,7 +152,7 @@ def gen_inventory(num_inventory, available_pids, available_sellers):
             quantity = fake.random_int(min = 1, max = 20)
             writer.writerow([id, uid, pid, time_purchased, quantity])
         print(f'{num_purchases} generated')
-
+        
     return
 
 def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
