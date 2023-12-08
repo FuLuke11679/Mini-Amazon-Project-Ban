@@ -7,6 +7,7 @@ from flask import request
 
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.purchaseorder import PurchaseOrder
 from .models.inventory import InventoryItem
 from flask import current_app as app
 
@@ -121,7 +122,7 @@ VALUES(:uid)
 def inventory_order_fulfill():
     if current_user.is_authenticated:
         user_id = current_user.id
-        orderlist = Purchase.get_all_seller_id(user_id)  # Assuming you want to get purchases associated with the user
+        orderlist = PurchaseOrder.get_all_seller_id(user_id)  # Assuming you want to get purchases associated with the user
         return render_template('orderfulfillment.html',
                            orderlist=orderlist,
                            humanize_time=humanize_time,
