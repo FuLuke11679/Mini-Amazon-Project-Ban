@@ -26,18 +26,13 @@ WHERE id = :id
         return Product(*(rows[0])) if rows is not None else None
     
     @staticmethod
-    def get_all(available=True, page=1, per_page=9):
-        offset = (page-1) * per_page
+    def get_all(available=True):
         rows = app.db.execute('''
-SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
-FROM Products
-WHERE available = :available
-LIMIT :per_page OFFSET :offset
-
-''',
-                              available=available, 
-                              per_page = per_page, 
-                              offset = offset)
+    SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+    FROM Products
+    WHERE available = :available
+    ''',
+                            available=available)
         return [Product(*row) for row in rows]
 
     @staticmethod
@@ -48,14 +43,6 @@ LIMIT :per_page OFFSET :offset
             WHERE id = :id
         ''', id=id)
         return rows[0][0] if rows else None
-    def get_top_k_expensive(k):
-        rows = app.db.execute('''
-        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
-        FROM Products
-        ORDER BY price DESC
-        LIMIT :k
-    ''', k=k)
-        return [Product(*row) for row in rows]
 
     @staticmethod
     def search(keyword):
@@ -90,20 +77,16 @@ LIMIT :per_page OFFSET :offset
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def get_all_sorted(available=True, page=1, per_page=12, sort_order='asc'):
-        offset = (page - 1) * per_page
+    def get_all_sorted(available=True, sort_order='asc'):
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
         rows = app.db.execute('''
-SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
-FROM Products
-WHERE available = :available
-ORDER BY {} 
-LIMIT :per_page OFFSET :offset
-'''.format(order_clause),
-                              available=available, 
-                              per_page=per_page, 
-                              offset=offset)
+    SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+    FROM Products
+    WHERE available = :available
+    ORDER BY {}
+    '''.format(order_clause), available=available)
         return [Product(*row) for row in rows]
+
 
     @staticmethod
     def search_sorted(keyword, sort_order='asc'):
