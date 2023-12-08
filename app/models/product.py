@@ -24,7 +24,7 @@ WHERE id = :id
         return Product(*(rows[0])) if rows is not None else None
     
     @staticmethod
-    def get_all(available=True, page=1, per_page=10):
+    def get_all(available=True, page=1, per_page=9):
         offset = (page-1) * per_page
         rows = app.db.execute('''
 SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
