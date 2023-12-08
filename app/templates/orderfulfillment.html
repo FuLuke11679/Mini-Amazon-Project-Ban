@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+{% if current_user.is_authenticated %}
+<h2>Your Orders to be Fulfilled:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+        <th scope="col">Order ID</th>
+        <th scope="col">User ID</th>
+        <th scope="col">Address</th>
+        <th scope="col">Product ID</th>
+        <th scope="col">Seller ID</th>
+        <th scope = "col">Name</th>
+        <th scope="col">Date Added</th>
+        <th scope="col"># of Items</th>
+        <th scope="col">Fulfillment</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in  orderlist %}
+      <tr>
+        <th scope="row">{{ item.id }}</th>
+        <td>{{ item.uid }}</td>
+        <td>{{ item.address }}</td>
+        <td>{{ item.pid }}</td>
+        <td>{{ item.seller_id }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.time_purchased }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.fulfillment_status }}<form action="{{ url_for('inventory.inventory_confirm_fulfill', order_id=item.id, product_id=item.pid) }}" method="POST">
+          <input type="submit" value="Fulfill Order"/>
+        </form></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your orders!</p>
+{% endif %}
+{% endblock %}
