@@ -47,4 +47,100 @@
   }
   
   /* Add more styles as needed */
-  
+  .search-container {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.search-options {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Adjust as needed */
+  margin-top: 10px; /* Adjust as needed */
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Adjust as needed */
+}
+
+.search-input, .search-select, .search-button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px; /* Larger font size for better readability */
+    border-radius: 5px; /* Rounded corners for a softer look */
+}
+
+.search-input {
+    width: 50%; /* Increase the width of the search input */
+}
+
+.search-button {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #45a049; /* Darker shade on hover */
+}
+
+
+
+/*for search result information formatting*/
+.search-details {
+  font-size: 0.9em; /* Smaller font size */
+  white-space: nowrap; /* Ensures that the text stays on one line */
+  font-weight: normal; /* Default weight for the text */
+  text-align: center; /* Center align the text */
+  margin: 0 auto; /* Auto margins for horizontal centering */
+  padding: 20px 20px; /* Optional: Adds some padding above and below */
+}
+
+.search-details strong {
+  font-weight: bold; /* Makes the labels bold */
+  margin-right: 5px; /* Spacing after the bold text */
+}
+
+.search-details strong::after {
+  content: ' '; /* Removes the vertical lines */
+}
+
+
+
+/*Banner/*
+
+/* Add this CSS to your styles.css or in a <style> tag within your HTML */
+
+.banner {
+  text-align: center; /* Horizontally center the content */
+  padding: 50px 0; /* Add some padding for spacing */
+  background-color: #f0f0f0; /* Background color for the banner */
+}
+
+.banner h1 {
+  font-size: 24px; /* Adjust the font size as needed */
+}
+
+.banner p {
+  font-size: 16px; /* Adjust the font size as needed */
+}
+
+/* Center the banner vertically within the viewport */
+.banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Vertically center the content */
+  align-items: center; /* Horizontally center the content */
+}
+
+/* Reset the styles for html and body elements */
+html, body {
+  height: auto;
+  margin: 0;
+}
+
+/* Add other CSS styles for your existing content as needed */

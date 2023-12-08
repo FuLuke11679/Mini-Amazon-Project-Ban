@@ -1,30 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- head elements -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <!-- Home button -->
-    <a href="{{ url_for('index.index') }}" style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Home</a>
-    <h1>Search Results</h1>
-
-    {% if search_term %}
-        <h2>Currently Searching For: {{ search_term }}</h2>
-    {% else %}
-        <h2>Currently Searching For Any Keyword</h2>
-    {% endif %}
-
-    {% if tag %}
-        <h2>Currently Browsing in Category: {{ tag }}</h2>
-    {% else %}
-        <h2>Browsing All Categories</h2>
-    {% endif %}
-
-    {% if subtag %}
-        <h2>Currently Browsing in Subcategory: {{ subtag }}</h2>
-    {% else %}
-        <h2>Browsing All Subcategories</h2>
-    {% endif %}
 
     <script>
         function updateSubtags() {
@@ -67,35 +50,53 @@
         }, false);
     </script>
 
-    <!-- Include a search bar with category and subcategory selection -->
-    <form action="/search" method="get">
-        <input type="text" name="keyword" placeholder="Search products..." value="{{ search_term }}">
-
-        <select name="tag" id="tag" onchange="updateSubtags()">
+    <!-- Start of the modified search bar in search_results.html -->
+<!-- Search Container -->
+<div class="search-container">
+    <h2>Search Products</h2>
+  
+    <!-- Search Bar and Button -->
+    <div class="search-bar-container">
+        <form action="/search" method="get" class="search-form">
+            <input type="text" name="keyword" placeholder="Search products..." class="search-input">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+  
+    <!-- Dropdown Search Options -->
+    <div class="search-options">
+        <select name="tag" id="tag" onchange="updateSubtags()" class="search-select">
             <option value="">All Categories</option>
-            <option value="Groceries" {% if tag == 'Groceries' %}selected{% endif %}>Groceries</option>
-            <option value="Basics" {% if tag == 'Basics' %}selected{% endif %}>Basics</option>
-            <option value="Music" {% if tag == 'Music' %}selected{% endif %}>Music</option>
-            <option value="Books" {% if tag == 'Books' %}selected{% endif %}>Books</option>
-            <option value="Tech" {% if tag == 'Tech' %}selected{% endif %}>Tech</option>
-            <option value="Pharmacy" {% if tag == 'Pharmacy' %}selected{% endif %}>Pharmacy</option>
-            <option value="Fashion" {% if tag == 'Fashion' %}selected{% endif %}>Fashion</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Basics">Basics</option>
+            <option value="Music">Music</option>
+            <option value="Books">Books</option>
+            <option value="Tech">Tech</option>
+            <option value="Pharmacy">Pharmacy</option>
+            <option value="Fashion">Fashion</option>
             <!-- ... other options ... -->
         </select>
-        
-        <!-- Subcategory selection -->
-        <select name="subtag" id="subtag">
+  
+        <select name="subtag" id="subtag" class="search-select">
             <option value="">All Subcategories</option>
-            <!-- Options will be populated by JavaScript -->
+            <!-- Subcategories options will be populated by JavaScript -->
         </select>
+  
+        <select name="sort_order" class="search-select">
+            <option value="asc">Price: Low to High</option>
+            <option value="desc">Price: High to Low</option>
+        </select>
+    </div>
+  </div>
 
-        <select name="sort_order">
-            <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Price: Low to High</option>
-            <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Price: High to Low</option>
-        </select>
-        
-        <button type="submit">Search</button>
-    </form>
+  <div class="search-details">
+    <strong>Currently Searching For:</strong> 
+    {% if search_term %}{{ search_term }}{% else %}Any Keyword{% endif %}
+    <strong>| Browsing:</strong> 
+    {% if tag %}{{ tag }}{% else %}All Categories{% endif %}
+    <strong>| Browsing:</strong> 
+    {% if subtag %}{{ subtag }}{% else %}All Subcategories{% endif %}
+</div>
     
     <!-- Displaying products in a table similar to index.html -->
     {% if products %}
@@ -126,3 +127,5 @@
 
 </body>
 </html>
+
+{% endblock %}

@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="banner">
+  <h1>Welcome to Our Online Store!</h1>
+  <p>Discover a wide range of products and enjoy shopping with us.</p>
+</div>
 
 
 <br><br>
-
+<!-- 
 
 <h2>Search Inventory Based On Seller ID:</h2>
   <form action="{{ url_for('inventory.inventory_view') }}" method="POST">
@@ -35,7 +39,7 @@
     <input type="text" id="user_id" name="user_id">
     <input type="submit" value="Search">
 </form>
-
+-->
 
 <script>
 function updateSubtags() {
@@ -71,42 +75,46 @@ function updateSubtags() {
 </script>
 
 
-<h2>Search Products</h2>
-<form action="/search" method="get">
-    <!-- Search Input -->
-    <input type="text" name="keyword" placeholder="Search products..." value="">
+<!-- Search Container -->
+<div class="search-container">
+  <h2>Search Products</h2>
 
-    <!-- Category Selection -->
-    <select name="tag" id="tag" onchange="updateSubtags()">
-        <option value="">All Categories</option>
-        <option value="Groceries">Groceries</option>
-        <option value="Basics">Basics</option>
-        <option value="Music">Music</option>
-        <option value="Books">Books</option>
-        <option value="Tech">Tech</option>
-        <option value="Pharmacy">Pharmacy</option>
-        <option value="Fashion">Fashion</option>
-        <!-- ... other options ... -->
-    </select>
-    
-    <!-- Subcategory Selection -->
-    <select name="subtag" id="subtag">
-        <option value="">All Subcategories</option>
-        <!-- Options will be populated by JavaScript -->
-    </select>
+  <!-- Search Bar and Button -->
+  <div class="search-bar-container">
+      <form action="/search" method="get" class="search-form">
+          <input type="text" name="keyword" placeholder="Search products..." class="search-input">
+          <button type="submit" class="search-button">Search</button>
+      </form>
+  </div>
 
-    <!-- Sorting Options -->
-    <select name="sort_order">
-        <option value="asc">Price: Low to High</option>
-        <option value="desc">Price: High to Low</option>
-    </select>
-    
-    <button type="submit">Search</button>
-</form>
+  <!-- Dropdown Search Options -->
+  <div class="search-options">
+      <select name="tag" id="tag" onchange="updateSubtags()" class="search-select">
+          <option value="">All Categories</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Basics">Basics</option>
+          <option value="Music">Music</option>
+          <option value="Books">Books</option>
+          <option value="Tech">Tech</option>
+          <option value="Pharmacy">Pharmacy</option>
+          <option value="Fashion">Fashion</option>
+          <!-- ... other options ... -->
+      </select>
 
+      <select name="subtag" id="subtag" class="search-select">
+          <option value="">All Subcategories</option>
+          <!-- Subcategories options will be populated by JavaScript -->
+      </select>
 
+      <select name="sort_order" class="search-select">
+          <option value="asc">Price: Low to High</option>
+          <option value="desc">Price: High to Low</option>
+      </select>
+  </div>
+</div>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
 
 <!-- Products for sale (Card Layout) -->
 <h2>Products for sale:</h2>

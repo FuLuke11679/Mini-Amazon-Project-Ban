@@ -22,9 +22,6 @@ def page_not_found(e):
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-    # Get page value or default 1 (for products for sale display)
-    page = int(request.args.get('page', 1))
-
     # Get the sorting order from the request, default to ascending
     sort_order = request.args.get('sort_order', 'asc')
 
@@ -39,19 +36,18 @@ def index():
 
     # Render the index.html template with the provided variables
     return render_template('index.html',
-                           page=page,
                            avail_products=products,
                            recent_purchase_history=recent_purchases,
                            ) 
 
-
+'''
 @bp.route('/search_results', methods = ['GET', 'POST'])
 def search_results():
     if request.method == 'POST':
         user_id = request.form['user_id']
         return redirect(url_for('purchases.purchases', user_id = user_id))
     return render_template('index.html')
-
+'''
 
 @bp.route('/product/<int:product_id>', methods=['GET'])
 def product_page(product_id):

@@ -15,6 +15,7 @@ class Product:
         self.tag = tag
         self.subtag = subtag
 
+    #Used
     @staticmethod
     def get(id):
         rows = app.db.execute('''
@@ -25,35 +26,8 @@ WHERE id = :id
                               id=id)
         return Product(*(rows[0])) if rows is not None else None
     
-    @staticmethod
-    def get_all(available=True):
-        rows = app.db.execute('''
-    SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
-    FROM Products
-    WHERE available = :available
-    ''',
-                            available=available)
-        return [Product(*row) for row in rows]
-
-    @staticmethod
-    def get_amount(id):
-        rows = app.db.execute('''
-            SELECT amount
-            FROM Products
-            WHERE id = :id
-        ''', id=id)
-        return rows[0][0] if rows else None
-
-    @staticmethod
-    def search(keyword):
-        keyword = f"%{keyword}%"
-        rows = app.db.execute('''
-        SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
-        FROM Products
-        WHERE name LIKE :keyword OR longDescription LIKE :keyword
-        ''', keyword=keyword)
-        return [Product(*row) for row in rows]
     
+    #Used
     @staticmethod
     def get_by_tag(tag, sort_order):
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
@@ -65,6 +39,7 @@ WHERE id = :id
         tag=tag)
         return [Product(*row) for row in rows]
     
+    #Used
     @staticmethod
     def search_in_category(keyword, tag):
         keyword = f"%{keyword}%"
@@ -76,6 +51,7 @@ WHERE id = :id
         keyword=keyword, tag=tag)
         return [Product(*row) for row in rows]
     
+    #Used
     @staticmethod
     def get_all_sorted(available=True, sort_order='asc'):
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
@@ -87,7 +63,7 @@ WHERE id = :id
     '''.format(order_clause), available=available)
         return [Product(*row) for row in rows]
 
-
+    #Used
     @staticmethod
     def search_sorted(keyword, sort_order='asc'):
         keyword = f"%{keyword}%"
@@ -101,6 +77,7 @@ ORDER BY {}
                               keyword=keyword)
         return [Product(*row) for row in rows]
 
+    #used
     @staticmethod
     def search_in_category_sorted(keyword, tag, sort_order='asc'):
         keyword = f"%{keyword}%"
@@ -115,7 +92,7 @@ ORDER BY {}
         return [Product(*row) for row in rows]
 
 
-
+    #Used
     @staticmethod
     def get_subtags_by_tag(tag):
         # Query the database to get subtags based on the selected category (tag)
@@ -147,6 +124,7 @@ ORDER BY {}
         rows = app.db.execute(query, keyword=keyword, tag=tag, subtag=subtag)
         return [Product(*row) for row in rows]
     
+    #Used
     @staticmethod
     def get_by_subtag(subtag, sort_order):
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
@@ -161,6 +139,7 @@ ORDER BY {}
         rows = app.db.execute(query, subtag=subtag)
         return [Product(*row) for row in rows]
     
+    #Used
     @staticmethod
     def search_with_everything(keyword, subtag, sort_order):
         keyword = f"%{keyword}%"
@@ -177,6 +156,7 @@ ORDER BY {}
         rows = app.db.execute(query, keyword=keyword, subtag=subtag)
         return [Product(*row) for row in rows]
     
+    #Used
     @staticmethod
     def just_order(sort_order):
         # Define the order clause based on the sort_order argument
@@ -192,24 +172,54 @@ ORDER BY {}
         # Create and return a list of Product instances
         return [Product(*row) for row in rows]
 
-    @staticmethod
-    def get_list_by_ids(product_ids):
-        # Use WHERE id IN (:product_ids) to filter by a list of product IDs
-        rows = app.db.execute('''
-            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
-            FROM Products
-            WHERE id IN :product_ids
-        ''',
-        product_ids=tuple(product_ids))
+    # @staticmethod
+    # def get_list_by_ids(product_ids):
+    #     # Use WHERE id IN (:product_ids) to filter by a list of product IDs
+    #     rows = app.db.execute('''
+    #         SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+    #         FROM Products
+    #         WHERE id IN :product_ids
+    #     ''',
+    #     product_ids=tuple(product_ids))
         
-        return [Product(*row) for row in rows]
+    #     return [Product(*row) for row in rows]
 
-    @staticmethod
-    def get_amount_num(id):
-        rows = app.db.execute('''
-            SELECT amount
-            FROM Products
-            WHERE id = :id
-        ''', id=id)
-        return rows[0][0] if rows else None
+    # @staticmethod
+    # def get_amount_num(id):
+    #     rows = app.db.execute('''
+    #         SELECT amount
+    #         FROM Products
+    #         WHERE id = :id
+    #     ''', id=id)
+    #     return rows[0][0] if rows else None
+
+        # @staticmethod
+    # def get_all(available=True):
+    #     rows = app.db.execute('''
+    # SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+    # FROM Products
+    # WHERE available = :available
+    # ''',
+    #                         available=available)
+    #     return [Product(*row) for row in rows]
+    
+
+    # @staticmethod
+    # def get_amount(id):
+    #     rows = app.db.execute('''
+    #         SELECT amount
+    #         FROM Products
+    #         WHERE id = :id
+    #     ''', id=id)
+    #     return rows[0][0] if rows else None
+
+    # @staticmethod
+    # def search(keyword):
+    #     keyword = f"%{keyword}%"
+    #     rows = app.db.execute('''
+    #     SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
+    #     FROM Products
+    #     WHERE name LIKE :keyword OR longDescription LIKE :keyword
+    #     ''', keyword=keyword)
+    #     return [Product(*row) for row in rows]
 
