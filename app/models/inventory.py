@@ -41,4 +41,12 @@ WHERE uid = :uid
 ''',
                               uid=uid)
         return (num[0])
-
+    
+    @staticmethod
+    def get_num():
+        num = app.db.execute('''
+SELECT COUNT(id)
+FROM Sellers
+''',
+                            )
+        return (num[0])
