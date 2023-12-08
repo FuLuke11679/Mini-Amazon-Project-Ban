@@ -148,14 +148,27 @@ def myprofile():
 
 @bp.route('/publicprofile/<int:user_id>', methods = ['GET'])
 def publicprofile(user_id):
-    # Fetch user information from the address using user_id
-    # Route to the public profile of the user with that id
+    #user_id = request.form['user_id']
     seller = is_seller(user_id)
     userInfo = User.get(user_id)
     return render_template('publicprofile.html',
                     user_id = user_id, 
                     userInfo = userInfo, 
                     seller = seller)
+
+@bp.route('/user_search', methods=['GET', 'POST'])
+def user_search():
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        seller = is_seller(user_id)
+        userInfo = User.get(user_id)
+
+        return render_template('publicprofile.html',
+                    user_id = user_id, 
+                    userInfo = userInfo, 
+                    seller = seller)
+    else:
+        return redirect(url_for('index.html'))
 
 
 def is_seller(user_id):

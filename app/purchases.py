@@ -16,6 +16,15 @@ bp = Blueprint('purchases', __name__)
 
 from humanize import naturaltime
 
+
+
+
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+
+
 @bp.route('/purchases/<int:user_id>/<int:page>', methods = ['GET'])
 def purchases(user_id, page):
     purchasedItems = Purchase.get_all(user_id, page = page, per_page=20)
@@ -27,12 +36,16 @@ def purchases(user_id, page):
 @bp.route('/mypurchases/<int:page>', methods = ['GET'])
 def mypurchases(page):
     purchasedItems = Purchase.get_all(current_user.id, page = page, per_page=20)
+
+    recommended_pids = recommend_based_on_purchase_history(current_user.id, user_item_matrix)
+    rec_products = Product.get_list_by_ids(recommended_pids)
     return render_template('purchases.html',
                     purchasedItems=purchasedItems, 
+                    rec_products = rec_products,
                     user_id = current_user.id, 
                     page = page)
     
-@bp.route('/purchases_search', methods = ['GET', 'POST'])
+@bp.route('/purchases_search', methods=['GET', 'POST'])
 def purchases_search():
     if request.method == 'POST':
         user_id = request.form['user_id']
@@ -43,5 +56,41 @@ def purchases_search():
                       user_id = user_id, 
                       page = page) 
     else:
-        return render_template('purchases.html')
-    
+        return redirect(url_for('purchases.html'))
+
+
+
+
+
+
+#recommendation system
+file_path = 'db/data/generated/Purchases.csv'
+purchases_df = pd.read_csv(file_path, header=None)
+column_names = ['id', 'uid', 'seller_id', 'pid', 'name', 'photo_url', 'tag', 'quantity', 'price_per_unit', 'total_price', 'time_purchased', 'fulfillment_status']
+purchases_df.columns = column_names
+user_item_matrix = pd.pivot_table(purchases_df, values='quantity', index='uid', columns='pid', fill_value=0)
+
+def get_similar_users(user_id, matrix):
+    # Calculate cosine similarity between the user and all other users
+    similarities = cosine_similarity(matrix, [matrix.loc[user_id]])
+    # Sort users by similarity (excluding the user itself)
+    similar_users = np.argsort(similarities[:, 0])[::-1][1:]
+    return similar_users
+
+def recommend_based_on_purchase_history(user_id, matrix, num_recommendations=5):
+    # Get similar users
+    similar_users = get_similar_users(user_id, matrix)
+
+    # Identify products that similar users have purchased but the target user has not
+    recommended_products = matrix.columns[
+        (matrix.loc[similar_users].sum(axis=0) > 0) & (matrix.loc[user_id] == 0)
+    ].tolist()
+
+    # Sort recommended products by the sum of purchases by similar users
+    recommended_products = sorted(
+        recommended_products,
+        key=lambda pid: matrix.loc[similar_users, pid].sum(),
+        reverse=True
+    )
+
+    return recommended_products[:num_recommendations]
