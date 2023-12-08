@@ -4,39 +4,53 @@
 
 <br><br>
 {% if current_user.is_authenticated %}
-<h2>Your Orders:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-        <th scope="col">Order ID</th>
-        <th scope="col">Product ID</th>
-        <th scope = "col">Name</th>
-        <th scope="col">Date Added</th>
-        <th scope="col">Quantity</th>
-        <th scope="col">Price per Unit</th>
-        <th scope="col">Total Price</th>
-        <th scope="col">Fulfillment</th>
-        <th scope="col">Talk To The Seller</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in  orderlist %}
-      <tr>
-        <th scope="row">{{ item.id }}</th>
-        <td>{{item.pid}}</td>
-        <td><a href="/product/{{item.pid}}">{{item.name}}</a></td>
-        <td>{{ item.time_purchased }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>{{ item.price_per_unit }}</td>
-        <td>{{ item.total_price }} </td>
-        <td>{{ item.fulfillment_status }} </td>
-        <td><a href="{{ url_for('users.login') }}" type="button" class="btn btn-dark">Click To Talk!</a></td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<h3>Total Price: {{ total_price }}</h3>
+  <h2>Your Orders:</h2>
+  {% set grouped_orders = {} %}
+  {% for item in orderlist %}
+    {% set order_id = item.id %}
+    {% set _ = grouped_orders.setdefault(order_id, {'items': [], 'fulfillment_status': 'Not Fulfilled'}) %}
+    {% set _ = grouped_orders[order_id]['items'].append(item) %}
+    {% if item.fulfillment_status == 'Fulfilled' and grouped_orders[order_id]['fulfillment_status'] != 'Fulfilled' %}
+      {% set temp = 'Fulfilled' %}
+    {% else %}
+      {% set temp = 'Not Fulfilled' %}
+    {% endif %}
+    {% set _ = grouped_orders[order_id].update({'fulfillment_status': temp}) %}
+  {% endfor %}
+
+  {% for order_id, data in grouped_orders.items() %}
+    <h3>Order ID: {{ order_id }}</h3>
+    <table class='table table-hover table-bordered container'>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Product ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Date Added</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Price per Unit</th>
+          <th scope="col">Total Price</th>
+          <th scope="col">Fulfillment</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data['items'] %}
+          <tr>
+            <td>{{ item.pid }}</td>
+            <td><a href="/product/{{item.pid}}">{{item.name}}</a></td>
+            <td>{{ item.time_purchased }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.price_per_unit }}</td>
+            <td>{{ item.total_price }}</td>
+            <td>{{ item.fulfillment_status }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <h5>Order Fulfillment Status: {{ data['fulfillment_status'] }}</h5>
+  {% endfor %}
+
+  <h3>Total Price: {{ total_price }}</h3>
 {% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your orders!</p>
+  <p><a href="{{ url_for('users.login') }}">Log in</a> to see your orders!</p>
 {% endif %}
 {% endblock %}

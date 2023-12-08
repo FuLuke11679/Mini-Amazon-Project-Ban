@@ -8,7 +8,7 @@ CREATE TABLE Users (
    firstname VARCHAR(255) NOT NULL,
    lastname VARCHAR(255) NOT NULL,
    address VARCHAR(255) NOT NULL,
-   balance INT NOT NULL
+   balance FLOAT NOT NULL
 );
 
 
@@ -87,7 +87,8 @@ CREATE TABLE Reviews (
     review VARCHAR(1000) NOT NULL,
     rating INT NOT NULL,
     upvotes INT NOT NULL,
-    time_posted timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+    time_posted timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    photo_url VARCHAR(255)
 );
 
 ALTER TABLE Reviews
