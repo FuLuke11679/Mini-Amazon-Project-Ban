@@ -10,6 +10,7 @@
     <tr>
         <th scope="col">Cart ID</th>
         <th scope="col">Product ID</th>
+        <th scope="col">Seller ID</th>
         <th scope="col">Date Added</th>
         <th scope="col">Quantity</th>
         <th scope="col">Price per Unit</th>
@@ -21,6 +22,7 @@
       <tr>
         <th scope="row">{{item.id}}</th>
         <td>{{item.pid}}</td>
+        <td>{{item.seller_id}}</td>
         <td>{{item.time_added}}</td>
         <td>
           <form action="{{ url_for('cart.update_quantity', product_id=item.pid) }}" method="POST">
