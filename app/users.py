@@ -2,8 +2,8 @@ from flask import render_template, redirect, url_for, flash, request, get_flashe
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import FloatField, StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms import DateField, RadioField, FloatField, StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length 
 
 from flask import current_app as app
 
@@ -49,8 +49,13 @@ def login():
     return render_template('login.html', title='Sign In', form=form)
 
 class TopUpForm(FlaskForm):
-    deposit = FloatField('Deposit')
-    withdraw = FloatField('Withdraw')
+    amount = FloatField('Amount', validators=[DataRequired()])
+    action = RadioField('Action', choices = [('deposit', 'Deposit'), ('withdraw', 'Withdraw')], validators=[DataRequired()])
+
+    credit_card_number = StringField('Credit Card Number', validators=[Length(min=15, max=16)])
+    cvv = StringField('CVV', validators=[Length(min=3, max=4), DataRequired()], )
+    expiry_date = DateField('Expiry Date', format='%Y-%m-%d', validators=[DataRequired()])
+
     submit = SubmitField('Change balance')
 
 
@@ -147,12 +152,21 @@ def top_up():
     form = TopUpForm()
 
     if form.validate_on_submit():
-        deposit = form.deposit.data if form.deposit.data else 0
-        withdraw_amount = form.withdraw.data if form.withdraw.data else 0
-        current_user.balance += deposit
-        current_user.balance -= withdraw
-        return redirect(url_for('index.html'))  # Redirect to the user's dashboard or profile page
+        action = form.action.data
+        amount = form.amount.data
 
+        if action == 'deposit':
+            current_user.balance += amount
+            flash(f'Deposit successful! Your new balance is {current_user.balance}', 'success')
+        elif action == 'withdraw':
+            if amount <= current_user.balance:
+                current_user.balance -= amount
+                flash(f'Withdrawal successful! Your new balance is {current_user.balance}', 'success')
+            else:
+                flash('Insufficient funds for withdrawal', 'danger')
+        return redirect(url_for('index.index'))  # Redirect to the user's profile page
+    else:
+        return redirect(url_for('index.index'))  # Redirect to the user's profile page
 
 
 @bp.route('/logout')
