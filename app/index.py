@@ -16,6 +16,10 @@ def humanize_time(dt):
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
+@bp.app_errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     # Get page value or default 1 (for products for sale display)
@@ -71,6 +75,12 @@ def product_page(product_id):
         average_rating = average_rating_a[0]
     # print(product_id)
     # print(associated_reviews.review)
+
+    if current_user.is_authenticated:
+        user_id = current_user.id
+    else:
+        user_id = None
+
     return render_template('productsPage.html', 
                             current_product=current_product,
                             top_3_reviews=top_3_reviews,
@@ -78,7 +88,8 @@ def product_page(product_id):
                             humanize_time=humanize_time,
                             current_seller=current_seller,
                             num_of_reviews= (len(associated_reviews or "") + len(top_3_reviews or "")),
-                            average_rating=average_rating)
+                            average_rating=average_rating,
+                            user_id=user_id)
 
 
 @bp.route('/search', methods=['GET'])
