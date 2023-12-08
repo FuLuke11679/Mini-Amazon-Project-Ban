@@ -25,7 +25,7 @@ Product Img: <img src="{{ current_product.photo_url }}" alt="{{ current_product.
 Sold by: <a href="/publicprofile/{{ current_seller.id }}">{{ current_seller.firstname }} {{ current_seller.lastname }}</a>
 <br><br>
 {% if current_user.is_authenticated %}
-Reviews for this Product: <form action="{{ url_for('review.review')  }}" method="GET">
+Reviews for this Product: <form action="/myprofile" method="GET">
   <input type="submit" value="Add/Update Your Review!"/>
 </form>
 {% else %}

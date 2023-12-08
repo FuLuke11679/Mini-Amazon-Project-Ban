@@ -32,8 +32,6 @@ def review():
     sItems = SellerReview.get_all_by_uid_since(
                     idToUse, datetime.datetime(1980, 9, 14, 0, 0, 0))
     
-    for review in items:
-        print(review.upvotes)
 
     return render_template('review.html',
                     reviews=items,
@@ -103,7 +101,7 @@ AND pid = :pid
         #push them over to wishlist()
             # print(str(product_id) + "pid")
             # print(str(current_user.id) + "uid")
-            return redirect(url_for('review.review'))
+            return redirect(url_for('users.myprofile'))
         except Exception as e:
             print(str(e))
             return jsonify({}), 404
@@ -134,10 +132,10 @@ AND pid = :pid
         #push them over to wishlist()
             # print(str(product_id) + "pid")
             # print(str(current_user.id) + "uid")
-            return redirect(url_for('review.review'))
+            return redirect(url_for('users.myprofile'))
         except Exception as e:
             print("Update unsuccessful, sorry :( - "+ str(e))
-            return redirect(url_for('review.review'))
+            return redirect(url_for('users.myprofile'))
     else:
         return jsonify({}), 404
 
@@ -196,7 +194,7 @@ AND seller_uid = :suid
                                   uid=current_user.id,
                                   suid=seller_uid)
                                   
-            return redirect(url_for('review.review'))
+            return redirect(url_for('users.myprofile'))
         except Exception as e:
             print(str(e))
             return jsonify({}), 404
@@ -227,9 +225,9 @@ AND seller_uid = :suid
         #push them over to wishlist()
             # print(str(product_id) + "pid")
             # print(str(current_user.id) + "uid")
-            return redirect(url_for('review.review'))
+            return redirect(url_for('users.myprofile'))
         except Exception as e:
             print("Update unsuccessful, sorry :( - "+ str(e))
-            return redirect(url_for('review.review'))
+            return redirect(url_for('users.myprofile'))
     else:
         return jsonify({}), 404
