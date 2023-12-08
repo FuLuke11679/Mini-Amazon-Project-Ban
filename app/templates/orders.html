@@ -16,19 +16,21 @@
         <th scope="col">Price per Unit</th>
         <th scope="col">Total Price</th>
         <th scope="col">Fulfillment</th>
+        <th scope="col">Talk To The Seller</th>
     </tr>
   </thead>
   <tbody>
     {% for item in  orderlist %}
       <tr>
         <th scope="row">{{ item.id }}</th>
-        <td>{{ item.pid }}</td>
-        <td>{{ item.name }}</td>
+        <td>{{item.pid}}</td>
+        <td><a href="/product/{{item.pid}}">{{item.name}}</a></td>
         <td>{{ item.time_purchased }}</td>
         <td>{{ item.quantity }}</td>
         <td>{{ item.price_per_unit }}</td>
         <td>{{ item.total_price }} </td>
         <td>{{ item.fulfillment_status }} </td>
+        <td><a href="{{ url_for('users.login') }}" type="button" class="btn btn-dark">Click To Talk!</a></td>
       </tr>
     {% endfor %}
   </tbody>
