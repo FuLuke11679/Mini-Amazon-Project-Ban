@@ -6,7 +6,6 @@ import random
 num_users = 100
 num_products = 200
 num_purchases = 250
-num_sellers = 20
 num_wishlistitems = 2200
 num_sellers = 20
 num_inventory = 1000
@@ -150,8 +149,69 @@ def gen_inventory(num_inventory, available_pids, available_sellers):
             uid = fake.random_element(elements=available_sellers)
             pid = fake.random_element(elements=available_pids)
             time_purchased = fake.date_time()
-            writer.writerow([id, uid, pid, time_purchased])
-        print(f'{num_inventory} generated')
+            quantity = fake.random_int(min = 1, max = 20)
+            writer.writerow([id, uid, pid, time_purchased, quantity])
+        print(f'{num_purchases} generated')
+
+    return
+
+def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
+    reviewDict = {
+        "1": "abhors",
+        "2": "hates",
+        "3": "could care less either way about",
+        "4": "likes",
+        "5": "adores"
+    }
+
+
+    with open('Reviews.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Reviews...', end=' ', flush=True)
+        num_reviews = num_users * num_reviews_per_user
+        for i in range(num_users):
+            poss_pids = fake.random_elements(elements=available_pids, length=num_reviews_per_user, unique=True)
+            for j in range(num_reviews_per_user):
+                if (((i*num_reviews_per_user) + j) % 100 == 0):
+                    print(f'{((i*num_reviews_per_user) + j)}', end=" ", flush=True)
+                uid = i
+                pid = poss_pids[j]
+                rating = fake.random_int(min=1, max=5)
+                #review = f'{users[i]["firstname"]} {reviewDict[str(rating)]} this product!'
+                review = ''
+                time_purchased = fake.date_time()
+                upvotes = fake.random_int(min=0, max=num_users-1)
+                writer.writerow([((i*num_reviews_per_user) + j) , uid, pid, review, rating, upvotes, time_purchased])
+        print(f'{num_reviews} generated')
+    return
+
+def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sellers):
+    reviewDict = {
+        "1": "abhors",
+        "2": "hates",
+        "3": "could care less either way about",
+        "4": "likes",
+        "5": "adores"
+    }
+
+    with open('SellerReviews.csv', 'w') as g:
+        writer = get_csv_writer(g)
+        print('SellerReviews...', end=' ', flush=True)
+        num_sellerReviews = num_sellers * num_reviews_per_seller
+        for i in range(num_sellers):
+            #poss_ids = fake.random_element(elements=available_sellers, length=num_reviews_per_seller, unique=true)
+            for j in range(num_reviews_per_seller):
+                if (((i*num_reviews_per_seller) + j) % 200 == 0):
+                    print(f'{((i*num_reviews_per_seller) + j)}', end=" ", flush=True)
+                uid = i
+                seller_uid = available_sellers[i]
+                rating = fake.random_int(min=1, max=5)
+                #review = f'{users[i]["firstname"]} {reviewDict[str(rating)]} this seller!'
+                review = ''
+                time_purchased = fake.date_time()
+                upvotes = fake.random_int(min=0, max=num_users-1)
+                writer.writerow([((i*num_reviews_per_seller) + j), uid, seller_uid, review, str(rating), upvotes, time_purchased])
+        print(f'{num_sellerReviews} generated')
     return
 
 def gen_reviews(users, num_reviews_per_user, num_users, available_pids):

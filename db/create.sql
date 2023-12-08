@@ -49,7 +49,8 @@ CREATE TABLE Inventory (
     uid INT NOT NULL REFERENCES Users(id),
     pid INT NOT NULL REFERENCES Products(id),
     /*amt INT NOT NULL REFERENCES Products(amount),*/
-    time_added timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+    time_added timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    quantity INT NOT NULL
 );
 
 CREATE TABLE Wishes (
