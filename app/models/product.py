@@ -41,12 +41,11 @@ LIMIT :per_page OFFSET :offset
     @staticmethod
     def get_amount(id):
         rows = app.db.execute('''
-SELECT amount
-FROM Products
-WHERE id = :id
-''',
-                              id=id)
-        return Product(*(rows[0])) if rows is not None else None
+            SELECT amount
+            FROM Products
+            WHERE id = :id
+        ''', id=id)
+        return rows[0][0] if rows else None
     def get_top_k_expensive(k):
         rows = app.db.execute('''
         SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
@@ -55,3 +54,11 @@ WHERE id = :id
         LIMIT :k
     ''', k=k)
         return [Product(*row) for row in rows]
+    @staticmethod
+    def get_amount_num(id):
+        rows = app.db.execute('''
+            SELECT amount
+            FROM Products
+            WHERE id = :id
+        ''', id=id)
+        return rows[0][0] if rows else None

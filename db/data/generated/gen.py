@@ -134,7 +134,7 @@ def gen_purchases(num_purchases, products):
             price_per_unit = float(product['price'])
             total_price = quantity * price_per_unit 
             time_purchased = fake.date_time() # not based on product
-            fulfillment_status = random.choice(['pending', 'shipped', 'delivered'])
+            fulfillment_status = random.choice(['Fulfilled', 'In Progress'])
 
             writer.writerow([id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status])
         print(f'{num_purchases} generated')

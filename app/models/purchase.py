@@ -57,16 +57,29 @@ LIMIT :per_page OFFSET :offset
         return [Purchase(*row) for row in rows]
 
 
+    @staticmethod
+    def get_max_id():
+        rows = app.db.execute('''
+            SELECT MAX(id)
+            FROM Purchases
+        ''')
+
+        if rows is not None and rows[0] is not None:
+            max_id = rows[0][0]
+            return max_id
+        else:
+            return None
 
 
     @staticmethod
-    def create_purchase(uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status):
+    def create_purchase(id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status):
         try: 
             rows = app.db.execute("""
-INSERT INTO Purchases(uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status)
-VALUES(:uid, :seller_id, :pid, :name, :photo_url, :tag, :quantity, :price_per_unit, :total_price, :time_purchased, :fulfillment_status)
+INSERT INTO Purchases(id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status)
+VALUES(:id, :uid, :seller_id, :pid, :name, :photo_url, :tag, :quantity, :price_per_unit, :total_price, :time_purchased, :fulfillment_status)
 RETURNING id
 """,
+                                  id = id,
                                   uid = uid,
                                   seller_id = seller_id,
                                   pid = pid, 
@@ -78,7 +91,6 @@ RETURNING id
                                   total_price = total_price,
                                   time_purchased = time_purchased,
                                   fulfillment_status = fulfillment_status)
-            id = rows[0][0]
             return Purchase.get(id)
         except Exception as e:
             return None

@@ -105,7 +105,7 @@ def cart_add(product_id):
         quantity = request.form.get('quantityChoice')
         CartItem.add(current_user.id, product_id, datetime.datetime.now(), quantity)
         flash("Item added to cart successfully", "success")
-        cartlist = CartItem.display_num(current_user.id, 5, 1)
+        cartlist = CartItem.get_all(current_user.id)
         return redirect(url_for('cart.cart'))
     else:
         return jsonify({}), 404
@@ -140,34 +140,55 @@ def cart_submit():
     return product.price if product else 0  # Default to 0 if product not found
 
 
-@bp.route('/cart_submit2', methods = ['GET', 'POST'])        
+@bp.route('/cart_submit2', methods=['GET', 'POST'])
 def cart_submit2():
     user_id = current_user.id
     cartlist = CartItem.get_all(current_user.id)
+    orderid = Purchase.get_max_id() + 1
+    invalid = CartItem.return_invalid(current_user.id)
 
     if not cartlist:
         flash("Your cart is empty", "info")
         return redirect(url_for('cart.get_cart'))
 
-    
-    for cart_item in cartlist:
+    if not invalid:
+        for cart_item in cartlist:
             pid = cart_item.pid
             quantity = cart_item.quantity
-
             product = Product.get(pid)
-
-            print (Product)
-            Purchase.create_purchase(uid = current_user.id,
-                                    seller_id = product.seller_id,
-                                    pid = pid, # comes from cartlist
-                                    name = product.name,
-                                    photo_url = product.photo_url,
-                                    tag = product.tag,
-                                    quantity = quantity, # also comes from cartlist
-                                    price_per_unit = product.price,
-                                    total_price = product.price * quantity,
-                                    time_purchased = datetime.datetime.now(),
-                                    fulfillment_status = "pending")
-    CartItem.delete_all(user_id)
-    flash("Your order has been submitted successfully!", "success")
-    return redirect(url_for('cart.get_cart'))
+            Purchase.create_purchase(id=orderid,
+                                     uid=current_user.id,
+                                     seller_id=product.seller_id,
+                                     pid=pid,
+                                     name=product.name,
+                                     photo_url=product.photo_url,
+                                     tag=product.tag,
+                                     quantity=quantity,
+                                     price_per_unit=product.price,
+                                     total_price=product.price * quantity,
+                                     time_purchased=datetime.datetime.now(),
+                                     fulfillment_status="In Progress")
+        CartItem.delete_all(user_id)
+        flash("Your order has been submitted successfully!", "success")
+        return redirect(url_for('cart.get_cart'))
+    else:
+        error_message = "Some items in your cart have quantities greater than available amounts. "
+        error_message += "Please review the following items:\n"
+        for item in invalid:
+            amount = Product.get_amount_num(item.pid)
+            error_message += f"Product ID: {item.pid}, Quantity: {item.quantity}, Available Amount: {amount}\n"
+        flash(error_message, "error")
+        return redirect(url_for('cart.get_cart'))
+    
+@staticmethod
+def delete_all(user_id):
+        try:
+            rows = app.db.execute('''
+DELETE FROM Carts
+WHERE uid = :user_id
+''', 
+                                user_id=user_id)
+            return True
+        except Exception as e:
+            # Handle the exception (log it, return False, etc.)
+            return False
