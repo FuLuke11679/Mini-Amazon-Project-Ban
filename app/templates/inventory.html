@@ -7,19 +7,33 @@
 
 <br><br>
 {% if current_user.is_authenticated %}
+<form action="{{ url_for('index.index') }}" method="POST">
+  <input type="submit" value="Back to Home"/>
+</form>
+<form action="{{ url_for('inventory.inventory_add')  }}" method="POST">
+  <label for = "user_id">Add Product to Inventory: </label>
+    <input type="text"  placeholder="Enter Product ID..."  name="product_id" product_id = "product_id" />
+</form>
 <h2>Inventory:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product ID</th>
       <th scope="col">Date Added</th>
+      <th scope="col">Quantity</th>
     </tr>
   </thead>
   <tbody>
     {% for inventory in items%}
       <tr>
-        <th scope="row">{{inventory.pid}}</th>
+        <th scope="row">{{inventory.pid}}<form action="{{ url_for('inventory.inventory_delete', product_id=inventory.pid)  }}" method="POST">
+          <input type="submit" value="Remove Product"/>
+        </form></th>
         <td>{{humanize_time(inventory.time_added)}}</td>
+        <td>{{inventory.quantity}}<form action="{{ url_for('inventory.inventory_update', product_id=inventory.pid)  }}" method="POST">
+          <label for = "user_id">Update Product Quantity: </label>
+            <input type="text"  placeholder="Enter #..."  name="quantity" quantity = "quantity" />
+        </form></td>
       </tr>
     {% endfor %}
   </tbody>

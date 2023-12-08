@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+{% if current_user.is_authenticated %}
+<h2>Your Orders:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+        <th scope="col">Order ID</th>
+        <th scope="col">Product ID</th>
+        <th scope = "col">Name</th>
+        <th scope="col">Date Added</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Price per Unit</th>
+        <th scope="col">Total Price</th>
+        <th scope="col">Fulfillment</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in  orderlist %}
+      <tr>
+        <th scope="row">{{ item.id }}</th>
+        <td>{{ item.pid }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.time_purchased }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.price_per_unit }}</td>
+        <td>{{ item.total_price }} </td>
+        <td>{{ item.fulfillment_status }} </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<h3>Total Price: {{ total_price }}</h3>
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your orders!</p>
+{% endif %}
+{% endblock %}

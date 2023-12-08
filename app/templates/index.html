@@ -18,6 +18,15 @@
     <input type="text"  placeholder="Enter Seller ID..."  name="user_id" user_id = "user_id" />
   </form>
 
+  <h2>See Your Inventory:</h2>
+  <form action="{{ url_for('inventory.inv') }}" method="POST">
+    <input type="submit" value="Search">
+  </form>
+
+  <h2>Register as Seller:</h2>
+  <form action="{{ url_for('inventory.inventory_register') }}" method="POST">
+    <input type="submit" value="Register">
+  </form>
 
 <h2>Search User's Cart Items</h2>
 <form action="{{ url_for('cart.cart_search') }}" method="POST">
@@ -26,8 +35,8 @@
     <input type="submit" value="Search">
 </form>
 
-<h2>Search User Purchases</h2>
-<form action="{{ url_for('purchases.purchases_search') }}" method="POST">
+<h2>Search Users</h2>
+<form action="{{ url_for('users.user_search') }}" method="POST">
     <label for="user_id">User ID:</label>
     <input type="text" id="user_id" name="user_id">
     <input type="submit" value="Search">
@@ -129,30 +138,44 @@ function updateSubtags() {
 
 
 
+    {% for product in avail_products%}
+      <tr>
+        <th scope="row">{{product.id}}</th>
+        <td>{{product.name}}<form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
+            <input type="submit" value="Add to Wishlist"/>
+          </form></td>
+        <td>{{product.price}}</td>
+        <td>
+          <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}"
+          method="POST">
+          <input type="submit" value="Add to Wishlist"/>
+          </form>
+          <form action = "{{ url_for('cart.cart_add', product_id=product.id) }}" method="POST">
+            <input type="number" id="quantityInput" name="quantityChoice" min="1" max="99" value="1">
+            <input type="submit" value="Add to Cart"/>
+        </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-{% if page > 1 %}
-<a href="{{ url_for('index.index', page=page-1) }}">Previous</a>
-{% endif %}
-
-{% if avail_products|length == 10 %}
-<a href="{{ url_for('index.index', page=page+1) }}">Next</a>
-{% endif %}
 
 
 
 <br><br>
 {% if current_user.is_authenticated %}
-<h2>Your most recent purchases:</h2>
+<h2>Your recent purchases:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">Purchase ID</th>
-      <th scope="col">Product Id</th>
+      <th scope="col">Product ID</th>
       <th scope="col">Time Purchased</th>
     </tr>
   </thead>
   <tbody>
-    {% for purchase in recent_purchase_history%}
+    {% for purchase in purchase_history%}
       <tr>
         <th scope="row">{{purchase.id}}</th>
         <td>{{purchase.pid}}<form action="{{ url_for('review.review_add', product_id = purchase.pid) }}" method="POST">

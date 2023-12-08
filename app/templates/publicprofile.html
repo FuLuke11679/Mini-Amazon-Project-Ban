@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<h2>User</h2>
+<table class='table table-hover table-bordered container'>
+ <thead class="thead-dark">
+   <tr>
+     <th scope="col">ID</th>
+     <th scope="col">First Name</th>
+     <th scope="col">Last Name</th>
+     {% if seller %}
+        <th scope="col">Seller Email</th>
+        <th scope="col">Seller Address</th>
+     {% endif %}
+   </tr>
+ </thead>
+ <tbody>
+   <tr>
+       <th scope="row">{{ userInfo.id }}</th>
+       <td>{{ userInfo.firstname }}</td>
+       <td>{{ userInfo.lastname }}</td>
+       {% if seller %}
+        <td>{{ userInfo.email }}</td>
+        <td>{{ userInfo.address }}</td>
+
+       {% endif %}
+   </tr>
+
+ </tbody>
+</table>  
+
+
+
+{% endblock %}

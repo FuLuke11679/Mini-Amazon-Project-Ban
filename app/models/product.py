@@ -26,7 +26,7 @@ WHERE id = :id
         return Product(*(rows[0])) if rows is not None else None
     
     @staticmethod
-    def get_all(available=True, page=1, per_page=10):
+    def get_all(available=True, page=1, per_page=9):
         offset = (page-1) * per_page
         rows = app.db.execute('''
 SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
@@ -43,12 +43,11 @@ LIMIT :per_page OFFSET :offset
     @staticmethod
     def get_amount(id):
         rows = app.db.execute('''
-SELECT amount
-FROM Products
-WHERE id = :id
-''',
-                              id=id)
-        return Product(*(rows[0])) if rows is not None else None
+            SELECT amount
+            FROM Products
+            WHERE id = :id
+        ''', id=id)
+        return rows[0][0] if rows else None
     def get_top_k_expensive(k):
         rows = app.db.execute('''
         SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
@@ -209,3 +208,25 @@ ORDER BY {}
 
         # Create and return a list of Product instances
         return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_list_by_ids(product_ids):
+        # Use WHERE id IN (:product_ids) to filter by a list of product IDs
+        rows = app.db.execute('''
+            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+            FROM Products
+            WHERE id IN :product_ids
+        ''',
+        product_ids=tuple(product_ids))
+        
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_amount_num(id):
+        rows = app.db.execute('''
+            SELECT amount
+            FROM Products
+            WHERE id = :id
+        ''', id=id)
+        return rows[0][0] if rows else None
+
