@@ -74,6 +74,12 @@ LIMIT :per_page OFFSET :offset
     @staticmethod
     def create_purchase(id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status):
         try: 
+            app.db.execute('''
+            UPDATE Products
+            SET amount = amount - :quantity
+            WHERE id = :pid
+        ''', quantity=quantity, pid=pid)
+            
             rows = app.db.execute("""
 INSERT INTO Purchases(id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status)
 VALUES(:id, :uid, :seller_id, :pid, :name, :photo_url, :tag, :quantity, :price_per_unit, :total_price, :time_purchased, :fulfillment_status)

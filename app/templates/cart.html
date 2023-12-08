@@ -10,6 +10,7 @@
     <tr>
         <th scope="col">Cart ID</th>
         <th scope="col">Product ID</th>
+        <th scope="col">Product Name</th>
         <th scope="col">Seller ID</th>
         <th scope="col">Date Added</th>
         <th scope="col">Quantity</th>
@@ -22,6 +23,7 @@
       <tr>
         <th scope="row">{{item.id}}</th>
         <td>{{item.pid}}</td>
+        <td>{{ get_product_name(item.pid) }}</td>
         <td>{{item.seller_id}}</td>
         <td>{{item.time_added}}</td>
         <td>
@@ -44,6 +46,19 @@
 <form action="{{ url_for('cart.cart_submit2') }}" method="POST">
   <input type="submit" value="Submit Cart">
   </form>
+  <p>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category == 'error' %} {# Check if the category is 'error' #}
+          <ul>
+            <li>{{ message }}</li>
+          </ul>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+  </p>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
 {% endif %}
