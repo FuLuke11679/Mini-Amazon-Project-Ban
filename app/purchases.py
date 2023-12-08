@@ -16,6 +16,16 @@ bp = Blueprint('purchases', __name__)
 
 from humanize import naturaltime
 
+def humanize_time(dt):
+    return naturaltime(datatime.datetime.now() - dt)
+
+def calculate_total_price(orderlist):
+    total_price = 0
+    for item in orderlist:
+        price = item.price_per_unit
+        total_price += item.quantity * price
+    return total_price
+
 @bp.route('/purchases/<int:user_id>/<int:page>', methods = ['GET'])
 def purchases(user_id, page):
     purchasedItems = Purchase.get_all(user_id, page = page, per_page=20)
@@ -45,3 +55,13 @@ def purchases_search():
     else:
         return render_template('purchases.html')
     
+@bp.route('/get_orders', methods=['GET', 'POST'])
+def get_orders():
+    user_id = current_user.id
+    orderlist = Purchase.get_all(user_id)  # Assuming you want to get purchases associated with the user
+    total_price = calculate_total_price(orderlist)
+    return render_template('orders.html',
+                           orderlist=orderlist,
+                           humanize_time=humanize_time,
+                           total_price=total_price,
+                           user_id=user_id)
