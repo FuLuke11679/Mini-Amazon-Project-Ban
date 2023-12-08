@@ -171,6 +171,9 @@ ORDER BY {}
 
         # Create and return a list of Product instances
         return [Product(*row) for row in rows]
+    
+    
+
 
     # @staticmethod
     # def get_list_by_ids(product_ids):

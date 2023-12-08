@@ -116,3 +116,19 @@ def get_subtags():
     subtags = Product.get_subtags_by_tag(tag)
     return jsonify({'subtags': subtags})
 
+@bp.route('/create_product', methods=['GET', 'POST'])
+def create_product():
+    if request.method == 'POST':
+        # Retrieve product data from the form
+        product_name = request.form['product_name']
+        description = request.form['description']
+        price = request.form['price']
+        
+        # Create a new product in your database (e.g., SQLAlchemy)
+        # You'll need to define a Product model and handle database operations here
+        
+        # Redirect the user back to their profile page after product creation
+        return redirect(url_for('users.myprofile'))
+
+    # Render the profile page with the form for product creation
+    return render_template('myprofile.html', current_user=current_user, reviews=reviews, sellerReviews=sellerReviews)
