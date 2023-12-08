@@ -36,6 +36,10 @@ def get_product_name(product_id):
     product = Product.get(product_id)
     return product.name 
 
+def get_seller_id(product_id):
+    product = Product.get(product_id)
+    return product.seller_id
+
 @bp.route('/cart')
 def cart():
     # find the products current user has wishlisted:
@@ -49,7 +53,8 @@ def cart():
                       total_price=total_price,
                       get_product_price=get_product_price,
                       get_product_name = get_product_name,
-                      user_id = current_user.id) 
+                      user_id = current_user.id,
+                      get_seller_id = get_seller_id) 
     else:
         return jsonify({}), 404
 
@@ -66,7 +71,8 @@ def get_cart():
                       total_price=total_price, 
                       get_product_price=get_product_price,
                       user_id = user_id,
-                      get_product_name = get_product_name) 
+                      get_product_name = get_product_name,
+                      get_seller_id = get_seller_id) 
 
 @bp.route('/cart/update_quantity/<int:product_id>', methods = ['GET', 'POST'])
 def update_quantity(product_id):
@@ -92,7 +98,8 @@ WHERE uid = :uid AND pid = :pid
                       total_price=total_price, 
                       get_product_price=get_product_price,
                       user_id = user_id,
-                      get_product_name = get_product_name) 
+                      get_product_name = get_product_name,
+                      get_seller_id = get_seller_id) 
     
 @bp.route('/cart_search', methods = ['GET', 'POST'])
 def cart_search():
@@ -106,7 +113,8 @@ def cart_search():
                       total_price=total_price, 
                       get_product_price=get_product_price,
                       user_id = user_id,
-                      get_product_name=get_product_name) 
+                      get_product_name=get_product_name,
+                      get_seller_id = get_seller_id) 
     else:
         return render_template('cart.html')
 
@@ -143,7 +151,8 @@ WHERE uid = :uid AND pid = :pid
                       total_price=total_price, 
                       get_product_price=get_product_price,
                       user_id = user_id,
-                      get_product_name=get_product_name) 
+                      get_product_name=get_product_name,
+                      get_seller_id=get_seller_id) 
  
 @bp.route('/cart_submit')        
 def cart_submit():

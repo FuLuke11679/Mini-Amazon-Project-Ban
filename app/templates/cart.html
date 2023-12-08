@@ -24,7 +24,7 @@
         <th scope="row">{{item.id}}</th>
         <td>{{item.pid}}</td>
         <td>{{ get_product_name(item.pid) }}</td>
-        <td>{{item.seller_id}}</td>
+        <td>{{ get_seller_id(item.pid) }}</td>
         <td>{{item.time_added}}</td>
         <td>
           <form action="{{ url_for('cart.update_quantity', product_id=item.pid) }}" method="POST">
