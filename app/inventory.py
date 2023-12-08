@@ -105,11 +105,13 @@ def inventory_register():
     if(InventoryItem.get_seller(current_user.id)[0] == 1):
         return redirect(url_for('index.index'))
     if current_user.is_authenticated:
+        numSellers = InventoryItem.get_num()[0]
         try:
             rows = app.db.execute("""
 INSERT INTO Sellers
-VALUES(:uid)
+VALUES(:id, :uid)
 """,
+                                  id = numSellers,
                                   uid=current_user.id)
             return redirect(url_for('inventory.inv'))
         except Exception as e:
