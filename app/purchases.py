@@ -112,7 +112,7 @@ def recommend_based_on_purchase_history(user_id, matrix, num_recommendations=5):
 
     return recommended_products[:num_recommendations]
 
-bp.route('/get_orders', methods=['GET', 'POST'])
+@bp.route('/get_orders', methods=['GET', 'POST'])
 def get_orders():
     user_id = current_user.id
     orderlist = Purchase.get_all(user_id)  # Assuming you want to get purchases associated with the user
