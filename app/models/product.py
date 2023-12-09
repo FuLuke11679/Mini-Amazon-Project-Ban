@@ -15,6 +15,13 @@ class Product:
         self.tag = tag
         self.subtag = subtag
 
+    @classmethod
+    def new_product(cls, name, price, amount, photo_url, seller_id, longDescription, tag, subtag):
+        """
+        Factory method for creating a new product instance without an id.
+        """
+        return cls(None, name, price, amount, True, photo_url, seller_id, longDescription, tag, subtag)
+
     #Used
     @staticmethod
     def get(id):

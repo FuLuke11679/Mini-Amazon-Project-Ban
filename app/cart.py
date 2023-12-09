@@ -127,7 +127,7 @@ def cart_add(product_id):
         cartlist = CartItem.get_all(current_user.id)
         return redirect(url_for('cart.cart'))
     else:
-        return jsonify({}), 404
+        return render_template('login_request.html')
 
 
 @bp.route('/cart/remove_item/<int:product_id>', methods = ['GET', 'POST'])

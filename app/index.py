@@ -7,6 +7,12 @@ from .models.purchase import Purchase
 from .models.review import Review
 from humanize import naturaltime
 from flask import jsonify
+from flask import request, redirect, url_for
+from flask_login import current_user  # Import current_user for getting seller_id
+from .db import DB
+from flask import current_app
+
+
 
 import datetime
 
@@ -140,3 +146,45 @@ def create_product():
 
     # Render the profile page with the form for product creation
     return render_template('myprofile.html', current_user=current_user, reviews=reviews, sellerReviews=sellerReviews)
+
+@bp.route('/add_product', methods=['POST'])
+def add_product():
+    name = request.form['name']
+    price = float(request.form['price'])
+    amount = int(request.form['amount'])
+    photo_url = request.form['photo_url']
+    longDescription = request.form['longDescription']
+    tag = request.form['tag']
+    subtag = request.form['subtag']
+
+    
+    # Insert into Products and retrieve the new product id
+    sql_product = """
+    INSERT INTO Products (name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag)
+    VALUES (:name, :price, :amount, TRUE, :photo_url, :seller_id, :longDescription, :tag, :subtag)
+    RETURNING id
+    """
+    result = current_app.db.execute(sql_product, name=name, price=price, amount=amount, 
+                                    photo_url=photo_url, seller_id=current_user.id, 
+                                    longDescription=longDescription, tag=tag, subtag=subtag)
+    
+    if result:
+        product_id = result[0][0]  # Accessing the first row's first column which is the id
+
+        # Insert into Inventory
+        sql_inventory = """
+        INSERT INTO Inventory (uid, pid, quantity)
+        VALUES (:uid, :pid, :quantity)
+        """
+        current_app.db.execute(sql_inventory, uid=current_user.id, pid=product_id, quantity=amount)
+
+        # Redirect or other response
+        return redirect(request.referrer or url_for('default_route'))
+    else:
+        # Handle the case where product insertion failed
+        # Redirect or return an error message
+        return "Error adding product", 500
+
+
+    # Redirect to the same page
+    return redirect(request.referrer or url_for('default_route'))
