@@ -63,6 +63,7 @@ function updateSubtags() {
 
 </script>
 
+<hr>
 
 <!-- Search Container -->
 <div class="search-container">
@@ -107,18 +108,15 @@ function updateSubtags() {
 
 <!-- Products for sale (Card Layout) -->
 <h2>Products for sale:</h2>
-<div class="product-container">
+<div class="product-container" style="margin: auto;">
   {% for product in avail_products %}
-    <div class="product-card">
+    <div class="product-card" style="margin: auto;">
       <!-- Use the full URL stored in the photo_url column -->
       <img src="{{ product.photo_url }}" alt="{{product.name}}" class="product-image"/>
       <div class="product-info">
         <h3><a href="/product/{{product.id}}">{{ product.name }}</a></h3>
         <p>Tag: {{ product.tag }}</p>
         <p>Price: {{ product.price }}</p>
-        <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}" method="POST">
-          <input type="submit" value="Add to Wishlist" class="btn-wishlist"/>
-        </form>
         <form action = "{{ url_for('cart.cart_add', product_id=product.id) }}" method="POST">
           <input type="number" id="quantityInput" name="quantityChoice" min="1" max="99" value="1">
           <input type="submit" value="Add to Cart" class = "btn-cart"/>
@@ -132,12 +130,12 @@ function updateSubtags() {
 <a href="{{ url_for('index.index', page=page-1) }}">Previous</a>
 {% endif %}
 
-{% if avail_products|length == 10 %}
+{% if avail_products|length == 9 %}
 <a href="{{ url_for('index.index', page=page+1) }}">Next</a>
 {% endif %}
 
 
-
+<hr>
 
 <br><br>
 {% if current_user.is_authenticated %}
