@@ -33,10 +33,15 @@
   <button type="submit" class="btn btn-primary">Update Profile</button>
 </form>
 
+<form action="{{ url_for('users.top_up') }}" method="get">
+  <button type="submit" class="btn btn-primary">Change Balance</button>
+</form>
 
 <form action="{{ url_for('purchases.mypurchases', page=1) }}" method="get">
   <button type="submit" class="btn btn-primary">Purchase History</button>
 </form>
+
+
 
 
  
