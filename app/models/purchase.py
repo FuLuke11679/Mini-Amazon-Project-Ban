@@ -2,9 +2,10 @@ from flask import current_app as app
 
 
 class Purchase:
-    def __init__(self, id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status):
+    def __init__(self, id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status):
         self.id = id
         self.uid = uid
+        self.oid = oid
         self.seller_id = seller_id
         self.pid = pid
         self.name = name
@@ -29,7 +30,7 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
+SELECT id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
 FROM Purchases
 WHERE uid = :uid
 AND time_purchased >= :since
@@ -45,7 +46,7 @@ LIMIT 5
     def get_all(uid, page=1, per_page=20):
         offset = (page-1) * per_page
         rows = app.db.execute('''
-SELECT id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
+SELECT id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
 FROM Purchases
 WHERE uid = :uid
 ORDER BY time_purchased DESC
@@ -70,9 +71,9 @@ ORDER BY time_purchased DESC
 
 
     @staticmethod
-    def get_max_id():
+    def get_max_oid():
         rows = app.db.execute('''
-            SELECT MAX(id)
+            SELECT MAX(oid)
             FROM Purchases
         ''')
 
@@ -84,7 +85,7 @@ ORDER BY time_purchased DESC
 
 
     @staticmethod
-    def create_purchase(id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status):
+    def create_purchase(uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status):
         try: 
             app.db.execute('''
             UPDATE Products
@@ -93,12 +94,12 @@ ORDER BY time_purchased DESC
         ''', quantity=quantity, pid=pid)
             
             rows = app.db.execute("""
-INSERT INTO Purchases(id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status)
-VALUES(:id, :uid, :seller_id, :pid, :name, :photo_url, :tag, :quantity, :price_per_unit, :total_price, :time_purchased, :fulfillment_status)
+INSERT INTO Purchases(uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status)
+VALUES(:uid, :oid, :seller_id, :pid, :name, :photo_url, :tag, :quantity, :price_per_unit, :total_price, :time_purchased, :fulfillment_status)
 RETURNING id
 """,
-                                  id = id,
                                   uid = uid,
+                                  oid = oid,
                                   seller_id = seller_id,
                                   pid = pid, 
                                   name = name,
@@ -109,7 +110,7 @@ RETURNING id
                                   total_price = total_price,
                                   time_purchased = time_purchased,
                                   fulfillment_status = fulfillment_status)
-            return Purchase.get(id)
+            return Purchase.get(oid)
         except Exception as e:
             return None
 
@@ -118,7 +119,7 @@ RETURNING id
     def get_all_seller_id(uid, page=1, per_page=20):
         offset = (page-1) * per_page
         rows = app.db.execute('''
-SELECT Purchases.id, uid, seller_id, pid, name, address, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
+SELECT Purchases.id, uid, oid, seller_id, pid, name, address, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
 FROM Purchases LEFT JOIN Users
 ON Purchases.uid = Users.id
 WHERE seller_id = :uid
