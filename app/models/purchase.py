@@ -135,7 +135,10 @@ LIMIT :per_page OFFSET :offset
 
 
 
-    def get_all_by_modifier(uid, seller_id=None, item_tag=None, start_date=None, end_date=None):
+    def get_all_by_modifier(uid, seller_id=None, tag=None, start_date=None, end_date=None):
+        
+        seller_id = seller_id if seller_id else None
+        tag = tag if tag else None
         start_date = start_date if start_date else None
         end_date = end_date if end_date else None
         
@@ -144,13 +147,14 @@ SELECT id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_u
 FROM Purchases
 WHERE uid = :uid
 AND (:seller_id IS NULL OR seller_id = :seller_id)
+AND (:tag IS NULL OR tag = :tag)
 AND (:start_date IS NULL OR time_purchased >= :start_date)
 AND (:end_date IS NULL OR time_purchased <= :end_date)
 ORDER BY time_purchased DESC
 ''',
                               uid = uid,
                               seller_id=seller_id,
-                              item_tag=item_tag,
+                              tag=tag,
                               start_date=start_date,
                               end_date=end_date)
         return [Purchase(*row) for row in rows]
