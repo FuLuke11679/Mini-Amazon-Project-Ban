@@ -57,6 +57,18 @@ LIMIT :per_page OFFSET :offset
                               offset=offset)
         return [Purchase(*row) for row in rows]
 
+    @staticmethod
+    def get_all_by_order(uid, order_id):
+        rows = app.db.execute('''
+SELECT id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
+FROM Purchases
+WHERE uid = :uid AND id = :order_id
+ORDER BY time_purchased DESC
+''',
+                              uid=uid,
+                              order_id = order_id)
+        return [Purchase(*row) for row in rows]
+
 
     @staticmethod
     def get_max_oid():
@@ -117,4 +129,28 @@ LIMIT :per_page OFFSET :offset
                               uid=uid,
                               per_page = per_page,
                               offset=offset)
+        return [Purchase(*row) for row in rows]
+
+
+
+
+
+    def get_all_by_modifier(uid, seller_id=None, item_tag=None, start_date=None, end_date=None):
+        start_date = start_date if start_date else None
+        end_date = end_date if end_date else None
+        
+        rows = app.db.execute('''
+SELECT id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
+FROM Purchases
+WHERE uid = :uid
+AND (:seller_id IS NULL OR seller_id = :seller_id)
+AND (:start_date IS NULL OR time_purchased >= :start_date)
+AND (:end_date IS NULL OR time_purchased <= :end_date)
+ORDER BY time_purchased DESC
+''',
+                              uid = uid,
+                              seller_id=seller_id,
+                              item_tag=item_tag,
+                              start_date=start_date,
+                              end_date=end_date)
         return [Purchase(*row) for row in rows]

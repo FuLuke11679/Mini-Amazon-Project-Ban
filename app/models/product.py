@@ -15,6 +15,13 @@ class Product:
         self.tag = tag
         self.subtag = subtag
 
+    @classmethod
+    def new_product(cls, name, price, amount, photo_url, seller_id, longDescription, tag, subtag):
+        """
+        Factory method for creating a new product instance without an id.
+        """
+        return cls(None, name, price, amount, True, photo_url, seller_id, longDescription, tag, subtag)
+
     #Used
     @staticmethod
     def get(id):
@@ -182,7 +189,7 @@ ORDER BY {}
     def get_list_by_ids(product_ids):
         # Use WHERE id IN (:product_ids) to filter by a list of product IDs
         rows = app.db.execute('''
-            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
             FROM Products
             WHERE id IN :product_ids
         ''',
