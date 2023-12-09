@@ -14,7 +14,7 @@
   <label for = "user_id">Add Product to Inventory: </label>
     <input type="text"  placeholder="Enter Product ID..."  name="product_id" product_id = "product_id" />
 </form>
-<h2>Inventory:</h2>
+<h2>Inventory: </h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -38,6 +38,28 @@
     {% endfor %}
   </tbody>
 </table>
+
+<form action="{{ url_for('index.add_product') }}" method="POST">
+  <input type="text" name="name" placeholder="Product Name">
+  <input type="number" step="0.01" name="price" placeholder="Price">
+  <input type="number" name="amount" placeholder="Amount">
+  <input type="text" name="photo_url" placeholder="Photo URL">
+  <textarea name="longDescription" placeholder="Long Description"></textarea>
+  <select name="tag">
+      <option value="Groceries">Groceries</option>
+      <option value="Groceries">Basics</option>
+      <option value="Groceries">Music</option>
+      <option value="Groceries">Books</option>
+      <option value="Groceries">Tech</option>
+      <option value="Groceries">Pharmacy</option>
+      <option value="Groceries">Fashion</option>
+      <!-- Other options -->
+  </select>
+  <input type="text" name="subtag" placeholder="Subtag">
+  <input type="submit" value="Add Product">
+</form>
+
+
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your inventory!</p>
 {% endif %}
