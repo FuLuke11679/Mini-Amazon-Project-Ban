@@ -5,7 +5,7 @@ import random
 
 num_users = 100
 num_products = 200
-num_purchases = 250
+num_purchases = 1000
 num_wishlistitems = 2200
 num_sellers = 20
 num_inventory = 1000
@@ -157,6 +157,7 @@ def gen_purchases(num_purchases, products):
             if id % 100 == 0:
                 print(f'{id}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)
+            oid = fake.random_int(min=0, max=num_purchases/200)
             
             product = random.choice(products)
 
@@ -172,7 +173,7 @@ def gen_purchases(num_purchases, products):
             time_purchased = fake.date_time() # not based on product
             fulfillment_status = random.choice(['Fulfilled', 'In Progress'])
 
-            writer.writerow([id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status])
+            writer.writerow([id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status])
         print(f'{num_purchases} generated')
     return
 

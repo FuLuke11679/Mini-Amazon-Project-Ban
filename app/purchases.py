@@ -112,7 +112,7 @@ def purchases_search():
 #recommendation system
 file_path = 'db/data/generated/Purchases.csv'
 purchases_df = pd.read_csv(file_path, header=None)
-column_names = ['id', 'uid', 'seller_id', 'pid', 'name', 'photo_url', 'tag', 'quantity', 'price_per_unit', 'total_price', 'time_purchased', 'fulfillment_status']
+column_names = ['id', 'uid', 'oid', 'seller_id', 'pid', 'name', 'photo_url', 'tag', 'quantity', 'price_per_unit', 'total_price', 'time_purchased', 'fulfillment_status']
 purchases_df.columns = column_names
 user_item_matrix = pd.pivot_table(purchases_df, values='quantity', index='uid', columns='pid', fill_value=0)
 
