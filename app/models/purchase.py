@@ -155,7 +155,6 @@ ORDER BY time_purchased DESC
                               uid = uid,
                               seller_id=seller_id,
                               tag=tag,
-                              tag=tag,
                               start_date=start_date,
                               end_date=end_date)
         return [Purchase(*row) for row in rows]
