@@ -14,32 +14,32 @@ from .models.purchase import Purchase
 from .models.wishlist import WishlistItem
 from .models.cart import CartItem
 from .models.user import User
-
+#create this as a blueprint
 from flask import Blueprint
 bp = Blueprint('cart', __name__)
-
+#sets time to current time
 def humanize_time(dt):
     return naturaltime(datatime.datetime.now() - dt)
-
+#gets the product price given a product_id
 def get_product_price(product_id):
     product = Product.get(product_id)
     return product.price if product else 0  # Default to 0 if product not found
-
+#calculates the total price of a user's current cart
 def calculate_total_price(cartlist):
     total_price = 0
     for item in cartlist:
         price = get_product_price(item.pid)
         total_price += item.quantity * price
     return total_price
-
+#gets product name given a product id
 def get_product_name(product_id):
     product = Product.get(product_id)
     return product.name 
-
+#gets seller id given a product id
 def get_seller_id(product_id):
     product = Product.get(product_id)
     return product.seller_id
-
+#defines routing for cart, and properly renders the cart page
 @bp.route('/cart')
 def cart():
     # find the products current user has wishlisted:
@@ -58,7 +58,7 @@ def cart():
     else:
         return jsonify({}), 404
 
-     #render the page by adding information to the index.html file
+#render the page by adding information to the index.html file
 
 @bp.route('/get_cart', methods = ['GET', 'POST'])
 def get_cart():
@@ -73,7 +73,7 @@ def get_cart():
                       user_id = user_id,
                       get_product_name = get_product_name,
                       get_seller_id = get_seller_id) 
-
+#updates the quantity of a product given a product id and redirects to cart.html after updating quantity
 @bp.route('/cart/update_quantity/<int:product_id>', methods = ['GET', 'POST'])
 def update_quantity(product_id):
         user_id = current_user.id
@@ -87,9 +87,6 @@ WHERE uid = :uid AND pid = :pid
                                 uid=user_id,
                                 quantity=quantity,
                                 pid=product_id)
-            #push them over to wishlist()
-                # print(str(product_id) + "pid")
-                # print(str(current_user.id) + "uid")
         cartlist = CartItem.get_all(user_id)
         total_price = calculate_total_price(cartlist)
         return render_template('cart.html',
@@ -100,7 +97,7 @@ WHERE uid = :uid AND pid = :pid
                       user_id = user_id,
                       get_product_name = get_product_name,
                       get_seller_id = get_seller_id) 
-    
+#allows to search for carts by user. R
 @bp.route('/cart_search', methods = ['GET', 'POST'])
 def cart_search():
     if request.method == 'POST':
@@ -117,7 +114,8 @@ def cart_search():
                       get_seller_id = get_seller_id) 
     else:
         return render_template('cart.html')
-
+#routing for adding a product to a cart given a product id. If 
+#signed in, adds to cart and goes to cart page. If not, requests for login.
 @bp.route('/cart/add/<int:product_id>', methods=['POST'])
 def cart_add(product_id):
     if current_user.is_authenticated:
@@ -129,7 +127,7 @@ def cart_add(product_id):
     else:
         return render_template('login_request.html')
 
-
+#defines routing for removing from cart. 
 @bp.route('/cart/remove_item/<int:product_id>', methods = ['GET', 'POST'])
 def remove_item(product_id):
         user_id = current_user.id
@@ -140,9 +138,6 @@ WHERE uid = :uid AND pid = :pid
     """,
                                 uid=user_id,
                                 pid=product_id)
-            #push them over to wishlist()
-                # print(str(product_id) + "pid")
-                # print(str(current_user.id) + "uid")
         cartlist = CartItem.get_all(user_id)
         total_price = calculate_total_price(cartlist)
         return render_template('cart.html',
@@ -153,14 +148,8 @@ WHERE uid = :uid AND pid = :pid
                       user_id = user_id,
                       get_product_name=get_product_name,
                       get_seller_id=get_seller_id) 
- 
-@bp.route('/cart_submit')        
-def cart_submit():
-    cartlist = CartItem.get_all(current_user.id)
-    
-    return product.price if product else 0  # Default to 0 if product not found
-
-
+#defines routing for submitting carts. Checks if there are invalid 
+#items in the cart, and provides error message explaining why submission was invalid
 @bp.route('/cart_submit2', methods=['GET', 'POST'])
 def cart_submit2():
     user_id = current_user.id
@@ -206,7 +195,7 @@ def cart_submit2():
                 error_message += f"Product ID: {item.pid}, Quantity: {item.quantity}, Available Amount: {amount}<br>"
         flash(Markup(error_message), "error")
         return redirect(url_for('cart.get_cart'))
-    
+#deletes all items in the cart. Operates after cart submission
 @staticmethod
 def delete_all(user_id):
         try:

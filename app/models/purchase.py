@@ -1,6 +1,6 @@
 from flask import current_app as app
 
-
+#initialize Purchase
 class Purchase:
     def __init__(self, id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status):
         self.id = id
@@ -16,7 +16,7 @@ class Purchase:
         self.total_price = total_price
         self.time_purchased = time_purchased
         self.fulfillment_status = fulfillment_status
-
+#gets specific purchase by primary key
     @staticmethod
     def get(id):
         rows = app.db.execute('''
@@ -26,7 +26,7 @@ WHERE id = :id
 ''',
                               id=id)
         return Purchase(*(rows[0])) if rows else None
-
+#gets rows of purchases that are after a time input
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
@@ -41,7 +41,7 @@ LIMIT 5
                               since=since)
         return [Purchase(*row) for row in rows]
 
-
+#gets all purchases by user id with pagination
     @staticmethod
     def get_all(uid, page=1, per_page=20):
         offset = (page-1) * per_page
@@ -56,7 +56,7 @@ LIMIT :per_page OFFSET :offset
                               per_page = per_page,
                               offset=offset)
         return [Purchase(*row) for row in rows]
-
+#gets all uid 
     @staticmethod
     def get_all_by_order(uid, order_id):
         rows = app.db.execute('''
@@ -69,7 +69,7 @@ ORDER BY time_purchased DESC
                               order_id = order_id)
         return [Purchase(*row) for row in rows]
 
-
+#gets the max oid in the purchases table. Utilized when creating new orders
     @staticmethod
     def get_max_oid():
         rows = app.db.execute('''
@@ -83,7 +83,7 @@ ORDER BY time_purchased DESC
         else:
             return None
 
-
+#creates a new row in purchases and updates quantity from products
     @staticmethod
     def create_purchase(uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status):
         try: 
@@ -114,7 +114,7 @@ RETURNING id
         except Exception as e:
             return None
 
-
+#gets all purchases by a user by seller id
     @staticmethod
     def get_all_seller_id(uid, page=1, per_page=20):
         offset = (page-1) * per_page
@@ -134,7 +134,7 @@ LIMIT :per_page OFFSET :offset
 
 
 
-
+#get_all function with multiple ways to manipulate what you are getting (selller id, item tag, start date, end date)
     def get_all_by_modifier(uid, seller_id=None, item_tag=None, start_date=None, end_date=None):
         start_date = start_date if start_date else None
         end_date = end_date if end_date else None

@@ -1,7 +1,7 @@
 from flask import current_app as app
 from flask import jsonify   
-#test
 
+#initialize cart item
 class CartItem:
     def __init__(self, id, uid, pid, time_added, quantity):
         self.id = id
@@ -9,7 +9,7 @@ class CartItem:
         self.pid = pid
         self.time_added = time_added
         self.quantity = quantity
-
+#gets by cart id primary key
     @staticmethod
     def get(id):
         rows = app.db.execute('''
@@ -19,6 +19,7 @@ WHERE id = :id
 ''',
                               id=id)
         return CartItem(*(rows[0])) if rows else None
+#adds new item to carts table and updates quantity instead of the item is already there
     @staticmethod
     def add(uid, pid, time_added, quantity):
         rows = app.db.execute('''SELECT quantity FROM Carts WHERE uid = :uid AND pid = :pid;''', uid=uid, pid=pid)
@@ -54,7 +55,7 @@ WHERE id = :id
             return CartItem.get(uid)
 
 
-    
+#gets all items in cart by user id
     @staticmethod
     def get_all(uid, page=1, per_page=10):
         offset = (page-1) * per_page
@@ -69,7 +70,7 @@ LIMIT :per_page OFFSET :offset
                               per_page = per_page,
                               offset=offset)
         return [CartItem(*row) for row in rows]
-    
+#displays certain number of items in cart
     @staticmethod
     def display_num(uid, num_rows, offset):
         times = offset*num_rows
@@ -84,7 +85,7 @@ LIMIT :num_rows OFFSET :times
                               num_rows = num_rows,
                               times = times)
         return [CartItem(*row) for row in rows]
-    
+#returns all items in cart to where the quantity in carts is greater than the amount in products
     @staticmethod
     def return_invalid(user_id):
         rows = app.db.execute('''
@@ -96,7 +97,7 @@ LIMIT :num_rows OFFSET :times
 
         return [CartItem(*row) for row in rows]
 
-
+#deletes all items from a users cart
     @staticmethod
     def delete_all(user_id):
         try:
