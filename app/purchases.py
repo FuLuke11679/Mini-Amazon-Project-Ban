@@ -160,3 +160,16 @@ def get_orders():
                           humanize_time=humanize_time,
                           total_price=total_price,
                           user_id = user_id)
+
+                          
+@bp.route('/get_specific_order/<int:order_id>', methods=['GET'])
+def get_specific_order(order_id):
+   user_id = current_user.id
+   orderlist = Purchase.get_all_by_order(user_id, order_id) 
+   total_price = calculate_total_price(orderlist)
+   return render_template('orders.html',
+                          orderlist=orderlist,
+                          humanize_time=humanize_time,
+                          total_price=total_price,
+                          user_id = user_id,
+                          order_id = order_id)

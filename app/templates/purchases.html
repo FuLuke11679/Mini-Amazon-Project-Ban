@@ -44,6 +44,7 @@
       <th scope="col">Total Price</th>
       <th scope="col">Date Purchased</th>
       <th scope="col">Fulfillment Status</th>
+      <th scope="col">Detailed Order Page</th>
 
     </tr>
   </thead>
@@ -60,6 +61,7 @@
         <td>{{item.total_price}}</td>
         <td>{{item.time_purchased}}</td>
         <td>{{item.fulfillment_status}}</td>
+        <td><a href="{{ url_for('purchases.get_specific_order', order_id=item.id) }}" class="btn btn-light" role="button">View Order Details</a></td>
       </tr>
     {% endfor %}
   </tbody>

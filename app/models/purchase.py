@@ -56,6 +56,18 @@ LIMIT :per_page OFFSET :offset
                               offset=offset)
         return [Purchase(*row) for row in rows]
 
+    @staticmethod
+    def get_all_by_order(uid, order_id):
+        rows = app.db.execute('''
+SELECT id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
+FROM Purchases
+WHERE uid = :uid AND id = :order_id
+ORDER BY time_purchased DESC
+''',
+                              uid=uid,
+                              order_id = order_id)
+        return [Purchase(*row) for row in rows]
+
 
     @staticmethod
     def get_max_id():

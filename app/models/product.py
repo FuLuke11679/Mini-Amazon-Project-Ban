@@ -182,7 +182,7 @@ ORDER BY {}
     def get_list_by_ids(product_ids):
         # Use WHERE id IN (:product_ids) to filter by a list of product IDs
         rows = app.db.execute('''
-            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag
+            SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
             FROM Products
             WHERE id IN :product_ids
         ''',
