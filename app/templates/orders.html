@@ -5,10 +5,12 @@
 <br><br>
 {% if current_user.is_authenticated %}
   <h2>Your Orders:</h2>
+  <!--GROUPS BY ORDERS-->
   {% set grouped_orders = {} %}
   {% for item in orderlist %}
     {% set order_id = item.oid %}
-    {% set _ = grouped_orders.setdefault(order_id, {'items': [], 'fulfillment_status': 'Not Fulfilled'}) %}
+    <!--DETECS IF ENTIRE ORDER HAS BEEN FULFILLED-->
+    {% set _ = grouped_orders.setdefault(order_id, {'items': [], 'fulfillment_status': 'Not Fulfilled', 'total_price': 0}) %}
     {% set _ = grouped_orders[order_id]['items'].append(item) %}
     {% if item.fulfillment_status == 'Fulfilled' and grouped_orders[order_id]['fulfillment_status'] != 'Fulfilled' %}
       {% set temp = 'Fulfilled' %}
@@ -16,8 +18,9 @@
       {% set temp = 'Not Fulfilled' %}
     {% endif %}
     {% set _ = grouped_orders[order_id].update({'fulfillment_status': temp}) %}
+    {% set _ = grouped_orders[order_id].update({'total_price': grouped_orders[order_id]['total_price'] + item.total_price}) %}
   {% endfor %}
-
+<!--DISPLAYS BY ORDER-->
   {% for order_id, data in grouped_orders.items() %}
     <h3>Order ID: {{ order_id }}</h3>
     <table class='table table-hover table-bordered container'>
@@ -29,12 +32,13 @@
           <th scope="col">Photo</th>
           <th scope="col">Tag</th>
           <th scope="col">Quantity</th>
-          <th scope="col">Total Price</th>
+          <th scope="col">Final Price</th>
           <th scope="col">Date Purchased</th>
           <th scope="col">Fulfillment Status</th>
         </tr>
       </thead>
       <tbody>
+        <!--DISPLAYS EACH ITEM IN EACH ORDER-->
         {% for item in data['items'] %}
           <tr>
             <td><a href="/product/{{item.pid}}">{{item.name}}</a></td>
@@ -50,10 +54,12 @@
         {% endfor %}
       </tbody>
     </table>
+    <!--DISPLAYS FULFILLMENT STATUS AND TOTAL FINAL ORDER PRICE-->
     <h5>Order Fulfillment Status: {{ data['fulfillment_status'] }}</h5>
+    <h5>Final Order Price: {{ data['total_price'] }}</h5>
   {% endfor %}
 
-  <h3>Total Price: {{ total_price }}</h3>
+  <h3>Total Prices: {{ total_price }}</h3>
 {% else %}
   <p><a href="{{ url_for('users.login') }}">Log in</a> to see your orders!</p>
 {% endif %}
