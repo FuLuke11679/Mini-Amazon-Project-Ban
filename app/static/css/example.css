@@ -2,6 +2,33 @@ hr {
     border: 1px solid black;
 }
 
+.search_div {
+    float: left;
+    width: 33.33%;
+    margin: auto;
+    height: 0;
+    position: relative;
+    padding-bottom: 200px;
+  }
+  
+/* Clear floats after the columns */
+.row:after {
+content: "";
+display: table;
+clear: both;
+}
+
+.product-card {
+    margin: auto; 
+    background-color: #fff9ee; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    transform-origin: bottom;
+}
+
 section {
 color: #fff;
 text-align: center;
