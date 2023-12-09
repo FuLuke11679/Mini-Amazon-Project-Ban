@@ -2,6 +2,7 @@ from werkzeug.security import generate_password_hash
 import csv
 from faker import Faker
 import random
+from datetime import timedelta
 
 num_users = 100
 num_products = 200
@@ -153,44 +154,34 @@ def gen_purchases(num_purchases, products):
     with open('Purchases.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Purchases...', end=' ', flush=True)
-        for id in range(num_purchases):
-            if id % 100 == 0:
-                print(f'{id}', end=' ', flush=True)
-            uid = fake.random_int(min=0, max=num_users-1)
-            oid = fake.random_int(min=0, max=num_purchases/200)
-            
-            product = random.choice(products)
 
+        for oid in range(5):
+            timestamp_offset = timedelta(days=oid)
+            order_timestamp = fake.date_time_between(start_date='-365d', end_date='now') - timestamp_offset
 
-            seller_id = product['seller_id']
-            pid = product['id']
-            name = product['name']
-            photo_url = product['photo_url']
-            tag = product['tag']
-            quantity = fake.random_int(min = 1, max = 20) # not based on product
-            price_per_unit = float(product['price'])
-            total_price = quantity * price_per_unit 
-            time_purchased = fake.date_time() # not based on product
-            fulfillment_status = random.choice(['Fulfilled', 'In Progress'])
+            for id in range(oid * 200, (oid + 1) * 200):
+                if id % 100 == 0:
+                    print(f'{id}', end=' ', flush=True)
 
-            writer.writerow([id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status])
+                uid = fake.random_int(min=0, max=num_users-1)
+                product = random.choice(products)
+                seller_id = product['seller_id']
+                pid = product['id']
+                name = product['name']
+                photo_url = product['photo_url']
+                tag = product['tag']
+                quantity = fake.random_int(min=1, max=20)
+                price_per_unit = float(product['price'])
+                total_price = quantity * price_per_unit
+
+                # Use the same timestamp for all purchases within the order
+                time_purchased = order_timestamp
+
+                fulfillment_status = random.choice(['Fulfilled', 'In Progress'])
+
+                writer.writerow([id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status])
+
         print(f'{num_purchases} generated')
-    return
-
-def gen_inventory(num_inventory, available_pids, available_sellers):
-    with open('Inventory.csv', 'w') as f:
-        writer = get_csv_writer(f)
-        print('Inventory...', end=' ', flush=True)
-        for id in range(num_inventory):
-            if id % 100 == 0:
-                print(f'{id}', end=' ', flush=True)
-            uid = fake.random_element(elements=available_sellers)
-            pid = fake.random_element(elements=available_pids)
-            time_purchased = fake.date_time()
-            quantity = fake.random_int(min = 1, max = 20)
-            writer.writerow([id, uid, pid, time_purchased, quantity])
-        print(f'{num_purchases} generated')
-        
     return
 
     

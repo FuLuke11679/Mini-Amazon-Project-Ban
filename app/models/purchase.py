@@ -58,15 +58,15 @@ LIMIT :per_page OFFSET :offset
         return [Purchase(*row) for row in rows]
 
     @staticmethod
-    def get_all_by_order(uid, order_id):
+    def get_all_by_order(uid, oid):
         rows = app.db.execute('''
-SELECT id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
+SELECT id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
 FROM Purchases
-WHERE uid = :uid AND id = :order_id
+WHERE uid = :uid AND oid = :oid
 ORDER BY time_purchased DESC
 ''',
                               uid=uid,
-                              order_id = order_id)
+                              oid=oid)
         return [Purchase(*row) for row in rows]
 
 
@@ -140,7 +140,7 @@ LIMIT :per_page OFFSET :offset
         end_date = end_date if end_date else None
         
         rows = app.db.execute('''
-SELECT id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
+SELECT id, uid, oid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status
 FROM Purchases
 WHERE uid = :uid
 AND (:seller_id IS NULL OR seller_id = :seller_id)

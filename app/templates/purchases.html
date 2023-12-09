@@ -51,6 +51,7 @@
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
+      <th scope="col">Order ID</th>
       <th scope="col">Purchase ID</th>
       <th scope="col">Seller ID</th>
       <th scope="col">Product ID</th>
@@ -68,7 +69,8 @@
   <tbody>
     {% for item in purchasedItems %}
       <tr>
-        <th scope="row">{{item.id}}</th>
+        <th scope="row">{{item.oid}}</th>
+        <td>{{item.id}}</td>
         <td>{{item.seller_id}}</td>
         <td>{{item.pid}}</td>
         <td>{{item.name}}</td>
@@ -78,7 +80,7 @@
         <td>{{item.total_price}}</td>
         <td>{{item.time_purchased}}</td>
         <td>{{item.fulfillment_status}}</td>
-        <td><a href="{{ url_for('purchases.get_specific_order', order_id=item.id) }}" class="btn btn-light" role="button">View Order Details</a></td>
+        <td><a href="{{ url_for('purchases.get_specific_order', oid=item.oid) }}" class="btn btn-light" role="button">View Order Details</a></td>
       </tr>
     {% endfor %}
   </tbody>
