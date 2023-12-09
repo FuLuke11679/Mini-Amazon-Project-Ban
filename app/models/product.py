@@ -53,7 +53,7 @@ WHERE id = :id
     
     #Used
     @staticmethod
-    def get_all_sorted(available=True, sort_order='asc', page=1, per_page=10):
+    def get_all_sorted(available=True, sort_order='asc', page=1, per_page=9):
         offset = (page-1) * per_page
         #print(page-1)
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
