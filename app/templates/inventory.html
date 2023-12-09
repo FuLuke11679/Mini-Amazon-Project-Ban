@@ -39,25 +39,47 @@
   </tbody>
 </table>
 
-<form action="{{ url_for('index.add_product') }}" method="POST">
-  <input type="text" name="name" placeholder="Product Name">
-  <input type="number" step="0.01" name="price" placeholder="Price">
-  <input type="number" name="amount" placeholder="Amount">
-  <input type="text" name="photo_url" placeholder="Photo URL">
-  <textarea name="longDescription" placeholder="Long Description"></textarea>
-  <select name="tag">
-      <option value="Groceries">Groceries</option>
-      <option value="Groceries">Basics</option>
-      <option value="Groceries">Music</option>
-      <option value="Groceries">Books</option>
-      <option value="Groceries">Tech</option>
-      <option value="Groceries">Pharmacy</option>
-      <option value="Groceries">Fashion</option>
-      <!-- Other options -->
+<form action="{{ url_for('index.add_product') }}" method="POST" onsubmit="return validateForm()">
+  <input type="text" name="name" id="name" placeholder="Product Name" required>
+  <input type="number" step="0.01" name="price" id="price" placeholder="Price" required>
+  <input type="number" name="amount" id="amount" placeholder="Amount" required>
+  <input type="text" name="photo_url" id="photo_url" placeholder="Photo URL" required>
+  <textarea name="longDescription" id="longDescription" placeholder="Long Description" required></textarea>
+  <select name="tag" id="tag" required>
+    <option value="Groceries">Groceries</option>
+    <option value="Basics">Basics</option>
+    <option value="Music">Music</option>
+    <option value="Books">Books</option>
+    <option value="Tech">Tech</option>
+    <option value="Pharmacy">Pharmacy</option>
+    <option value="Fashion">Fashion</option>
+    <!-- Other options -->
   </select>
-  <input type="text" name="subtag" placeholder="Subtag">
+  <input type="text" name="subtag" id="subtag" placeholder="Subtag" required>
   <input type="submit" value="Add Product">
 </form>
+
+<script>
+function validateForm() {
+  var name = document.getElementById("name").value;
+  var price = document.getElementById("price").value;
+  var amount = document.getElementById("amount").value;
+  var photo_url = document.getElementById("photo_url").value;
+  var longDescription = document.getElementById("longDescription").value;
+  var tag = document.getElementById("tag").value;
+  var subtag = document.getElementById("subtag").value;
+
+  if (name === "" || price === "" || amount === "" || photo_url === "" || longDescription === "" || tag === "" || subtag === "") {
+    alert("Please fill in all fields.");
+    return false; // Prevent form submission
+  }
+
+  // You can add additional validation logic here for specific fields if needed
+
+  return true; // Allow form submission
+}
+</script>
+
 
 
 {% else %}
