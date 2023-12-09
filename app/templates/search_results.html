@@ -118,7 +118,7 @@
     {% if products %}
     <div class="product-container" style="margin: auto;">
         {% for product in products %}
-        <div class="product-card" style="margin: auto;">
+        <div class="product-card">
             <img src="{{ product.photo_url }}" alt="{{ product.name }}" class="product-image"/>
             <div class="product-info">
                 <h3><a href="/product/{{ product.id }}">{{ product.name }}</a></h3>

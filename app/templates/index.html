@@ -9,27 +9,34 @@
 
 <br><br>
 
-
-<h2>Search Inventory Based On Seller ID:</h2>
+<div class="searchbars">
+<div class="search_div">
+  <h2>Search Inventory Based On Seller ID:</h2>
   <form action="{{ url_for('inventory.inventory_view') }}" method="POST">
     <label for = "user_id">Seller ID: </label>
     <input type="text"  placeholder="Enter Seller ID..."  name="user_id" user_id = "user_id" />
   </form>
+</div>
 
-<h2>Search User's Cart Items</h2>
-<form action="{{ url_for('cart.cart_search') }}" method="POST">
-    <label for="user_id">User ID:</label>
-    <input type="text" id="user_id" name="user_id">
-    <input type="submit" value="Search">
-</form>
+<div class="search_div">
+  <h2>Search User's Cart Items</h2>
+  <form action="{{ url_for('cart.cart_search') }}" method="POST">
+      <label for="user_id">User ID:</label>
+      <input type="text" id="user_id" name="user_id">
+      <input type="submit" value="Search">
+  </form>
+</div>
 
-<h2>Search Users</h2>
-<form action="{{ url_for('users.user_search') }}" method="POST">
-    <label for="user_id">User ID:</label>
-    <input type="text" id="user_id" name="user_id">
-    <input type="submit" value="Search">
-</form>
-
+<div class="search_div">
+  <h2>Search Users</h2>
+  <form action="{{ url_for('users.user_search') }}" method="POST">
+      <label for="user_id">User ID:</label>
+      <input type="text" id="user_id" name="user_id">
+      <input type="submit" value="Search">
+  </form>
+</div>
+</div>
+<br><br>
 <script>
 function updateSubtags() {
     var tag = document.getElementById('tag').value;
@@ -63,7 +70,6 @@ function updateSubtags() {
 
 </script>
 
-<hr>
 
 <!-- Search Container -->
 <div class="search-container">
@@ -110,7 +116,7 @@ function updateSubtags() {
 <h2>Products for sale:</h2>
 <div class="product-container" style="margin: auto;">
   {% for product in avail_products %}
-    <div class="product-card" style="margin: auto;">
+    <div class="product-card">
       <!-- Use the full URL stored in the photo_url column -->
       <img src="{{ product.photo_url }}" alt="{{product.name}}" class="product-image"/>
       <div class="product-info">
@@ -135,32 +141,4 @@ function updateSubtags() {
 {% endif %}
 
 
-<hr>
-
-<br><br>
-{% if current_user.is_authenticated %}
-<h2>Your recent purchases:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Purchase ID</th>
-      <th scope="col">Product ID</th>
-      <th scope="col">Time Purchased</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for purchase in purchase_history%}
-      <tr>
-        <th scope="row">{{purchase.id}}</th>
-        <td>{{purchase.pid}}<form action="{{ url_for('review.review_add', product_id = purchase.pid) }}" method="POST">
-          <input type="submit" value="Review Product"/>
-        </form></td>
-        <td>{{purchase.time_purchased}}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
-{% endif %}
 {% endblock %}
