@@ -128,6 +128,14 @@ function updateSubtags() {
   {% endfor %}
 </div>
 
+{% if page > 1 %}
+<a href="{{ url_for('index.index', page=page-1) }}">Previous</a>
+{% endif %}
+
+{% if avail_products|length == 10 %}
+<a href="{{ url_for('index.index', page=page+1) }}">Next</a>
+{% endif %}
+
 
 
 

@@ -22,11 +22,17 @@ def page_not_found(e):
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
+    #print(request.args.get('page'))
+    if request.method == 'POST':
+    # Get page value or default 1 (for products for sale display)
+        page = 1
+    else:
+        page = int(request.args.get('page', 1))
     # Get the sorting order from the request, default to ascending
     sort_order = request.args.get('sort_order', 'asc')
 
     # Get all available products for sale, sorted by price as per user's choice
-    products = Product.get_all_sorted(True, sort_order)
+    products = Product.get_all_sorted(True, sort_order, page=page)
 
     # Find the products current user has bought
     recent_purchases = None
@@ -34,11 +40,12 @@ def index():
         recent_purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
 
+
     # Render the index.html template with the provided variables
     return render_template('index.html',
+                           page=page,
                            avail_products=products,
-                           recent_purchase_history=recent_purchases,
-                           ) 
+                           recent_purchase_history=recent_purchases) 
 
 '''
 @bp.route('/search_results', methods = ['GET', 'POST'])

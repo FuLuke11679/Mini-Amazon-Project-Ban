@@ -53,14 +53,17 @@ WHERE id = :id
     
     #Used
     @staticmethod
-    def get_all_sorted(available=True, sort_order='asc'):
+    def get_all_sorted(available=True, sort_order='asc', page=1, per_page=10):
+        offset = (page-1) * per_page
+        #print(page-1)
         order_clause = 'price DESC' if sort_order == 'desc' else 'price ASC'
         rows = app.db.execute('''
     SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
     FROM Products
     WHERE available = :available
     ORDER BY {}
-    '''.format(order_clause), available=available)
+    LIMIT :per_page OFFSET :offset
+    '''.format(order_clause), available=available,per_page = per_page, offset = offset)
         return [Product(*row) for row in rows]
 
     #Used
@@ -197,13 +200,17 @@ ORDER BY {}
         return rows[0][0] if rows else None
 
     @staticmethod
-    def get_all(available=True):
+    def get_all(available=True, page=1, per_page=10):
+        offset = (page-1) * per_page
         rows = app.db.execute('''
     SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag
     FROM Products
     WHERE available = :available
+    LIMIT :per_page OFFSET :offset
     ''',
-                            available=available)
+                            available=available,
+                            per_page = per_page, 
+                              offset = offset)
         return [Product(*row) for row in rows]
     
 
