@@ -4,29 +4,19 @@ from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import DateField, RadioField, FloatField, StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
-
+from .models.review import Review 
+from .models.sellerreview import SellerReview
+import datetime
+from humanize import naturaltime
 
 from flask import current_app as app
-
-
 
 
 from wtforms.fields.simple import HiddenField
 
 
-
-
-
-
-
-
 from .models.user import User
 from .models.purchase import Purchase
-
-
-
-
-
 
 
 
@@ -268,45 +258,80 @@ def logout():
 
 @bp.route('/myprofile')
 def myprofile():
- return render_template('myprofile.html')
+    if current_user.is_authenticated:
+        reviews = Review.get_all_by_uid_since(current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+        sellerReviews = SellerReview.get_all_by_uid_since(current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+    else:
+        reviews = None
+        sellerReviews = None
+
+    # print(reviews)
+
+    return render_template('myprofile.html', 
+                        reviews=reviews,
+                        sellerReviews=sellerReviews,
+                        humanize_time=humanize_time)
+
+
 
 
 
 
 @bp.route('/publicprofile/<int:user_id>', methods = ['GET'])
 def publicprofile(user_id):
-  #user_id = request.form['user_id']
-  seller = is_seller(user_id)
-  userInfo = User.get(user_id)
-  return render_template('publicprofile.html',
-                  user_id = user_id,
-                  userInfo = userInfo,
-                  seller = seller)
+    #user_id = request.form['user_id']
+    seller = is_seller(user_id)
+    userInfo = User.get(user_id)
+    
+    average_rating_a = SellerReview.total_average(user_id)
+    if average_rating_a == None:
+        average_rating = None
+    else:
+        average_rating = average_rating_a[0]
+    
+    reviews_for_this_seller = SellerReview.reviews_for_this_seller(user_id)
+    num_of_reviews = len(reviews_for_this_seller or "")
+
+
+    return render_template('publicprofile.html',
+                    user_id = user_id, 
+                    userInfo = userInfo, 
+                    seller = seller,
+                    reviews_for_this_seller=reviews_for_this_seller,
+                    humanize_time=humanize_time,
+                    average_rating = average_rating,
+                    num_of_reviews=num_of_reviews)
+
 
 
 
 
 @bp.route('/user_search', methods=['GET', 'POST'])
 def user_search():
-  if request.method == 'POST':
-      user_id = request.form['user_id']
-      seller = is_seller(user_id)
-      userInfo = User.get(user_id)
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        seller = is_seller(user_id)
+        userInfo = User.get(user_id)
 
+        reviews_for_this_seller = SellerReview.reviews_for_this_seller(user_id)
+        num_of_reviews = len(reviews_for_this_seller  or "")
 
+        average_rating_a = SellerReview.total_average(user_id)
+        if average_rating_a == None:
+            average_rating = None
+        else:
+            average_rating = average_rating_a[0]
 
-
-      return render_template('publicprofile.html',
-                  user_id = user_id,
-                  userInfo = userInfo,
-                  seller = seller)
-  else:
-      return redirect(url_for('index.html'))
-
-
-
-
-
+        return render_template('publicprofile.html',
+                    user_id = user_id, 
+                    userInfo = userInfo, 
+                    seller = seller,
+                    reviews_for_this_seller=reviews_for_this_seller,
+                    humanize_time=humanize_time,
+                    num_of_reviews = num_of_reviews,
+                    average_rating = average_rating)
+    else:
+        return render_template('index.html')
 
 
 
