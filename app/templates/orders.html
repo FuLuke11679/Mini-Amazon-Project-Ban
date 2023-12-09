@@ -26,26 +26,30 @@
     <table class='table table-hover table-bordered container'>
       <thead class="thead-dark">
         <tr>
+          <th scope="col">Product Name</th>
+          <th scope="col">Seller ID</th>
           <th scope="col">Product ID</th>
-          <th scope="col">Name</th>
-          <th scope="col">Date Added</th>
+          <th scope="col">Photo</th>
+          <th scope="col">Tag</th>
           <th scope="col">Quantity</th>
-          <th scope="col">Price per Unit</th>
-          <th scope="col">Final Price</th>
-          <th scope="col">Fulfillment</th>
+          <th scope="col">Total Price</th>
+          <th scope="col">Date Purchased</th>
+          <th scope="col">Fulfillment Status</th>
         </tr>
       </thead>
       <tbody>
         <!--DISPLAYS EACH ITEM IN EACH ORDER-->
         {% for item in data['items'] %}
           <tr>
-            <td>{{ item.pid }}</td>
             <td><a href="/product/{{item.pid}}">{{item.name}}</a></td>
-            <td>{{ item.time_purchased }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.price_per_unit }}</td>
-            <td>{{ item.total_price }}</td>
-            <td>{{ item.fulfillment_status }}</td>
+            <td>{{item.seller_id}}</td>
+            <td>{{item.pid}}</td>
+            <td><img src="{{item.photo_url}}" width = "160" height = "120"></td>
+            <td>{{item.tag}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.total_price}}</td>
+            <td>{{item.time_purchased}}</td>
+            <td>{{item.fulfillment_status}}</td>
           </tr>
         {% endfor %}
       </tbody>

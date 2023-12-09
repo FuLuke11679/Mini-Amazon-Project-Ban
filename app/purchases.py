@@ -165,14 +165,14 @@ def get_orders():
 def get_orders_by_modifier():
     user_id = current_user.id
     seller_id = request.args.get('seller_id')  
-    item_tag = request.args.get('item tag') 
+    tag = request.args.get('tag') 
     start_date = request.args.get('start_date')  
     end_date = request.args.get('end_date')  
 
     orderlist = Purchase.get_all_by_modifier(
         uid=user_id,
         seller_id=seller_id,
-        item_tag=item_tag,
+        tag=tag,
         start_date=start_date,
         end_date=end_date
     )
@@ -186,14 +186,14 @@ def get_orders_by_modifier():
 
 
                           
-@bp.route('/get_specific_order/<int:order_id>', methods=['GET'])
-def get_specific_order(order_id):
+@bp.route('/get_specific_order/<int:oid>', methods=['GET'])
+def get_specific_order(oid):
    user_id = current_user.id
-   orderlist = Purchase.get_all_by_order(user_id, order_id) 
+   orderlist = Purchase.get_all_by_order(user_id, oid) 
    total_price = calculate_total_price(orderlist)
    return render_template('orders.html',
                           orderlist=orderlist,
                           humanize_time=humanize_time,
                           total_price=total_price,
                           user_id = user_id,
-                          order_id = order_id)
+                          oid = oid)

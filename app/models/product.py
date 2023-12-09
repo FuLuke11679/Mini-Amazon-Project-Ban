@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import jsonify
-
+#from .db import DB
 
 class Product:
     def __init__(self, id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag):
@@ -240,3 +240,30 @@ ORDER BY {}
         ''', keyword=keyword)
         return [Product(*row) for row in rows]
 
+    @staticmethod
+    def get_by_name_and_seller(name, seller_id):
+        """
+        Retrieve a product by name and seller ID.
+
+        Args:
+            name (str): The name of the product.
+            seller_id (int): The ID of the seller (user).
+
+        Returns:
+            Product object if found, None otherwise.
+        """
+        db = app.db  # Access the database connection from current_app
+
+        result = db.execute(
+            "SELECT id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag "
+            "FROM Products "
+            "WHERE name = :name AND seller_id = :seller_id",
+            name=name, seller_id=seller_id
+        )
+
+        if result:
+            print("Found Product")
+            return "Something"
+    
+        else:
+            return None

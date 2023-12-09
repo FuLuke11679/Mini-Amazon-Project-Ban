@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if current_user.is_authenticated %}
+<div class="banner">
+  <h1>Hello {{current_user.firstname}}! Welcome to Our Online Store!</h1>
+  <p>Discover a wide range of products and enjoy shopping with us.</p>
+</div>
+{% else %}
 <div class="banner">
   <h1>Welcome to Our Online Store!</h1>
   <p>Discover a wide range of products and enjoy shopping with us.</p>
 </div>
-
+{% endif %}
 
 <br><br>
 
@@ -18,14 +24,6 @@
   </form>
 </div>
 
-<div class="search_div">
-  <h2>Search User's Cart Items</h2>
-  <form action="{{ url_for('cart.cart_search') }}" method="POST">
-      <label for="user_id">User ID:</label>
-      <input type="text" id="user_id" name="user_id">
-      <input type="submit" value="Search">
-  </form>
-</div>
 
 <div class="search_div">
   <h2>Search Users</h2>
