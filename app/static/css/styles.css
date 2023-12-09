@@ -141,6 +141,11 @@
 html, body {
   height: auto;
   margin: 0;
+  background-color: #fff4e0;
+}
+
+* {
+  font-family: 'Baloo 2', sans-serif;
 }
 
 /* Add other CSS styles for your existing content as needed */
