@@ -165,7 +165,7 @@ def cart_submit():
 def cart_submit2():
     user_id = current_user.id
     cartlist = CartItem.get_all(current_user.id)
-    orderid = Purchase.get_max_id() + 1
+    orderid = Purchase.get_max_oid() + 1
     invalid = CartItem.return_invalid(current_user.id)
     total_price = calculate_total_price(cartlist)
     balance = current_user.balance
@@ -179,8 +179,8 @@ def cart_submit2():
             pid = cart_item.pid
             quantity = cart_item.quantity
             product = Product.get(pid)
-            Purchase.create_purchase(id=orderid,
-                                     uid=current_user.id,
+            Purchase.create_purchase(uid=current_user.id,
+                                     oid=orderid,
                                      seller_id=product.seller_id,
                                      pid=pid,
                                      name=product.name,

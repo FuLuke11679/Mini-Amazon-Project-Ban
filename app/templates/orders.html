@@ -7,7 +7,7 @@
   <h2>Your Orders:</h2>
   {% set grouped_orders = {} %}
   {% for item in orderlist %}
-    {% set order_id = item.id %}
+    {% set order_id = item.oid %}
     {% set _ = grouped_orders.setdefault(order_id, {'items': [], 'fulfillment_status': 'Not Fulfilled'}) %}
     {% set _ = grouped_orders[order_id]['items'].append(item) %}
     {% if item.fulfillment_status == 'Fulfilled' and grouped_orders[order_id]['fulfillment_status'] != 'Fulfilled' %}
