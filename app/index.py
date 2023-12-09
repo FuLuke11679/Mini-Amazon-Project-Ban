@@ -130,22 +130,6 @@ def get_subtags():
     subtags = Product.get_subtags_by_tag(tag)
     return jsonify({'subtags': subtags})
 
-@bp.route('/create_product', methods=['GET', 'POST'])
-def create_product():
-    if request.method == 'POST':
-        # Retrieve product data from the form
-        product_name = request.form['product_name']
-        description = request.form['description']
-        price = request.form['price']
-        
-        # Create a new product in your database (e.g., SQLAlchemy)
-        # You'll need to define a Product model and handle database operations here
-        
-        # Redirect the user back to their profile page after product creation
-        return redirect(url_for('users.myprofile'))
-
-    # Render the profile page with the form for product creation
-    return render_template('myprofile.html', current_user=current_user, reviews=reviews, sellerReviews=sellerReviews)
 
 @bp.route('/add_product', methods=['POST'])
 def add_product():
@@ -157,7 +141,13 @@ def add_product():
     tag = request.form['tag']
     subtag = request.form['subtag']
 
+    # Check if a product with the same name exists for the current user
+    existing_product = Product.get_by_name_and_seller(name, current_user.id)
     
+    if existing_product:
+        # Product with the same name already exists for the current user
+        return "Product with the same name already exists for your account.", 400
+
     # Insert into Products and retrieve the new product id
     sql_product = """
     INSERT INTO Products (name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag)
@@ -169,9 +159,8 @@ def add_product():
                                     longDescription=longDescription, tag=tag, subtag=subtag)
     
     if result:
-        product_id = result[0][0]  # Accessing the first row's first column which is the id
-
         # Insert into Inventory
+        product_id = result[0][0]  # Accessing the first row's first column which is the id
         sql_inventory = """
         INSERT INTO Inventory (uid, pid, quantity)
         VALUES (:uid, :pid, :quantity)
@@ -184,7 +173,6 @@ def add_product():
         # Handle the case where product insertion failed
         # Redirect or return an error message
         return "Error adding product", 500
-
 
     # Redirect to the same page
     return redirect(request.referrer or url_for('default_route'))
