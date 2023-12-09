@@ -112,7 +112,7 @@ def purchases_search():
 #recommendation system
 file_path = 'db/data/generated/Purchases.csv'
 purchases_df = pd.read_csv(file_path, header=None)
-column_names = ['id', 'uid', 'seller_id', 'pid', 'name', 'photo_url', 'tag', 'quantity', 'price_per_unit', 'total_price', 'time_purchased', 'fulfillment_status']
+column_names = ['id', 'uid', 'oid', 'seller_id', 'pid', 'name', 'photo_url', 'tag', 'quantity', 'price_per_unit', 'total_price', 'time_purchased', 'fulfillment_status']
 purchases_df.columns = column_names
 user_item_matrix = pd.pivot_table(purchases_df, values='quantity', index='uid', columns='pid', fill_value=0)
 
@@ -160,3 +160,40 @@ def get_orders():
                           humanize_time=humanize_time,
                           total_price=total_price,
                           user_id = user_id)
+
+@bp.route('/get_orders_by_modifier', methods=['GET', 'POST'])
+def get_orders_by_modifier():
+    user_id = current_user.id
+    seller_id = request.args.get('seller_id')  
+    item_tag = request.args.get('item tag') 
+    start_date = request.args.get('start_date')  
+    end_date = request.args.get('end_date')  
+
+    orderlist = Purchase.get_all_by_modifier(
+        uid=user_id,
+        seller_id=seller_id,
+        item_tag=item_tag,
+        start_date=start_date,
+        end_date=end_date
+    )
+    total_price = calculate_total_price(orderlist)
+
+    return render_template('orders.html',
+                           orderlist=orderlist,
+                           humanize_time=humanize_time,
+                           total_price=total_price,
+                           user_id=user_id)
+
+
+                          
+@bp.route('/get_specific_order/<int:order_id>', methods=['GET'])
+def get_specific_order(order_id):
+   user_id = current_user.id
+   orderlist = Purchase.get_all_by_order(user_id, order_id) 
+   total_price = calculate_total_price(orderlist)
+   return render_template('orders.html',
+                          orderlist=orderlist,
+                          humanize_time=humanize_time,
+                          total_price=total_price,
+                          user_id = user_id,
+                          order_id = order_id)

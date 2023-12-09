@@ -30,6 +30,23 @@
 {% endif %}
 
 
+<form id="searchForm" action="{{ url_for('purchases.get_orders_by_modifier') }}" method="GET">
+  <label for="sellerName">Seller ID:</label>
+  <input type="text" id="sellerName" name="seller_id">
+
+  <label for="itemTag">Item Tag:</label>
+  <input type="text" id="itemTag" name="item_tag">
+
+  <label for="startDate">Start Date:</label>
+  <input type="date" id="startDate" name="start_date">
+
+  <label for="endDate">End Date:</label>
+  <input type="date" id="endDate" name="end_date">
+
+  <button type="submit">Filter Purchases</button>
+</form>
+
+
 <h2>User's Recent Purchases:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -44,6 +61,7 @@
       <th scope="col">Total Price</th>
       <th scope="col">Date Purchased</th>
       <th scope="col">Fulfillment Status</th>
+      <th scope="col">Detailed Order Page</th>
 
     </tr>
   </thead>
@@ -60,6 +78,7 @@
         <td>{{item.total_price}}</td>
         <td>{{item.time_purchased}}</td>
         <td>{{item.fulfillment_status}}</td>
+        <td><a href="{{ url_for('purchases.get_specific_order', order_id=item.id) }}" class="btn btn-light" role="button">View Order Details</a></td>
       </tr>
     {% endfor %}
   </tbody>

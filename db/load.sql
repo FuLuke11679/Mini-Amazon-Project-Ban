@@ -20,8 +20,6 @@ SELECT pg_catalog.setval('public.carts_id_seq',
                          (SELECT MAX(id)+1 FROM Carts),
                          false);
 
--- Assuming "id" is the column you want to increment manually in Purchases
-CREATE SEQUENCE public.purchases_id_seq;
 
 \COPY Purchases FROM 'generated/Purchases.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.purchases_id_seq',
