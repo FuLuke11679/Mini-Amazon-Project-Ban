@@ -68,7 +68,7 @@ RETURNING id
 
 
    @staticmethod
-   def update(uid, email, password, firstname, lastname, address, balance):
+   def update(uid, email, password, firstname, lastname, address):
        try:
            rows = app.db.execute("""
    UPDATE Users
