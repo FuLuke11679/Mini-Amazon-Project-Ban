@@ -23,7 +23,7 @@
       <tr>
         <th scope="row">{{item.id}}</th>
         <td>{{item.pid}}</td>
-        <td>{{ get_product_name(item.pid) }}</td>
+        <td><a href="/product/{{item.pid}}">{{get_product_name(item.pid)}}</a></td>
         <td>{{ get_seller_id(item.pid) }}</td>
         <td>{{item.time_added}}</td>
         <td>
