@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+  <h1>Top Up Balance</h1>
+{% endif %}
+
+
+<form action="{{ url_for('users.top_up') }}" method="post">
+  {{ form.hidden_tag() }}
+
+  <p>
+    {{ form.amount.label }}<br/>
+    {{ form.amount(size=8) }}<br/>
+    {% for error in form.amount.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+
+  <p>
+    {{ form.action.label }}<br/>
+    {{ form.action() }}
+    <br/>
+    {% for error in form.action.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+
+  <p>
+    {{ form.credit_card_number.label }}<br/>
+    {{ form.credit_card_number(size=16) }}<br/>
+    {% for error in form.credit_card_number.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+
+  <p>
+    {{ form.cvv.label }}<br/>
+    {{ form.cvv(size=4) }}<br/>
+    {% for error in form.cvv.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+
+  <p>
+    {{ form.expiry_date.label }}<br/>
+    {{ form.expiry_date(size=10) }}<br/>
+    {% for error in form.expiry_date.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+
+  <p>{{ form.submit() }}</p>
+</form>
+
+{% endblock %}
