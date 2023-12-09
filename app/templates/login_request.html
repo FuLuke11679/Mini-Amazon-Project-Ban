@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br><br>
+<h1>Please log in to save your changes 🥺</h1>
+
+<h2><a href="/">Go Home</a></h2>
+<a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in/Register</a>
+{% endblock %}
