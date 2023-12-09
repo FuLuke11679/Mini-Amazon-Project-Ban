@@ -165,14 +165,14 @@ def get_orders():
 def get_orders_by_modifier():
     user_id = current_user.id
     seller_id = request.args.get('seller_id')  
-    item_tag = request.args.get('item tag') 
+    tag = request.args.get('tag') 
     start_date = request.args.get('start_date')  
     end_date = request.args.get('end_date')  
 
     orderlist = Purchase.get_all_by_modifier(
         uid=user_id,
         seller_id=seller_id,
-        item_tag=item_tag,
+        tag=tag,
         start_date=start_date,
         end_date=end_date
     )

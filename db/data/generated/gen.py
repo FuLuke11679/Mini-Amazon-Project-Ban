@@ -155,9 +155,14 @@ def gen_purchases(num_purchases, products):
         writer = get_csv_writer(f)
         print('Purchases...', end=' ', flush=True)
 
-        for oid in range(5):
-            timestamp_offset = timedelta(days=oid)
-            order_timestamp = fake.date_time_between(start_date='-365d', end_date='now') - timestamp_offset
+        for oid in range(num_purchases//200):
+            start_offset = 5 - oid
+            end_offset = 4 - oid
+
+            start_date = f'-{start_offset}y'
+            end_date = f'-{end_offset}y' if oid < 4 else 'now'
+
+            order_timestamp = fake.date_time_between(start_date=start_date, end_date=end_date)
 
             for id in range(oid * 200, (oid + 1) * 200):
                 if id % 100 == 0:
@@ -251,7 +256,7 @@ num_reviews_per_seller = 2 #len(available_sellers) #num_of_sellerReviews_per_use
 available_pids, products = gen_products(num_products, available_sellers)
 gen_purchases(num_purchases, products)
 gen_Carts(num_purchases, available_pids)
-gen_inventory(num_inventory, available_pids, available_sellers)
+#gen_inventory(num_inventory, available_pids, available_sellers)
 gen_reviews(users, num_reviews_per_user, num_users, available_pids)
 gen_sellerReviews(users, num_reviews_per_seller, list(set(available_sellers)), num_sellers, num_users)
 gen_Carts(num_purchases, available_pids)

@@ -41,12 +41,14 @@
    {% endfor %}
  </p>
  <p>
-   {{ form.balance.label }}<br/>
-   {{ form.balance(size=8) }}<br/>
-   {% for error in form.balance.errors %}
-   <span style="color: red;">[{{ error }}]</span>
-   {% endfor %}
- </p>
+  {% if form.balance is defined %}
+      {{ form.balance.label }}<br/>
+      {{ form.balance(size=8) }}<br/>
+      {% for error in form.balance.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+  {% endif %}
+</p>
  <p>
    {{ form.password.label }}<br/>
    {{ form.password(size=32) }}<br/>
