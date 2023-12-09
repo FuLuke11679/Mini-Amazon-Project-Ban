@@ -10,11 +10,23 @@ from flask import jsonify
 from flask import request, redirect, url_for
 from flask_login import current_user  # Import current_user for getting seller_id
 from .db import DB
+
 from flask import current_app
 
 
 
 import datetime
+
+def is_seller(user_id):
+  rows = current_app.db.execute('''
+      SELECT id FROM Sellers
+      WHERE uid = :user_id
+  ''', user_id=user_id)
+
+
+
+
+  return bool(rows)
 
 def humanize_time(dt):
     return naturaltime(datetime.datetime.now() - dt)
@@ -45,8 +57,11 @@ def index():
     if current_user.is_authenticated:
         recent_purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-
-
+        current_user.isseller = is_seller(current_user.id)
+    else:
+        current_user.isseller = False
+    # print(current_user.__dict__)
+    
     # Render the index.html template with the provided variables
     return render_template('index.html',
                            page=page,

@@ -56,14 +56,17 @@
       <div style="color: #564236; text-align: center; margin-bottom: 25px">
         <a href="{{ url_for('index.index') }}" type="button" class="btn btn-light">Home</a>
         {% if current_user.is_authenticated %}
-          Hello {{current_user.firstname}}! 
-          <a href="{{ url_for('inventory.inventory_register') }}" type="button" class="btn btn-light">Register as Seller</a>
-          <a href="{{ url_for('inventory.inv') }}" type="button" class="btn btn-light">(Seller) My Inventory</a>
-          <a href="{{ url_for('inventory.inventory_order_fulfill') }}" type="button" class="btn btn-light">(Seller) Check Orders</a>
+          {% if not current_user.isseller %}
+           <a href="{{ url_for('inventory.inventory_register') }}" type="button" class="btn btn-light">Register as Seller</a>
+          {% endif %}
+          {% if current_user.isseller %}
+          <a href="{{ url_for('inventory.inv') }}" type="button" class="btn btn-light">My Seller Inventory</a>
+          <a href="{{ url_for('inventory.inventory_order_fulfill') }}" type="button" class="btn btn-light">Check Seller Orders</a>
+          {% endif %}
           <a href="{{ url_for('purchases.get_orders') }}" type="button" class="btn btn-light">My Orders</a>
+          <a href="{{ url_for('cart.get_cart') }}" type="button" class="btn btn-light">Cart</a>
           <a href="{{ url_for('users.myprofile') }}" type="button" class="btn btn-light">My Profile</a>
           <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
-          <a href="{{ url_for('cart.get_cart') }}" type="button" class="btn btn-light">Cart</a>
         {% else %}
           <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
         {% endif %}
