@@ -32,7 +32,7 @@
           <th scope="col">Photo</th>
           <th scope="col">Tag</th>
           <th scope="col">Quantity</th>
-          <th scope="col">Total Price</th>
+          <th scope="col">Final Price</th>
           <th scope="col">Date Purchased</th>
           <th scope="col">Fulfillment Status</th>
         </tr>
@@ -56,7 +56,7 @@
     </table>
     <!--DISPLAYS FULFILLMENT STATUS AND TOTAL FINAL ORDER PRICE-->
     <h5>Order Fulfillment Status: {{ data['fulfillment_status'] }}</h5>
-    <h5>Total Final Order Price: {{ data['total_price'] }}</h5>
+    <h5>Final Order Price: {{ data['total_price'] }}</h5>
   {% endfor %}
 
   <h3>Total Prices: {{ total_price }}</h3>
