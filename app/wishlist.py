@@ -16,11 +16,11 @@ from flask import redirect, url_for
 from flask import Blueprint
 bp = Blueprint('wishlist', __name__)
 
-
+#defines humanize_time as the current time
 def humanize_time(dt):
     return naturaltime(datetime.datetime.now() - dt)
 
-
+#defines route to wishlist with all wishlist items to render the template wishlist.html
 @bp.route('/wishlist')
 def wishlist():
     if (current_user.is_authenticated):
@@ -33,7 +33,8 @@ def wishlist():
     else:
         return jsonify({}), 404 
 
-
+#defines route for wishlist add. If user is authenticated renders wishlist template
+#if not authenticated, return error 404 jsonify
 @bp.route('/wishlist/add/<int:product_id>', methods=['POST'])
 def wishlist_add(product_id):
     if current_user.is_authenticated:

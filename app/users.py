@@ -27,7 +27,7 @@ bp = Blueprint('users', __name__)
 def humanize_time(dt):
    return naturaltime(datetime.datetime.now() - dt)
 
-
+#defines class for login form
 class LoginForm(FlaskForm):
   email = StringField('Email', validators=[DataRequired(), Email()])
   password = PasswordField('Password', validators=[DataRequired()])
@@ -40,7 +40,7 @@ class LoginForm(FlaskForm):
 
 
 
-
+#routing to login page and references index.index 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
   if current_user.is_authenticated:
@@ -72,7 +72,8 @@ def login():
 
 
 
-
+#The TopUpForm class is a FlaskForm used to create a form for changing a user's balance, 
+# incorporates validation for non-negative amounts and fields for credit card information.
 class TopUpForm(FlaskForm):
   def validate_amount(form, field):
      if field.data and float(field.data) < 0:
@@ -102,7 +103,7 @@ class TopUpForm(FlaskForm):
 
 class UpdateInfoForm(FlaskForm):
 
-
+#checks if an email is already in use when updating info
   def validate_email(self, email):
       if email.data:
           if email.data != current_user.email and User.email_exists(email.data):
@@ -138,7 +139,7 @@ class RegistrationForm(FlaskForm):
 
 
 
-
+#checks if registered balance is 0
   def validate_balance(form, field):
      if field.data != 0:
          raise ValidationError('Balance must be 0!')
@@ -161,7 +162,7 @@ class RegistrationForm(FlaskForm):
 
 
 
-
+#checks if a user with this email already exists when registering
   def validate_email(self, email):
       if User.email_exists(email.data):
           raise ValidationError('Already a user with this email.')
@@ -172,7 +173,7 @@ class RegistrationForm(FlaskForm):
 
 
 
-
+#routing for registering
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
   if current_user.is_authenticated:
@@ -199,7 +200,7 @@ def register():
 
 
 
-
+#if form is validated on submitting and submission works, redirects to login page
   else:
       form = RegistrationForm()
       if form.validate_on_submit():
@@ -219,7 +220,7 @@ def register():
 
 
 
-
+#route for top_up. Defines functions to deposit or withdraw from/to balance
 @bp.route('/top_up', methods=['GET', 'POST'])
 def top_up():
   form = TopUpForm()
@@ -247,7 +248,7 @@ def top_up():
 
 
 
-
+#defines logging out routing and points back to index.index
 @bp.route('/logout')
 def logout():
   logout_user()
@@ -255,7 +256,7 @@ def logout():
 
 
 
-
+#defines route to myprofile and renders myprofile.html template with reviews, sellerreviews, and time.
 @bp.route('/myprofile')
 def myprofile():
     if current_user.is_authenticated:
@@ -276,7 +277,8 @@ def myprofile():
 
 
 
-
+#defines route for a public profile of a user. Renders template 
+#with whether or not a user is a seller and other subsequent information
 @bp.route('/publicprofile/<int:user_id>', methods = ['GET'])
 def publicprofile(user_id):
     #user_id = request.form['user_id']
@@ -305,7 +307,7 @@ def publicprofile(user_id):
 
 
 
-
+#defines routing for user_search. Renders profile page displaying the corresponding user information
 @bp.route('/user_search', methods=['GET', 'POST'])
 def user_search():
     if request.method == 'POST':
@@ -336,7 +338,7 @@ def user_search():
         return render_template('index.html')
 
 
-
+#determines whether or not a user is a seller.
 def is_seller(user_id):
   rows = app.db.execute('''
       SELECT id FROM Sellers

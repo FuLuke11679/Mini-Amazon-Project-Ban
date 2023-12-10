@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import jsonify
-
+#initializes product
 class Product:
     def __init__(self, id, name, price, amount, available, photo_url, seller_id, longDescription, tag, subtag):
         self.id = id

@@ -7,7 +7,7 @@ from .. import login
 
 
 
-
+#initializes user
 class User(UserMixin):
    def __init__(self, id, email, firstname, lastname, address, balance):
        self.id = id
@@ -17,7 +17,8 @@ class User(UserMixin):
        self.address = address
        self.balance = balance
 
-
+#searches for user by email. IF not found return Email not found.
+#if pw incorrect return incorrect password. Other than that return Login successful
    @staticmethod
    def get_by_auth(email, password):
        rows = app.db.execute("""
@@ -35,7 +36,7 @@ WHERE email = :email
        else:
            return User(*(rows[0][1:])), 'Login successful!'
 
-
+#checks if an email already exists among current users
    @staticmethod
    def email_exists(email):
        rows = app.db.execute("""
@@ -46,7 +47,7 @@ WHERE email = :email
                              email=email)
        return len(rows) > 0
 
-
+#user registration and returns user's id
    @staticmethod
    def register(email, password, firstname, lastname, address, balance):
        try:
@@ -66,7 +67,7 @@ RETURNING id
 
 
 
-
+#updates user information to inputs
    @staticmethod
    def update(uid, email, password, firstname, lastname, address):
        try:
@@ -85,7 +86,7 @@ RETURNING id
        except Exception as e:
            return False
 
-
+#updates balance of user through user id to the balance input
    @staticmethod
    def update_balance(uid, balance):
        try:
@@ -101,7 +102,7 @@ RETURNING id
        except Exception as e:
            return False
 
-
+#updates balance by subtracting the user's balance.
    @staticmethod
    def updateBal(uid, subtract):
        try:

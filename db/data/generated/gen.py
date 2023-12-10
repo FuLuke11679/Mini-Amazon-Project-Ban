@@ -16,11 +16,11 @@ num_reviews_per_user = 20
 Faker.seed(0)
 fake = Faker()
 
-
+#defines csv writer with dialect and quoting
 def get_csv_writer(f):
     return csv.writer(f, quoting=csv.QUOTE_MINIMAL, dialect='unix')
 
-
+#generates number of users by user input
 def gen_users(num_users):
     usersStore = []
     with open('Users.csv', 'w') as f:
@@ -63,7 +63,7 @@ def gen_users(num_users):
     return(usersStore)
    
 
-
+#generates all potential subtags
 def generate_subtag(tag):
     # Define sub-categories for each main category
     subtags = {
@@ -77,7 +77,7 @@ def generate_subtag(tag):
     }
     
     return random.choice(subtags[tag])
-
+#generates products by a number of products and number of available sellers
 def gen_products(num_products, available_sellers):
     tags = ['Groceries', 'Basics', 'Music', 'Books', 'Tech', 'Pharmacy', 'Fashion']
     products = []
@@ -120,7 +120,7 @@ def gen_products(num_products, available_sellers):
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids, products
 
-
+#generates carts by a number of wishlist items, and available pids that have already been initialized
 def gen_Carts(num_wishlistitems, available_pids):
     with open('Carts.csv', 'w') as f:
         writer = get_csv_writer(f)
@@ -135,7 +135,7 @@ def gen_Carts(num_wishlistitems, available_pids):
             writer.writerow([id, uid, pid, time_added, quantity])
         print(f'{num_wishlistitems} generated')
     return
-
+#ggenerates sellers given a number of sellers and number of users
 def gen_sellers(num_sellers, num_users):
     available_sellers = fake.random_elements(elements=[x for x in range(num_users)], unique=True, length=num_sellers)
     with open('Sellers.csv', 'w') as f:
@@ -149,7 +149,7 @@ def gen_sellers(num_sellers, num_users):
             writer.writerow([i, available_sellers[i]])
         print(f'{num_sellers} generated')
     return available_sellers
-            
+#generates purchases for an input of number of purchases and number of products
 def gen_purchases(num_purchases, products):
     with open('Purchases.csv', 'w') as f:
         writer = get_csv_writer(f)
@@ -189,7 +189,7 @@ def gen_purchases(num_purchases, products):
         print(f'{num_purchases} generated')
     return
 
-    
+#defines gen_reviews as a function that generates fake reviews given inputs for products
 def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
     reviewDict = {
         "1": "abhors",
@@ -218,7 +218,7 @@ def gen_reviews(users, num_reviews_per_user, num_users, available_pids):
                 writer.writerow([((i*num_reviews_per_user) + j) , uid, pid, review, rating, upvotes, time_purchased, photo_url])
         print(f'{num_reviews} generated')
     return
-
+#generates fake reviews for sellers given the following inputs
 def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sellers, num_users):
     reviewDict = {
         "1": "abhors",
@@ -248,7 +248,7 @@ def gen_sellerReviews(users, num_reviews_per_seller, available_sellers, num_sell
         print(f'{num_sellerReviews} generated')
     return
 
-
+#executes all generate functions
 users = gen_users(num_users)
 available_sellers = gen_sellers(num_sellers, num_users)
 num_reviews_per_seller = 2 #len(available_sellers) #num_of_sellerReviews_per_user

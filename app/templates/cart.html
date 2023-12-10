@@ -1,66 +1,78 @@
-<!--HTML for cart page-->
+<!-- HTML for cart page -->
 {% extends "base.html" %}
 
 {% block content %}
 
 <br><br>
 {% if current_user.is_authenticated %}
-<h2>Your Cart:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-        <th scope="col">Cart ID</th>
-        <th scope="col">Product ID</th>
-        <th scope="col">Product Name</th>
-        <th scope="col">Seller ID</th>
-        <th scope="col">Date Added</th>
-        <th scope="col">Quantity</th>
-        <th scope="col">Price per Unit</th>
-        <th scope="col">Total Price</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in cartlist %}
-      <tr>
-        <th scope="row">{{item.id}}</th>
-        <td>{{item.pid}}</td>
-        <td><a href="/product/{{item.pid}}">{{get_product_name(item.pid)}}</a></td>
-        <td>{{ get_seller_id(item.pid) }}</td>
-        <td>{{item.time_added}}</td>
-        <td>
-          <form action="{{ url_for('cart.update_quantity', product_id=item.pid) }}" method="POST">
-            <input type="number" id="quantityInput" name="quantityChoice" min="1" max="99" value="{{item.quantity}}">
-            <input type="submit" value="Change Quantity"/>
-          </form>
-        </td>
-        <td>{{ get_product_price(item.pid) }}</td>
-        <td>{{ item.quantity * get_product_price(item.pid) }}
-          <form action="{{ url_for('cart.remove_item', product_id=item.pid) }}" method="POST">
-            <input type="submit" value="Remove"/>
-        </form>
-        </td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<h3>Total Price: {{ total_price }}</h3>
-<form action="{{ url_for('cart.cart_submit2') }}" method="POST">
-  <input type="submit" value="Submit Cart">
-  </form>
-  <p>
-    {% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        {% if category == 'error' %} {# Check if the category is 'error' #}
-          <ul>
-            <li>{{ message }}</li>
-          </ul>
+    <!-- Cart header -->
+    <h2>Your Cart:</h2>
+    <!-- Cart table -->
+    <table class='table table-hover table-bordered container'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Cart ID</th>
+                <th scope="col">Product ID</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Seller ID</th>
+                <th scope="col">Date Added</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price per Unit</th>
+                <th scope="col">Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through cart items -->
+            {% for item in cartlist %}
+            <tr>
+                <th scope="row">{{item.id}}</th>
+                <td>{{item.pid}}</td>
+                <!-- Link to product details page -->
+                <td><a href="/product/{{item.pid}}">{{get_product_name(item.pid)}}</a></td>
+                <td>{{ get_seller_id(item.pid) }}</td>
+                <td>{{item.time_added}}</td>
+                <td>
+                    <!-- Form to update quantity -->
+                    <form action="{{ url_for('cart.update_quantity', product_id=item.pid) }}" method="POST">
+                        <input type="number" id="quantityInput" name="quantityChoice" min="1" max="99"
+                            value="{{item.quantity}}">
+                        <input type="submit" value="Change Quantity" />
+                    </form>
+                </td>
+                <td>{{ get_product_price(item.pid) }}</td>
+                <td>{{ item.quantity * get_product_price(item.pid) }}
+                    <!-- Form to remove item from cart -->
+                    <form action="{{ url_for('cart.remove_item', product_id=item.pid) }}" method="POST">
+                        <input type="submit" value="Remove" />
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- Total Price -->
+    <h3>Total Price: {{ total_price }}</h3>
+    <!-- Form to submit cart -->
+    <form action="{{ url_for('cart.cart_submit2') }}" method="POST">
+        <input type="submit" value="Submit Cart">
+    </form>
+    <!-- Flash messages display -->
+    <p>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <!-- Display error messages -->
+                    <ul>
+                        <li>{{ message }}</li>
+                    </ul>
+                {% endif %}
+            {% endfor %}
         {% endif %}
-      {% endfor %}
-    {% endif %}
-    {% endwith %}
-  </p>
+        {% endwith %}
+    </p>
 {% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
+    <!-- Message for non-authenticated users -->
+    <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
 {% endif %}
 {% endblock %}

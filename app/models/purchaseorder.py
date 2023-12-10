@@ -1,6 +1,6 @@
 from flask import current_app as app
 
-
+#initializes purchaseorder
 class PurchaseOrder:
     def __init__(self, id, uid, seller_id, pid, name, photo_url, tag, quantity, price_per_unit, total_price, time_purchased, fulfillment_status, address):
         self.id = id
@@ -16,7 +16,7 @@ class PurchaseOrder:
         self.time_purchased = time_purchased
         self.fulfillment_status = fulfillment_status
         self.address = address
-
+#gets all purchases by seller id with pagination
     @staticmethod
     def get_all_seller_id(uid, page=1, per_page=20):
         offset = (page-1) * per_page

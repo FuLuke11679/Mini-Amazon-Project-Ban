@@ -149,7 +149,7 @@ def recommend_based_on_purchase_history(user_id, matrix, num_recommendations=5):
 
    return recommended_products[:num_recommendations]
 
-
+#route to page with all orders for a given user and calculates total price
 @bp.route('/get_orders', methods=['GET', 'POST'])
 def get_orders():
    user_id = current_user.id
@@ -160,7 +160,8 @@ def get_orders():
                           humanize_time=humanize_time,
                           total_price=total_price,
                           user_id = user_id)
-
+#displays orders based on specified modifiers such as seller ID, tag, start date, and end date. 
+#calculates total price of filtered orders and renders 'orders.html' template
 @bp.route('/get_orders_by_modifier', methods=['GET', 'POST'])
 def get_orders_by_modifier():
     user_id = current_user.id
@@ -185,7 +186,7 @@ def get_orders_by_modifier():
                            user_id=user_id)
 
 
-                          
+#gets specific order by order id for a given user.                          
 @bp.route('/get_specific_order/<int:oid>', methods=['GET'])
 def get_specific_order(oid):
    user_id = current_user.id
