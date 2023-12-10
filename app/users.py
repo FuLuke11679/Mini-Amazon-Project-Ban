@@ -313,9 +313,11 @@ def user_search():
         seller = is_seller(user_id)
         userInfo = User.get(user_id)
 
+        #get all reviews and number of reviews for a seller
         reviews_for_this_seller = SellerReview.reviews_for_this_seller(user_id)
         num_of_reviews = len(reviews_for_this_seller  or "")
 
+        #average rating of seller for summary info
         average_rating_a = SellerReview.total_average(user_id)
         if average_rating_a == None:
             average_rating = None
