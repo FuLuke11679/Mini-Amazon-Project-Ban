@@ -1,5 +1,8 @@
+<!--This is the html for the main home page-->
 {% extends "base.html" %}
 
+<!--This is a banner section to welcome people to our website. After searching once, you 
+are brough to a very similar page (search_results) except without this banner.-->
 {% block content %}
 {% if current_user.is_authenticated %}
 <div class="banner">
@@ -15,6 +18,7 @@
 
 <br><br>
 
+<!--This is a more niche search feature that allows you to search products based on Seller ID's-->
 <div class="searchbars">
 <div class="search_div">
   <h2>Search Inventory Based On Seller ID:</h2>
@@ -24,7 +28,7 @@
   </form>
 </div>
 
-
+<!--Like above, this allows you to search based on User ID's-->
 <div class="search_div">
   <h2>Search Users</h2>
   <form action="{{ url_for('users.user_search') }}" method="POST">
@@ -35,6 +39,8 @@
 </div>
 </div>
 <br><br>
+
+<!--This is the javascript that dynically updates the subcategory based on the tag selected-->
 <script>
 function updateSubtags() {
     var tag = document.getElementById('tag').value;
@@ -65,10 +71,9 @@ function updateSubtags() {
             });
     }
 }
-
 </script>
 
-
+<!--The following code is all about creating the search bar-->
 <!-- Search Container -->
 <div class="search-container">
   <h2>Search Products</h2>
@@ -92,7 +97,6 @@ function updateSubtags() {
           <option value="Tech">Tech</option>
           <option value="Pharmacy">Pharmacy</option>
           <option value="Fashion">Fashion</option>
-          <!-- ... other options ... -->
       </select>
 
       <select name="subtag" id="subtag" class="search-select">
@@ -110,7 +114,7 @@ function updateSubtags() {
 <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
 
-<!-- Products for sale (Card Layout) -->
+<!-- This section displays the products using a card layout -->
 <h2>Products for sale:</h2>
 <div class="product-container" style="margin: auto;">
   {% for product in avail_products %}
@@ -137,6 +141,5 @@ function updateSubtags() {
 {% if avail_products|length == 9 %}
 <a href="{{ url_for('index.index', page=page+1) }}">Next</a>
 {% endif %}
-
 
 {% endblock %}

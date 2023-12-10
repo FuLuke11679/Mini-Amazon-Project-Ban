@@ -1,9 +1,11 @@
+<!--This is the html for each product-->
 {% extends "base.html" %}
 
 {% block content %}
 
 <br><br>
 
+<!--The following displays all of the information assocaited with this product from the database-->
 Product ID: {{ current_product.id }}
 <br><br>
 Product Name: {{ current_product.name }}
@@ -40,6 +42,7 @@ Average Product Review Rating: {{average_rating}}
 Most Helpful Reviews For This Product:
 <br><br>
 
+<!--The following is the review section of the page-->
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
