@@ -135,6 +135,22 @@ def gen_Carts(num_wishlistitems, available_pids):
             writer.writerow([id, uid, pid, time_added, quantity])
         print(f'{num_wishlistitems} generated')
     return
+
+#generates inventory corresponding to the available sellers
+def gen_inventory(num_inventory, available_pids, available_sellers):
+    with open('Inventory.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Inventory...', end=' ', flush=True)
+        for id in range(num_inventory):
+            if id % 100 == 0:
+                print(f'{id}', end=' ', flush=True)
+            uid = fake.random_element(elements=available_sellers)
+            pid = fake.random_element(elements=available_pids)
+            time_purchased = fake.date_time()
+            writer.writerow([id, uid, pid, time_purchased])
+        print(f'{num_inventory} generated')
+    return
+
 #ggenerates sellers given a number of sellers and number of users
 def gen_sellers(num_sellers, num_users):
     available_sellers = fake.random_elements(elements=[x for x in range(num_users)], unique=True, length=num_sellers)
@@ -256,7 +272,7 @@ num_reviews_per_seller = 2 #len(available_sellers) #num_of_sellerReviews_per_use
 available_pids, products = gen_products(num_products, available_sellers)
 gen_purchases(num_purchases, products)
 gen_Carts(num_purchases, available_pids)
-#gen_inventory(num_inventory, available_pids, available_sellers)
+gen_inventory(num_inventory, available_pids, available_sellers)
 gen_reviews(users, num_reviews_per_user, num_users, available_pids)
 gen_sellerReviews(users, num_reviews_per_seller, list(set(available_sellers)), num_sellers, num_users)
 gen_Carts(num_purchases, available_pids)
